@@ -17,16 +17,19 @@ namespace Chromium.Remote {
         public static bool operator ==(RemotePtr p1, RemotePtr p2) { return p1.ptr == p2.ptr && (p1.connection == p2.connection || p1.ptr == IntPtr.Zero); }
         public static bool operator !=(RemotePtr p1, RemotePtr p2) { return !(p1.ptr == p2.ptr); }
         public static readonly RemotePtr Zero;
+
         internal RemoteConnection connection;
         internal IntPtr ptr;
+
         internal RemotePtr(RemoteConnection connection, IntPtr ptr) {
             this.connection = connection;
             this.ptr = ptr;
         }
         public override bool Equals(object obj) {
-            return this == (RemotePtr)obj;
+            return obj is RemotePtr && this == (RemotePtr)obj;
         }
         public override int GetHashCode() {
+            if(connection == null) return ptr.GetHashCode();
             return ptr.GetHashCode() ^ connection.GetHashCode();
         }
     }
