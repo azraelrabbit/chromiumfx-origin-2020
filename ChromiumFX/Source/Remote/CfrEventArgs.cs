@@ -11,7 +11,16 @@ namespace Chromium.Remote
     /// Base class for all remote callback event args.
     /// </summary>
     public class CfrEventArgs : EventArgs {
-        
+
+        /// <summary>
+        /// The process ID of the remote render process where the event originated.
+        /// </summary>
+        public int RemoteProcessId {
+            get {
+                return connection.remoteProcessId;
+            }
+        }
+
         internal RemoteConnection connection;
         internal void CheckAccess() {
             if(connection == null)
