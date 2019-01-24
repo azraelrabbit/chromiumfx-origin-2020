@@ -17,6 +17,7 @@ namespace Chromium.Remote {
         CfrMarshalCopyToNativeRemoteCall,
         CfrMarshalFreeHGlobalRemoteCall,
         CfrMarshalPtrToStringUniRemoteCall,
+        CfrProcessSetPriorityClassRemoteCall,
         CfxApiReleaseRemoteCall,
         CfxAppCtorWithGCHandleRemoteCall,
         CfxAppGetRenderProcessHandlerRemoteEventCall,

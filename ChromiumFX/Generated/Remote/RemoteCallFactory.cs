@@ -19,6 +19,7 @@ namespace Chromium.Remote {
             () => { return new CfrMarshalCopyToNativeRemoteCall(); },
             () => { return new CfrMarshalFreeHGlobalRemoteCall(); },
             () => { return new CfrMarshalPtrToStringUniRemoteCall(); },
+            () => { return new CfrProcessSetPriorityClassRemoteCall(); },
             () => { return new CfxApiReleaseRemoteCall(); },
             () => { return new CfxAppCtorWithGCHandleRemoteCall(); },
             () => { return new CfxAppGetRenderProcessHandlerRemoteEventCall(); },

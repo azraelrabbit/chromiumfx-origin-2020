@@ -15,7 +15,7 @@ namespace Chromium.Remote {
         /// <summary>
         /// Provides access to the remote process unmanaged memory.
         /// </summary>
-        public class Marshal {
+        public static class Marshal {
 
             /// <summary>
             /// Call Marshal.AllocHGlobal in the target process.
