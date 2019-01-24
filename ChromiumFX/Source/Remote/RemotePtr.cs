@@ -21,6 +21,15 @@ namespace Chromium.Remote {
         internal RemoteConnection connection;
         internal IntPtr ptr;
 
+        /// <summary>
+        /// The process ID of the remote render process this remote IntPtr belongs to.
+        /// </summary>
+        public int RemoteProcessId {
+            get {
+                return connection.remoteProcessId;
+            }
+        }
+
         internal RemotePtr(RemoteConnection connection, IntPtr ptr) {
             this.connection = connection;
             this.ptr = ptr;
