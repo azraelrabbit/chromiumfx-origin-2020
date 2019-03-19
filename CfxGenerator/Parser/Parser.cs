@@ -34,6 +34,8 @@ namespace Parser {
             Parser p = new CefCApiParser();
             p.SetFile(Path.Combine("cef", "include", "cef_version.h"));
             p.Parse(apiNode);
+            p.SetFile(Path.Combine("cef", "include", "cef_api_hash.h"));
+            p.Parse(apiNode);
             var files = Directory.GetFiles(Path.Combine("cef", "include", "capi"));
             foreach(var f in files) {
                 if(Path.GetFileName(f) == "cef_base_capi.h") continue;
@@ -85,6 +87,7 @@ namespace Parser {
                 if(Path.GetFileName(f) == "cef_pack_strings.h") continue;
                 if(Path.GetFileName(f) == "cef_sandbox_win.h") continue;
                 if(Path.GetFileName(f) == "cef_version.h") continue;
+                if(Path.GetFileName(f) == "cef_api_hash.h") continue;
 
                 p.SetFile(f);
                 p.Parse(apiNode);
@@ -94,7 +97,7 @@ namespace Parser {
         }
         
         public static string ParseApiHash() {
-            var code = File.ReadAllText(System.IO.Path.Combine("cef", "include", "cef_version.h"));
+            var code = File.ReadAllText(System.IO.Path.Combine("cef", "include", "cef_api_hash.h"));
             var ex = new Regex(@"CEF_API_HASH_UNIVERSAL ""(\w+)""");
             Debug.Assert(ex.IsMatch(code));
             return ex.Match(code).Groups[1].Value;
