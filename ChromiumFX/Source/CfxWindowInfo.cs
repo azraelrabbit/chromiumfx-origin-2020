@@ -379,6 +379,83 @@ namespace Chromium {
         }
 
         /// <summary>
+        /// Set to true (1) to enable shared textures for windowless rendering. Only
+        /// valid if windowless_rendering_enabled above is also set to true. Currently
+        /// only supported on Windows (D3D11).
+        /// </summary>
+        /// <remarks>
+        /// See also the original CEF documentation in
+        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/internal/cef_types_win.h">cef/include/internal/cef_types_win.h</see>.
+        /// </remarks>
+        public bool SharedTextureEnabled
+        {
+            get
+            {
+                switch (CfxApi.PlatformOS)
+                {
+                    case CfxPlatformOS.Windows:
+                        return windows.SharedTextureEnabled;
+                    case CfxPlatformOS.Linux:
+                        return linux.SharedTextureEnabled;
+                    default:
+                        throw new CfxException("Unsupported platform.");
+                }
+            }
+            set
+            {
+                switch (CfxApi.PlatformOS)
+                {
+                    case CfxPlatformOS.Windows:
+                        windows.SharedTextureEnabled = value;
+                        break;
+                    case CfxPlatformOS.Linux:
+                        linux.SharedTextureEnabled = value;
+                        break;
+                    default:
+                        throw new CfxException("Unsupported platform.");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Set to true (1) to enable the ability to issue BeginFrame requests from the
+        /// client application by calling CfxBrowserHost.SendExternalBeginFrame.
+        /// </summary>
+        /// <remarks>
+        /// See also the original CEF documentation in
+        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/internal/cef_types_win.h">cef/include/internal/cef_types_win.h</see>.
+        /// </remarks>
+        public bool ExternalBeginFrameEnabled
+        {
+            get
+            {
+                switch (CfxApi.PlatformOS)
+                {
+                    case CfxPlatformOS.Windows:
+                        return windows.ExternalBeginFrameEnabled;
+                    case CfxPlatformOS.Linux:
+                        return linux.ExternalBeginFrameEnabled;
+                    default:
+                        throw new CfxException("Unsupported platform.");
+                }
+            }
+            set
+            {
+                switch (CfxApi.PlatformOS)
+                {
+                    case CfxPlatformOS.Windows:
+                        windows.ExternalBeginFrameEnabled = value;
+                        break;
+                    case CfxPlatformOS.Linux:
+                        linux.ExternalBeginFrameEnabled = value;
+                        break;
+                    default:
+                        throw new CfxException("Unsupported platform.");
+                }
+            }
+        }
+
+        /// <summary>
         /// Handle for the new browser window. Only used with windowed rendering.
         /// </summary>
         /// <remarks>
