@@ -154,6 +154,10 @@ public class CefEnumType : ApiType {
                     case "CfxScaleFactor":
                         m.PublicName = "ScaleFactor" + m.PublicName;
                         break;
+                    case "CfxChannelLayout":
+                        // version numbers like CEF_CHANNEL_LAYOUT_4_0, CEF_CHANNEL_LAYOUT_5_0_BACK
+                        m.PublicName = "V" + m.PublicName;
+                        break;
                     default:
                         Debug.Assert(false);
                         break;
