@@ -25,6 +25,7 @@
 #endif
 
 #include "include/cef_version.h"
+#include "include/cef_api_hash.h"
 
 #include "cef_headers.h"
 #include "cef_function_pointers.c"
