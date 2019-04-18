@@ -216,6 +216,11 @@ static void cfx_browser_host_send_mouse_wheel_event(cef_browser_host_t* self, co
     self->send_mouse_wheel_event(self, event, deltaX, deltaY);
 }
 
+// send_touch_event
+static void cfx_browser_host_send_touch_event(cef_browser_host_t* self, const cef_touch_event_t* event) {
+    self->send_touch_event(self, event);
+}
+
 // send_focus_event
 static void cfx_browser_host_send_focus_event(cef_browser_host_t* self, int setFocus) {
     self->send_focus_event(self, setFocus);
@@ -328,6 +333,16 @@ static cef_extension_t* cfx_browser_host_get_extension(cef_browser_host_t* self)
 // is_background_host
 static int cfx_browser_host_is_background_host(cef_browser_host_t* self) {
     return self->is_background_host(self);
+}
+
+// set_audio_muted
+static void cfx_browser_host_set_audio_muted(cef_browser_host_t* self, int mute) {
+    self->set_audio_muted(self, mute);
+}
+
+// is_audio_muted
+static int cfx_browser_host_is_audio_muted(cef_browser_host_t* self) {
+    return self->is_audio_muted(self);
 }
 
 

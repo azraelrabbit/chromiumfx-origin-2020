@@ -40,6 +40,7 @@ namespace Chromium {
             on_scroll_offset_changed_native = on_scroll_offset_changed;
             on_ime_composition_range_changed_native = on_ime_composition_range_changed;
             on_text_selection_changed_native = on_text_selection_changed;
+            on_virtual_keyboard_requested_native = on_virtual_keyboard_requested;
 
             get_accessibility_handler_native_ptr = System.Runtime.InteropServices.Marshal.GetFunctionPointerForDelegate(get_accessibility_handler_native);
             get_root_screen_rect_native_ptr = System.Runtime.InteropServices.Marshal.GetFunctionPointerForDelegate(get_root_screen_rect_native);
@@ -56,6 +57,7 @@ namespace Chromium {
             on_scroll_offset_changed_native_ptr = System.Runtime.InteropServices.Marshal.GetFunctionPointerForDelegate(on_scroll_offset_changed_native);
             on_ime_composition_range_changed_native_ptr = System.Runtime.InteropServices.Marshal.GetFunctionPointerForDelegate(on_ime_composition_range_changed_native);
             on_text_selection_changed_native_ptr = System.Runtime.InteropServices.Marshal.GetFunctionPointerForDelegate(on_text_selection_changed_native);
+            on_virtual_keyboard_requested_native_ptr = System.Runtime.InteropServices.Marshal.GetFunctionPointerForDelegate(on_virtual_keyboard_requested_native);
         }
 
         // get_accessibility_handler
@@ -403,6 +405,26 @@ namespace Chromium {
             e.m_selected_text_length = selected_text_length;
             e.m_selected_range = selected_range;
             self.m_OnTextSelectionChanged?.Invoke(self, e);
+            e.m_isInvalid = true;
+            browser_release = e.m_browser_wrapped == null? 1 : 0;
+        }
+
+        // on_virtual_keyboard_requested
+        [System.Runtime.InteropServices.UnmanagedFunctionPointer(System.Runtime.InteropServices.CallingConvention.StdCall, SetLastError = false)]
+        private delegate void on_virtual_keyboard_requested_delegate(IntPtr gcHandlePtr, IntPtr browser, out int browser_release, int input_mode);
+        private static on_virtual_keyboard_requested_delegate on_virtual_keyboard_requested_native;
+        private static IntPtr on_virtual_keyboard_requested_native_ptr;
+
+        internal static void on_virtual_keyboard_requested(IntPtr gcHandlePtr, IntPtr browser, out int browser_release, int input_mode) {
+            var self = (CfxRenderHandler)System.Runtime.InteropServices.GCHandle.FromIntPtr(gcHandlePtr).Target;
+            if(self == null || self.CallbacksDisabled) {
+                browser_release = 1;
+                return;
+            }
+            var e = new CfxOnVirtualKeyboardRequestedEventArgs();
+            e.m_browser = browser;
+            e.m_input_mode = input_mode;
+            self.m_OnVirtualKeyboardRequested?.Invoke(self, e);
             e.m_isInvalid = true;
             browser_release = e.m_browser_wrapped == null? 1 : 0;
         }
@@ -890,6 +912,37 @@ namespace Chromium {
 
         private CfxOnTextSelectionChangedEventHandler m_OnTextSelectionChanged;
 
+        /// <summary>
+        /// Called when an on-screen keyboard should be shown or hidden for the
+        /// specified |Browser|. |InputMode| specifies what kind of keyboard should be
+        /// opened. If |InputMode| is CEF_TEXT_INPUT_MODE_NONE, any existing keyboard
+        /// for this browser should be hidden.
+        /// </summary>
+        /// <remarks>
+        /// See also the original CEF documentation in
+        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_render_handler_capi.h">cef/include/capi/cef_render_handler_capi.h</see>.
+        /// </remarks>
+        public event CfxOnVirtualKeyboardRequestedEventHandler OnVirtualKeyboardRequested {
+            add {
+                lock(eventLock) {
+                    if(m_OnVirtualKeyboardRequested == null) {
+                        CfxApi.RenderHandler.cfx_render_handler_set_callback(NativePtr, 15, on_virtual_keyboard_requested_native_ptr);
+                    }
+                    m_OnVirtualKeyboardRequested += value;
+                }
+            }
+            remove {
+                lock(eventLock) {
+                    m_OnVirtualKeyboardRequested -= value;
+                    if(m_OnVirtualKeyboardRequested == null) {
+                        CfxApi.RenderHandler.cfx_render_handler_set_callback(NativePtr, 15, IntPtr.Zero);
+                    }
+                }
+            }
+        }
+
+        private CfxOnVirtualKeyboardRequestedEventHandler m_OnVirtualKeyboardRequested;
+
         internal override void OnDispose(IntPtr nativePtr) {
             if(m_GetAccessibilityHandler != null) {
                 m_GetAccessibilityHandler = null;
@@ -950,6 +1003,10 @@ namespace Chromium {
             if(m_OnTextSelectionChanged != null) {
                 m_OnTextSelectionChanged = null;
                 CfxApi.RenderHandler.cfx_render_handler_set_callback(NativePtr, 14, IntPtr.Zero);
+            }
+            if(m_OnVirtualKeyboardRequested != null) {
+                m_OnVirtualKeyboardRequested = null;
+                CfxApi.RenderHandler.cfx_render_handler_set_callback(NativePtr, 15, IntPtr.Zero);
             }
             base.OnDispose(nativePtr);
         }
@@ -2054,6 +2111,61 @@ namespace Chromium {
 
             public override string ToString() {
                 return String.Format("Browser={{{0}}}, SelectedText={{{1}}}, SelectedRange={{{2}}}", Browser, SelectedText, SelectedRange);
+            }
+        }
+
+        /// <summary>
+        /// Called when an on-screen keyboard should be shown or hidden for the
+        /// specified |Browser|. |InputMode| specifies what kind of keyboard should be
+        /// opened. If |InputMode| is CEF_TEXT_INPUT_MODE_NONE, any existing keyboard
+        /// for this browser should be hidden.
+        /// </summary>
+        /// <remarks>
+        /// See also the original CEF documentation in
+        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_render_handler_capi.h">cef/include/capi/cef_render_handler_capi.h</see>.
+        /// </remarks>
+        public delegate void CfxOnVirtualKeyboardRequestedEventHandler(object sender, CfxOnVirtualKeyboardRequestedEventArgs e);
+
+        /// <summary>
+        /// Called when an on-screen keyboard should be shown or hidden for the
+        /// specified |Browser|. |InputMode| specifies what kind of keyboard should be
+        /// opened. If |InputMode| is CEF_TEXT_INPUT_MODE_NONE, any existing keyboard
+        /// for this browser should be hidden.
+        /// </summary>
+        /// <remarks>
+        /// See also the original CEF documentation in
+        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_render_handler_capi.h">cef/include/capi/cef_render_handler_capi.h</see>.
+        /// </remarks>
+        public class CfxOnVirtualKeyboardRequestedEventArgs : CfxEventArgs {
+
+            internal IntPtr m_browser;
+            internal CfxBrowser m_browser_wrapped;
+            internal int m_input_mode;
+
+            internal CfxOnVirtualKeyboardRequestedEventArgs() {}
+
+            /// <summary>
+            /// Get the Browser parameter for the <see cref="CfxRenderHandler.OnVirtualKeyboardRequested"/> callback.
+            /// </summary>
+            public CfxBrowser Browser {
+                get {
+                    CheckAccess();
+                    if(m_browser_wrapped == null) m_browser_wrapped = CfxBrowser.Wrap(m_browser);
+                    return m_browser_wrapped;
+                }
+            }
+            /// <summary>
+            /// Get the InputMode parameter for the <see cref="CfxRenderHandler.OnVirtualKeyboardRequested"/> callback.
+            /// </summary>
+            public CfxTextInputMode InputMode {
+                get {
+                    CheckAccess();
+                    return (CfxTextInputMode)m_input_mode;
+                }
+            }
+
+            public override string ToString() {
+                return String.Format("Browser={{{0}}}, InputMode={{{1}}}", Browser, InputMode);
             }
         }
 

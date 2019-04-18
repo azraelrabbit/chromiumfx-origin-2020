@@ -286,6 +286,20 @@ namespace Chromium {
         }
 
         /// <summary>
+        /// Returns true (1) if the browser's audio is muted.  This function can only
+        /// be called on the UI thread.
+        /// </summary>
+        /// <remarks>
+        /// See also the original CEF documentation in
+        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_browser_capi.h">cef/include/capi/cef_browser_capi.h</see>.
+        /// </remarks>
+        public bool IsAudioMuted {
+            get {
+                return 0 != CfxApi.BrowserHost.cfx_browser_host_is_audio_muted(NativePtr);
+            }
+        }
+
+        /// <summary>
         /// Request that the browser close. The JavaScript 'onbeforeunload' event will
         /// be fired. If |forceClose| is false (0) the event handler, if any, will be
         /// allowed to prompt the user and the user can optionally cancel the close. If
@@ -656,6 +670,17 @@ namespace Chromium {
         }
 
         /// <summary>
+        /// Send a touch event to the browser for a windowless browser.
+        /// </summary>
+        /// <remarks>
+        /// See also the original CEF documentation in
+        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_browser_capi.h">cef/include/capi/cef_browser_capi.h</see>.
+        /// </remarks>
+        public void SendTouchEvent(CfxTouchEvent @event) {
+            CfxApi.BrowserHost.cfx_browser_host_send_touch_event(NativePtr, CfxTouchEvent.Unwrap(@event));
+        }
+
+        /// <summary>
         /// Send a focus event to the browser.
         /// </summary>
         /// <remarks>
@@ -922,6 +947,17 @@ namespace Chromium {
         /// </remarks>
         public void SetAutoResizeEnabled(bool enabled, CfxSize minSize, CfxSize maxSize) {
             CfxApi.BrowserHost.cfx_browser_host_set_auto_resize_enabled(NativePtr, enabled ? 1 : 0, CfxSize.Unwrap(minSize), CfxSize.Unwrap(maxSize));
+        }
+
+        /// <summary>
+        ///  Set whether the browser's audio is muted.
+        /// </summary>
+        /// <remarks>
+        /// See also the original CEF documentation in
+        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_browser_capi.h">cef/include/capi/cef_browser_capi.h</see>.
+        /// </remarks>
+        public void SetAudioMuted(bool mute) {
+            CfxApi.BrowserHost.cfx_browser_host_set_audio_muted(NativePtr, mute ? 1 : 0);
         }
     }
 }

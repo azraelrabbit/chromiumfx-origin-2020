@@ -69,11 +69,11 @@ namespace Chromium {
         /// hash value will be returned:
         /// 0 - CEF_API_HASH_PLATFORM
         /// 1 - CEF_API_HASH_UNIVERSAL
-        /// 2 - CEF_COMMIT_HASH
+        /// 2 - CEF_COMMIT_HASH (from cef_version.h)
         /// </summary>
         /// <remarks>
         /// See also the original CEF documentation in
-        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/cef_version.h">cef/include/cef_version.h</see>.
+        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/cef_api_hash.h">cef/include/cef_api_hash.h</see>.
         /// </remarks>
         public static string ApiHash(int entry) {
             return System.Runtime.InteropServices.Marshal.PtrToStringAnsi(CfxApi.Runtime.cfx_api_hash(entry));
@@ -1101,11 +1101,13 @@ namespace Chromium {
         /// Returns CEF version information for the libcef library. The |entry|
         /// parameter describes which version component will be returned:
         /// 0 - CEF_VERSION_MAJOR
-        /// 1 - CEF_COMMIT_NUMBER
-        /// 2 - CHROME_VERSION_MAJOR
-        /// 3 - CHROME_VERSION_MINOR
-        /// 4 - CHROME_VERSION_BUILD
-        /// 5 - CHROME_VERSION_PATCH
+        /// 1 - CEF_VERSION_MINOR
+        /// 2 - CEF_VERSION_PATCH
+        /// 3 - CEF_COMMIT_NUMBER
+        /// 4 - CHROME_VERSION_MAJOR
+        /// 5 - CHROME_VERSION_MINOR
+        /// 6 - CHROME_VERSION_BUILD
+        /// 7 - CHROME_VERSION_PATCH
         /// </summary>
         /// <remarks>
         /// See also the original CEF documentation in
