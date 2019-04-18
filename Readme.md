@@ -30,9 +30,12 @@ The API of this project is not frozen and is subject to change. The overall stru
 
 ### Versioning ###
 
-ChromiumFX version numbers have the format X.Y.Z where X is the CEF version (currently 3), Y is the CEF branch and Z is the ChromiumFX release number for a specific CEF version and branch. 
+Older ChromiumFX version numbers have the format X.Y.Z where X is the CEF version (currently 3), Y is the CEF branch and Z is the ChromiumFX release number for a specific CEF version and branch. 
 
-A list of CEF versions known to work with each ChromiumFX version will be maintained in CefVersion.txt.
+As of April 2019, ChromiumFX is following the new CEF version number format.
+ChromiumFX version numbers have the format X.Y.Z.N with:
+* X.Y.Z is the CEF version number
+* N is the ChromiumFX release number, reset to 0 when x.y.z changes
 
 CEF binary packages are available for download at:
 
@@ -52,6 +55,9 @@ licensing information. See also [cef/LICENSE.txt](https://bitbucket.org/chromium
 ## Changes ##
 
 This is a summary of the most important changes and those relevant to embedders (API changes etc.).
+
+### Version 73.1.13.0 ###
+- Update to CEF 73.1.13 with API changes.
 
 ### Version 3.3578.1 ###
 - Fix Issue #196 (CfrTime.ToUniversalTime must be static).

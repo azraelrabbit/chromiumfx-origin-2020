@@ -360,6 +360,17 @@ namespace Chromium {
 
         }
 
+        internal static class AudioHandler {
+
+            static AudioHandler () {
+                CfxApiLoader.LoadCfxAudioHandlerApi();
+            }
+
+            public static cfx_ctor_with_gc_handle_delegate cfx_audio_handler_ctor;
+            public static cfx_set_callback_delegate cfx_audio_handler_set_callback;
+
+        }
+
         internal static class AuthCallback {
 
             static AuthCallback () {
@@ -841,6 +852,11 @@ namespace Chromium {
             public delegate void cfx_browser_host_send_mouse_wheel_event_delegate(IntPtr self, IntPtr @event, int deltaX, int deltaY);
             public static cfx_browser_host_send_mouse_wheel_event_delegate cfx_browser_host_send_mouse_wheel_event;
 
+            // static void cfx_browser_host_send_touch_event(cef_browser_host_t* self, const cef_touch_event_t* event)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_browser_host_send_touch_event_delegate(IntPtr self, IntPtr @event);
+            public static cfx_browser_host_send_touch_event_delegate cfx_browser_host_send_touch_event;
+
             // static void cfx_browser_host_send_focus_event(cef_browser_host_t* self, int setFocus)
             [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
             public delegate void cfx_browser_host_send_focus_event_delegate(IntPtr self, int setFocus);
@@ -940,6 +956,16 @@ namespace Chromium {
             [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
             public delegate int cfx_browser_host_is_background_host_delegate(IntPtr self);
             public static cfx_browser_host_is_background_host_delegate cfx_browser_host_is_background_host;
+
+            // static void cfx_browser_host_set_audio_muted(cef_browser_host_t* self, int mute)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_browser_host_set_audio_muted_delegate(IntPtr self, int mute);
+            public static cfx_browser_host_set_audio_muted_delegate cfx_browser_host_set_audio_muted;
+
+            // static int cfx_browser_host_is_audio_muted(cef_browser_host_t* self)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate int cfx_browser_host_is_audio_muted_delegate(IntPtr self);
+            public static cfx_browser_host_is_audio_muted_delegate cfx_browser_host_is_audio_muted;
 
         }
 
@@ -4966,9 +4992,9 @@ namespace Chromium {
                 CfxApiLoader.LoadCfxSchemeRegistrarApi();
             }
 
-            // static int cfx_scheme_registrar_add_custom_scheme(cef_scheme_registrar_t* self, char16 *scheme_name_str, int scheme_name_length, int is_standard, int is_local, int is_display_isolated, int is_secure, int is_cors_enabled, int is_csp_bypassing)
+            // static int cfx_scheme_registrar_add_custom_scheme(cef_scheme_registrar_t* self, char16 *scheme_name_str, int scheme_name_length, int options)
             [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
-            public delegate int cfx_scheme_registrar_add_custom_scheme_delegate(IntPtr self, IntPtr scheme_name_str, int scheme_name_length, int is_standard, int is_local, int is_display_isolated, int is_secure, int is_cors_enabled, int is_csp_bypassing);
+            public delegate int cfx_scheme_registrar_add_custom_scheme_delegate(IntPtr self, IntPtr scheme_name_str, int scheme_name_length, int options);
             public static cfx_scheme_registrar_add_custom_scheme_delegate cfx_scheme_registrar_add_custom_scheme;
 
         }
@@ -5749,6 +5775,109 @@ namespace Chromium {
             [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
             public delegate void cfx_time_get_millisecond_delegate(IntPtr self, out int millisecond);
             public static cfx_time_get_millisecond_delegate cfx_time_get_millisecond;
+
+        }
+
+        internal static class TouchEvent {
+
+            static TouchEvent () {
+                CfxApiLoader.LoadCfxTouchEventApi();
+            }
+
+            // static cef_touch_event_t* cfx_touch_event_ctor()
+            public static cfx_ctor_delegate cfx_touch_event_ctor;
+            // static void cfx_touch_event_dtor(cef_touch_event_t* ptr)
+            public static cfx_dtor_delegate cfx_touch_event_dtor;
+
+            // static void cfx_touch_event_set_id(cef_touch_event_t *self, int id)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_touch_event_set_id_delegate(IntPtr self, int id);
+            public static cfx_touch_event_set_id_delegate cfx_touch_event_set_id;
+            // static void cfx_touch_event_get_id(cef_touch_event_t *self, int* id)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_touch_event_get_id_delegate(IntPtr self, out int id);
+            public static cfx_touch_event_get_id_delegate cfx_touch_event_get_id;
+
+            // static void cfx_touch_event_set_x(cef_touch_event_t *self, float x)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_touch_event_set_x_delegate(IntPtr self, float x);
+            public static cfx_touch_event_set_x_delegate cfx_touch_event_set_x;
+            // static void cfx_touch_event_get_x(cef_touch_event_t *self, float* x)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_touch_event_get_x_delegate(IntPtr self, out float x);
+            public static cfx_touch_event_get_x_delegate cfx_touch_event_get_x;
+
+            // static void cfx_touch_event_set_y(cef_touch_event_t *self, float y)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_touch_event_set_y_delegate(IntPtr self, float y);
+            public static cfx_touch_event_set_y_delegate cfx_touch_event_set_y;
+            // static void cfx_touch_event_get_y(cef_touch_event_t *self, float* y)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_touch_event_get_y_delegate(IntPtr self, out float y);
+            public static cfx_touch_event_get_y_delegate cfx_touch_event_get_y;
+
+            // static void cfx_touch_event_set_radius_x(cef_touch_event_t *self, float radius_x)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_touch_event_set_radius_x_delegate(IntPtr self, float radius_x);
+            public static cfx_touch_event_set_radius_x_delegate cfx_touch_event_set_radius_x;
+            // static void cfx_touch_event_get_radius_x(cef_touch_event_t *self, float* radius_x)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_touch_event_get_radius_x_delegate(IntPtr self, out float radius_x);
+            public static cfx_touch_event_get_radius_x_delegate cfx_touch_event_get_radius_x;
+
+            // static void cfx_touch_event_set_radius_y(cef_touch_event_t *self, float radius_y)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_touch_event_set_radius_y_delegate(IntPtr self, float radius_y);
+            public static cfx_touch_event_set_radius_y_delegate cfx_touch_event_set_radius_y;
+            // static void cfx_touch_event_get_radius_y(cef_touch_event_t *self, float* radius_y)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_touch_event_get_radius_y_delegate(IntPtr self, out float radius_y);
+            public static cfx_touch_event_get_radius_y_delegate cfx_touch_event_get_radius_y;
+
+            // static void cfx_touch_event_set_rotation_angle(cef_touch_event_t *self, float rotation_angle)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_touch_event_set_rotation_angle_delegate(IntPtr self, float rotation_angle);
+            public static cfx_touch_event_set_rotation_angle_delegate cfx_touch_event_set_rotation_angle;
+            // static void cfx_touch_event_get_rotation_angle(cef_touch_event_t *self, float* rotation_angle)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_touch_event_get_rotation_angle_delegate(IntPtr self, out float rotation_angle);
+            public static cfx_touch_event_get_rotation_angle_delegate cfx_touch_event_get_rotation_angle;
+
+            // static void cfx_touch_event_set_pressure(cef_touch_event_t *self, float pressure)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_touch_event_set_pressure_delegate(IntPtr self, float pressure);
+            public static cfx_touch_event_set_pressure_delegate cfx_touch_event_set_pressure;
+            // static void cfx_touch_event_get_pressure(cef_touch_event_t *self, float* pressure)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_touch_event_get_pressure_delegate(IntPtr self, out float pressure);
+            public static cfx_touch_event_get_pressure_delegate cfx_touch_event_get_pressure;
+
+            // static void cfx_touch_event_set_type(cef_touch_event_t *self, cef_touch_event_type_t type)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_touch_event_set_type_delegate(IntPtr self, int type);
+            public static cfx_touch_event_set_type_delegate cfx_touch_event_set_type;
+            // static void cfx_touch_event_get_type(cef_touch_event_t *self, cef_touch_event_type_t* type)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_touch_event_get_type_delegate(IntPtr self, out int type);
+            public static cfx_touch_event_get_type_delegate cfx_touch_event_get_type;
+
+            // static void cfx_touch_event_set_modifiers(cef_touch_event_t *self, uint32 modifiers)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_touch_event_set_modifiers_delegate(IntPtr self, uint modifiers);
+            public static cfx_touch_event_set_modifiers_delegate cfx_touch_event_set_modifiers;
+            // static void cfx_touch_event_get_modifiers(cef_touch_event_t *self, uint32* modifiers)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_touch_event_get_modifiers_delegate(IntPtr self, out uint modifiers);
+            public static cfx_touch_event_get_modifiers_delegate cfx_touch_event_get_modifiers;
+
+            // static void cfx_touch_event_set_pointer_type(cef_touch_event_t *self, cef_pointer_type_t pointer_type)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_touch_event_set_pointer_type_delegate(IntPtr self, int pointer_type);
+            public static cfx_touch_event_set_pointer_type_delegate cfx_touch_event_set_pointer_type;
+            // static void cfx_touch_event_get_pointer_type(cef_touch_event_t *self, cef_pointer_type_t* pointer_type)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_touch_event_get_pointer_type_delegate(IntPtr self, out int pointer_type);
+            public static cfx_touch_event_get_pointer_type_delegate cfx_touch_event_get_pointer_type;
 
         }
 

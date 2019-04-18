@@ -30,6 +30,7 @@ typedef struct _cfx_render_handler_t {
     void (CEF_CALLBACK *on_scroll_offset_changed)(gc_handle_t self, cef_browser_t* browser, int *browser_release, double x, double y);
     void (CEF_CALLBACK *on_ime_composition_range_changed)(gc_handle_t self, cef_browser_t* browser, int *browser_release, const cef_range_t* selected_range, size_t character_boundsCount, cef_rect_t const* character_bounds, int character_bounds_structsize);
     void (CEF_CALLBACK *on_text_selection_changed)(gc_handle_t self, cef_browser_t* browser, int *browser_release, char16 *selected_text_str, int selected_text_length, const cef_range_t* selected_range);
+    void (CEF_CALLBACK *on_virtual_keyboard_requested)(gc_handle_t self, cef_browser_t* browser, int *browser_release, cef_text_input_mode_t input_mode);
 } cfx_render_handler_t;
 
 void CEF_CALLBACK _cfx_render_handler_add_ref(struct _cef_base_ref_counted_t* base) {
@@ -198,6 +199,14 @@ void CEF_CALLBACK cfx_render_handler_on_text_selection_changed(cef_render_handle
     if(browser_release && browser) browser->base.release((cef_base_ref_counted_t*)browser);
 }
 
+// on_virtual_keyboard_requested
+
+void CEF_CALLBACK cfx_render_handler_on_virtual_keyboard_requested(cef_render_handler_t* self, cef_browser_t* browser, cef_text_input_mode_t input_mode) {
+    int browser_release;
+    ((cfx_render_handler_t*)self)->on_virtual_keyboard_requested(((cfx_render_handler_t*)self)->gc_handle, browser, &browser_release, input_mode);
+    if(browser_release && browser) browser->base.release((cef_base_ref_counted_t*)browser);
+}
+
 static void cfx_render_handler_set_callback(cef_render_handler_t* self, int index, void* callback) {
     switch(index) {
     case 0:
@@ -259,6 +268,10 @@ static void cfx_render_handler_set_callback(cef_render_handler_t* self, int inde
     case 14:
         ((cfx_render_handler_t*)self)->on_text_selection_changed = (void (CEF_CALLBACK *)(gc_handle_t self, cef_browser_t* browser, int *browser_release, char16 *selected_text_str, int selected_text_length, const cef_range_t* selected_range))callback;
         self->on_text_selection_changed = callback ? cfx_render_handler_on_text_selection_changed : 0;
+        break;
+    case 15:
+        ((cfx_render_handler_t*)self)->on_virtual_keyboard_requested = (void (CEF_CALLBACK *)(gc_handle_t self, cef_browser_t* browser, int *browser_release, cef_text_input_mode_t input_mode))callback;
+        self->on_virtual_keyboard_requested = callback ? cfx_render_handler_on_virtual_keyboard_requested : 0;
         break;
     }
 }

@@ -72,6 +72,8 @@ namespace Chromium {
             cfx_accessibility_handler_set_callback,
             cfx_app_ctor,
             cfx_app_set_callback,
+            cfx_audio_handler_ctor,
+            cfx_audio_handler_set_callback,
             cfx_auth_callback_cont,
             cfx_auth_callback_cancel,
             cfx_before_download_callback_cont,
@@ -162,6 +164,7 @@ namespace Chromium {
             cfx_browser_host_send_mouse_click_event,
             cfx_browser_host_send_mouse_move_event,
             cfx_browser_host_send_mouse_wheel_event,
+            cfx_browser_host_send_touch_event,
             cfx_browser_host_send_focus_event,
             cfx_browser_host_send_capture_lost_event,
             cfx_browser_host_notify_move_or_resize_started,
@@ -182,6 +185,8 @@ namespace Chromium {
             cfx_browser_host_set_auto_resize_enabled,
             cfx_browser_host_get_extension,
             cfx_browser_host_is_background_host,
+            cfx_browser_host_set_audio_muted,
+            cfx_browser_host_is_audio_muted,
             cfx_browser_process_handler_ctor,
             cfx_browser_process_handler_set_callback,
             cfx_browser_settings_ctor,
@@ -1094,6 +1099,28 @@ namespace Chromium {
             cfx_time_get_second,
             cfx_time_set_millisecond,
             cfx_time_get_millisecond,
+            cfx_touch_event_ctor,
+            cfx_touch_event_dtor,
+            cfx_touch_event_set_id,
+            cfx_touch_event_get_id,
+            cfx_touch_event_set_x,
+            cfx_touch_event_get_x,
+            cfx_touch_event_set_y,
+            cfx_touch_event_get_y,
+            cfx_touch_event_set_radius_x,
+            cfx_touch_event_get_radius_x,
+            cfx_touch_event_set_radius_y,
+            cfx_touch_event_get_radius_y,
+            cfx_touch_event_set_rotation_angle,
+            cfx_touch_event_get_rotation_angle,
+            cfx_touch_event_set_pressure,
+            cfx_touch_event_get_pressure,
+            cfx_touch_event_set_type,
+            cfx_touch_event_get_type,
+            cfx_touch_event_set_modifiers,
+            cfx_touch_event_get_modifiers,
+            cfx_touch_event_set_pointer_type,
+            cfx_touch_event_get_pointer_type,
             cfx_urlparts_ctor,
             cfx_urlparts_dtor,
             cfx_urlparts_set_spec,
@@ -1504,6 +1531,13 @@ namespace Chromium {
             CfxApp.SetNativeCallbacks();
         }
 
+        internal static void LoadCfxAudioHandlerApi() {
+            CfxApi.Probe();
+            CfxApi.AudioHandler.cfx_audio_handler_ctor = (CfxApi.cfx_ctor_with_gc_handle_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_audio_handler_ctor, typeof(CfxApi.cfx_ctor_with_gc_handle_delegate));
+            CfxApi.AudioHandler.cfx_audio_handler_set_callback = (CfxApi.cfx_set_callback_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_audio_handler_set_callback, typeof(CfxApi.cfx_set_callback_delegate));
+            CfxAudioHandler.SetNativeCallbacks();
+        }
+
         internal static void LoadCfxAuthCallbackApi() {
             CfxApi.Probe();
             CfxApi.AuthCallback.cfx_auth_callback_cont = (CfxApi.AuthCallback.cfx_auth_callback_cont_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_auth_callback_cont, typeof(CfxApi.AuthCallback.cfx_auth_callback_cont_delegate));
@@ -1616,6 +1650,7 @@ namespace Chromium {
             CfxApi.BrowserHost.cfx_browser_host_send_mouse_click_event = (CfxApi.BrowserHost.cfx_browser_host_send_mouse_click_event_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_browser_host_send_mouse_click_event, typeof(CfxApi.BrowserHost.cfx_browser_host_send_mouse_click_event_delegate));
             CfxApi.BrowserHost.cfx_browser_host_send_mouse_move_event = (CfxApi.BrowserHost.cfx_browser_host_send_mouse_move_event_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_browser_host_send_mouse_move_event, typeof(CfxApi.BrowserHost.cfx_browser_host_send_mouse_move_event_delegate));
             CfxApi.BrowserHost.cfx_browser_host_send_mouse_wheel_event = (CfxApi.BrowserHost.cfx_browser_host_send_mouse_wheel_event_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_browser_host_send_mouse_wheel_event, typeof(CfxApi.BrowserHost.cfx_browser_host_send_mouse_wheel_event_delegate));
+            CfxApi.BrowserHost.cfx_browser_host_send_touch_event = (CfxApi.BrowserHost.cfx_browser_host_send_touch_event_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_browser_host_send_touch_event, typeof(CfxApi.BrowserHost.cfx_browser_host_send_touch_event_delegate));
             CfxApi.BrowserHost.cfx_browser_host_send_focus_event = (CfxApi.BrowserHost.cfx_browser_host_send_focus_event_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_browser_host_send_focus_event, typeof(CfxApi.BrowserHost.cfx_browser_host_send_focus_event_delegate));
             CfxApi.BrowserHost.cfx_browser_host_send_capture_lost_event = (CfxApi.BrowserHost.cfx_browser_host_send_capture_lost_event_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_browser_host_send_capture_lost_event, typeof(CfxApi.BrowserHost.cfx_browser_host_send_capture_lost_event_delegate));
             CfxApi.BrowserHost.cfx_browser_host_notify_move_or_resize_started = (CfxApi.BrowserHost.cfx_browser_host_notify_move_or_resize_started_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_browser_host_notify_move_or_resize_started, typeof(CfxApi.BrowserHost.cfx_browser_host_notify_move_or_resize_started_delegate));
@@ -1636,6 +1671,8 @@ namespace Chromium {
             CfxApi.BrowserHost.cfx_browser_host_set_auto_resize_enabled = (CfxApi.BrowserHost.cfx_browser_host_set_auto_resize_enabled_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_browser_host_set_auto_resize_enabled, typeof(CfxApi.BrowserHost.cfx_browser_host_set_auto_resize_enabled_delegate));
             CfxApi.BrowserHost.cfx_browser_host_get_extension = (CfxApi.BrowserHost.cfx_browser_host_get_extension_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_browser_host_get_extension, typeof(CfxApi.BrowserHost.cfx_browser_host_get_extension_delegate));
             CfxApi.BrowserHost.cfx_browser_host_is_background_host = (CfxApi.BrowserHost.cfx_browser_host_is_background_host_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_browser_host_is_background_host, typeof(CfxApi.BrowserHost.cfx_browser_host_is_background_host_delegate));
+            CfxApi.BrowserHost.cfx_browser_host_set_audio_muted = (CfxApi.BrowserHost.cfx_browser_host_set_audio_muted_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_browser_host_set_audio_muted, typeof(CfxApi.BrowserHost.cfx_browser_host_set_audio_muted_delegate));
+            CfxApi.BrowserHost.cfx_browser_host_is_audio_muted = (CfxApi.BrowserHost.cfx_browser_host_is_audio_muted_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_browser_host_is_audio_muted, typeof(CfxApi.BrowserHost.cfx_browser_host_is_audio_muted_delegate));
         }
 
         internal static void LoadCfxBrowserProcessHandlerApi() {
@@ -2988,6 +3025,32 @@ namespace Chromium {
             CfxApi.Time.cfx_time_get_second = (CfxApi.Time.cfx_time_get_second_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_time_get_second, typeof(CfxApi.Time.cfx_time_get_second_delegate));
             CfxApi.Time.cfx_time_set_millisecond = (CfxApi.Time.cfx_time_set_millisecond_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_time_set_millisecond, typeof(CfxApi.Time.cfx_time_set_millisecond_delegate));
             CfxApi.Time.cfx_time_get_millisecond = (CfxApi.Time.cfx_time_get_millisecond_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_time_get_millisecond, typeof(CfxApi.Time.cfx_time_get_millisecond_delegate));
+        }
+
+        internal static void LoadCfxTouchEventApi() {
+            CfxApi.Probe();
+            CfxApi.TouchEvent.cfx_touch_event_ctor = (CfxApi.cfx_ctor_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_touch_event_ctor, typeof(CfxApi.cfx_ctor_delegate));
+            CfxApi.TouchEvent.cfx_touch_event_dtor = (CfxApi.cfx_dtor_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_touch_event_dtor, typeof(CfxApi.cfx_dtor_delegate));
+            CfxApi.TouchEvent.cfx_touch_event_set_id = (CfxApi.TouchEvent.cfx_touch_event_set_id_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_touch_event_set_id, typeof(CfxApi.TouchEvent.cfx_touch_event_set_id_delegate));
+            CfxApi.TouchEvent.cfx_touch_event_get_id = (CfxApi.TouchEvent.cfx_touch_event_get_id_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_touch_event_get_id, typeof(CfxApi.TouchEvent.cfx_touch_event_get_id_delegate));
+            CfxApi.TouchEvent.cfx_touch_event_set_x = (CfxApi.TouchEvent.cfx_touch_event_set_x_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_touch_event_set_x, typeof(CfxApi.TouchEvent.cfx_touch_event_set_x_delegate));
+            CfxApi.TouchEvent.cfx_touch_event_get_x = (CfxApi.TouchEvent.cfx_touch_event_get_x_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_touch_event_get_x, typeof(CfxApi.TouchEvent.cfx_touch_event_get_x_delegate));
+            CfxApi.TouchEvent.cfx_touch_event_set_y = (CfxApi.TouchEvent.cfx_touch_event_set_y_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_touch_event_set_y, typeof(CfxApi.TouchEvent.cfx_touch_event_set_y_delegate));
+            CfxApi.TouchEvent.cfx_touch_event_get_y = (CfxApi.TouchEvent.cfx_touch_event_get_y_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_touch_event_get_y, typeof(CfxApi.TouchEvent.cfx_touch_event_get_y_delegate));
+            CfxApi.TouchEvent.cfx_touch_event_set_radius_x = (CfxApi.TouchEvent.cfx_touch_event_set_radius_x_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_touch_event_set_radius_x, typeof(CfxApi.TouchEvent.cfx_touch_event_set_radius_x_delegate));
+            CfxApi.TouchEvent.cfx_touch_event_get_radius_x = (CfxApi.TouchEvent.cfx_touch_event_get_radius_x_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_touch_event_get_radius_x, typeof(CfxApi.TouchEvent.cfx_touch_event_get_radius_x_delegate));
+            CfxApi.TouchEvent.cfx_touch_event_set_radius_y = (CfxApi.TouchEvent.cfx_touch_event_set_radius_y_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_touch_event_set_radius_y, typeof(CfxApi.TouchEvent.cfx_touch_event_set_radius_y_delegate));
+            CfxApi.TouchEvent.cfx_touch_event_get_radius_y = (CfxApi.TouchEvent.cfx_touch_event_get_radius_y_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_touch_event_get_radius_y, typeof(CfxApi.TouchEvent.cfx_touch_event_get_radius_y_delegate));
+            CfxApi.TouchEvent.cfx_touch_event_set_rotation_angle = (CfxApi.TouchEvent.cfx_touch_event_set_rotation_angle_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_touch_event_set_rotation_angle, typeof(CfxApi.TouchEvent.cfx_touch_event_set_rotation_angle_delegate));
+            CfxApi.TouchEvent.cfx_touch_event_get_rotation_angle = (CfxApi.TouchEvent.cfx_touch_event_get_rotation_angle_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_touch_event_get_rotation_angle, typeof(CfxApi.TouchEvent.cfx_touch_event_get_rotation_angle_delegate));
+            CfxApi.TouchEvent.cfx_touch_event_set_pressure = (CfxApi.TouchEvent.cfx_touch_event_set_pressure_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_touch_event_set_pressure, typeof(CfxApi.TouchEvent.cfx_touch_event_set_pressure_delegate));
+            CfxApi.TouchEvent.cfx_touch_event_get_pressure = (CfxApi.TouchEvent.cfx_touch_event_get_pressure_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_touch_event_get_pressure, typeof(CfxApi.TouchEvent.cfx_touch_event_get_pressure_delegate));
+            CfxApi.TouchEvent.cfx_touch_event_set_type = (CfxApi.TouchEvent.cfx_touch_event_set_type_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_touch_event_set_type, typeof(CfxApi.TouchEvent.cfx_touch_event_set_type_delegate));
+            CfxApi.TouchEvent.cfx_touch_event_get_type = (CfxApi.TouchEvent.cfx_touch_event_get_type_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_touch_event_get_type, typeof(CfxApi.TouchEvent.cfx_touch_event_get_type_delegate));
+            CfxApi.TouchEvent.cfx_touch_event_set_modifiers = (CfxApi.TouchEvent.cfx_touch_event_set_modifiers_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_touch_event_set_modifiers, typeof(CfxApi.TouchEvent.cfx_touch_event_set_modifiers_delegate));
+            CfxApi.TouchEvent.cfx_touch_event_get_modifiers = (CfxApi.TouchEvent.cfx_touch_event_get_modifiers_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_touch_event_get_modifiers, typeof(CfxApi.TouchEvent.cfx_touch_event_get_modifiers_delegate));
+            CfxApi.TouchEvent.cfx_touch_event_set_pointer_type = (CfxApi.TouchEvent.cfx_touch_event_set_pointer_type_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_touch_event_set_pointer_type, typeof(CfxApi.TouchEvent.cfx_touch_event_set_pointer_type_delegate));
+            CfxApi.TouchEvent.cfx_touch_event_get_pointer_type = (CfxApi.TouchEvent.cfx_touch_event_get_pointer_type_delegate)CfxApi.GetDelegate(FunctionIndex.cfx_touch_event_get_pointer_type, typeof(CfxApi.TouchEvent.cfx_touch_event_get_pointer_type_delegate));
         }
 
         internal static void LoadCfxUrlPartsApi() {

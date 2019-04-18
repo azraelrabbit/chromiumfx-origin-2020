@@ -1,4 +1,5 @@
 ﻿void*|IntPtr
+float**|IntPtr
 char|byte
 char*|IntPtr
 char16*|IntPtr

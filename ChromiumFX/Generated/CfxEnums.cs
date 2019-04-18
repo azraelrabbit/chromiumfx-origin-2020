@@ -99,6 +99,51 @@ namespace Chromium {
         CtComplianceFailed = unchecked((int)1 << 20)
     }
     /// <summary>
+    /// Enumerates the various representations of the ordering of audio channels.
+    /// Logged to UMA, so never reuse a value, always add new/greater ones!
+    /// See media\base\channel_layout.h
+    /// </summary>
+    /// <remarks>
+    /// See also the original CEF documentation in
+    /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/internal/cef_types.h">cef/include/internal/cef_types.h</see>.
+    /// </remarks>
+    public enum CfxChannelLayout {
+        None = unchecked((int)0),
+        Unsupported = unchecked((int)1),
+        Mono = unchecked((int)2),
+        Stereo = unchecked((int)3),
+        V21 = unchecked((int)4),
+        Surround = unchecked((int)5),
+        V40 = unchecked((int)6),
+        V22 = unchecked((int)7),
+        Quad = unchecked((int)8),
+        V50 = unchecked((int)9),
+        V51 = unchecked((int)10),
+        V50Back = unchecked((int)11),
+        V51Back = unchecked((int)12),
+        V70 = unchecked((int)13),
+        V71 = unchecked((int)14),
+        V71Wide = unchecked((int)15),
+        StereoDownmix = unchecked((int)16),
+        V2point1 = unchecked((int)17),
+        V31 = unchecked((int)18),
+        V41 = unchecked((int)19),
+        V60 = unchecked((int)20),
+        V60Front = unchecked((int)21),
+        Hexagonal = unchecked((int)22),
+        V61 = unchecked((int)23),
+        V61Back = unchecked((int)24),
+        V61Front = unchecked((int)25),
+        V70Front = unchecked((int)26),
+        V71WideBack = unchecked((int)27),
+        Octagonal = unchecked((int)28),
+        Discrete = unchecked((int)29),
+        StereoAndKeyboardMic = unchecked((int)30),
+        V41QuadSide = unchecked((int)31),
+        Bitstream = unchecked((int)32),
+        Max = Bitstream
+    }
+    /// <summary>
     /// Print job color mode values.
     /// </summary>
     /// <remarks>
@@ -771,7 +816,12 @@ namespace Chromium {
         /// </summary>
         Error,
         /// <summary>
-        /// Completely disable logging.
+        /// FATAL logging.
+        /// </summary>
+        Fatal,
+        /// <summary>
+        /// Disable logging to file for all messages, and to stderr for messages with
+        /// severity less than FATAL.
         /// </summary>
         Disable = unchecked((int)99)
     }
@@ -1039,6 +1089,20 @@ namespace Chromium {
         Disable
     }
     /// <summary>
+    /// The device type that caused the event.
+    /// </summary>
+    /// <remarks>
+    /// See also the original CEF documentation in
+    /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/internal/cef_types.h">cef/include/internal/cef_types.h</see>.
+    /// </remarks>
+    public enum CfxPointerType {
+        Touch = unchecked((int)0),
+        Mouse,
+        Pen,
+        Eraser,
+        Unknown
+    }
+    /// <summary>
     /// Post data elements may represent either bytes or files.
     /// </summary>
     /// <remarks>
@@ -1119,7 +1183,7 @@ namespace Chromium {
         /// Always clear the referrer regardless of the request destination.
         /// </summary>
         NoReferrer,
-        LastValue
+        LastValue = NoReferrer
     }
     /// <summary>
     /// Resource type for a request.
@@ -1269,6 +1333,87 @@ namespace Chromium {
         ScaleFactor300p
     }
     /// <summary>
+    /// 
+    /// Configuration options for registering a custom scheme.
+    /// These values are used when calling AddCustomScheme.
+    /// </summary>
+    /// <remarks>
+    /// See also the original CEF documentation in
+    /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/internal/cef_types.h">cef/include/internal/cef_types.h</see>.
+    /// </remarks>
+    public enum CfxSchemeOptions {
+        None = unchecked((int)0),
+        /// <summary>
+        /// If CEF_SCHEME_OPTION_STANDARD is set the scheme will be treated as a
+        /// standard scheme. Standard schemes are subject to URL canonicalization and
+        /// parsing rules as defined in the Common Internet Scheme Syntax RFC 1738
+        /// Section 3.1 available at http://www.ietf.org/rfc/rfc1738.txt
+        /// 
+        /// In particular, the syntax for standard scheme URLs must be of the form:
+        /// &lt;pre>
+        ///  [scheme]://[username]:[password]@[host]:[port]/[url-path]
+        /// &lt;/pre> Standard scheme URLs must have a host component that is a fully
+        /// qualified domain name as defined in Section 3.5 of RFC 1034 [13] and
+        /// Section 2.1 of RFC 1123. These URLs will be canonicalized to
+        /// "scheme://host/path" in the simplest case and
+        /// "scheme://username:password@host:port/path" in the most explicit case. For
+        /// example, "scheme:host/path" and "scheme:///host/path" will both be
+        /// canonicalized to "scheme://host/path". The origin of a standard scheme URL
+        /// is the combination of scheme, host and port (i.e., "scheme://host:port" in
+        /// the most explicit case).
+        /// 
+        /// For non-standard scheme URLs only the "scheme:" component is parsed and
+        /// canonicalized. The remainder of the URL will be passed to the handler as-
+        /// is. For example, "scheme:///some%20text" will remain the same. Non-standard
+        /// scheme URLs cannot be used as a target for form submission.
+        /// </summary>
+        Standard = unchecked((int)1 << 0),
+        /// <summary>
+        /// If CEF_SCHEME_OPTION_LOCAL is set the scheme will be treated with the same
+        /// security rules as those applied to "file" URLs. Normal pages cannot link to
+        /// or access local URLs. Also, by default, local URLs can only perform
+        /// XMLHttpRequest calls to the same URL (origin + path) that originated the
+        /// request. To allow XMLHttpRequest calls from a local URL to other URLs with
+        /// the same origin set the CfxSettings.FileAccessFromFileUrlsAllowed
+        /// value to true (1). To allow XMLHttpRequest calls from a local URL to all
+        /// origins set the CfxSettings.UniversalAccessFromFileUrlsAllowed value
+        /// to true (1).
+        /// </summary>
+        Local = unchecked((int)1 << 1),
+        /// <summary>
+        /// If CEF_SCHEME_OPTION_DISPLAY_ISOLATED is set the scheme can only be
+        /// displayed from other content hosted with the same scheme. For example,
+        /// pages in other origins cannot create iframes or hyperlinks to URLs with the
+        /// scheme. For schemes that must be accessible from other schemes don't set
+        /// this, set CEF_SCHEME_OPTION_CORS_ENABLED, and use CORS
+        /// "Access-Control-Allow-Origin" headers to further restrict access.
+        /// </summary>
+        DisplayIsolated = unchecked((int)1 << 2),
+        /// <summary>
+        /// If CEF_SCHEME_OPTION_SECURE is set the scheme will be treated with the same
+        /// security rules as those applied to "https" URLs. For example, loading this
+        /// scheme from other secure schemes will not trigger mixed content warnings.
+        /// </summary>
+        Secure = unchecked((int)1 << 3),
+        /// <summary>
+        /// If CEF_SCHEME_OPTION_CORS_ENABLED is set the scheme can be sent CORS
+        /// requests. This value should be set in most cases where
+        /// CEF_SCHEME_OPTION_STANDARD is set.
+        /// </summary>
+        CorsEnabled = unchecked((int)1 << 4),
+        /// <summary>
+        /// If CEF_SCHEME_OPTION_CSP_BYPASSING is set the scheme can bypass Content-
+        /// Security-Policy (CSP) checks. This value should not be set in most cases
+        /// where CEF_SCHEME_OPTION_STANDARD is set.
+        /// </summary>
+        CspBypassing = unchecked((int)1 << 5),
+        /// <summary>
+        /// If CEF_SCHEME_OPTION_FETCH_ENABLED is set the scheme can perform Fetch API
+        /// requests.
+        /// </summary>
+        FetchEnabled = unchecked((int)1 << 6)
+    }
+    /// <summary>
     /// Supported SSL content status flags. See content/public/common/ssl_status.h
     /// for more information.
     /// </summary>
@@ -1355,6 +1500,27 @@ namespace Chromium {
         /// Out of memory. Some platforms may use TS_PROCESS_CRASHED instead.
         /// </summary>
         ProcessOOM
+    }
+    /// <summary>
+    /// Input mode of a virtual keyboard. These constants match their equivalents
+    /// in Chromium's text_input_mode.h and should not be renumbered.
+    /// See https://html.spec.whatwg.org/#input-modalities:-the-inputmode-attribute
+    /// </summary>
+    /// <remarks>
+    /// See also the original CEF documentation in
+    /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/internal/cef_types.h">cef/include/internal/cef_types.h</see>.
+    /// </remarks>
+    public enum CfxTextInputMode {
+        Default,
+        None,
+        Text,
+        Tel,
+        Url,
+        Email,
+        Numeric,
+        Decimal,
+        Search,
+        Max = Search
     }
     /// <summary>
     /// Text style types. Should be kepy in sync with gfx::TextStyle.
@@ -1459,6 +1625,19 @@ namespace Chromium {
         /// Suitable for low-latency, glitch-resistant audio.
         /// </summary>
         RealtimeAudio
+    }
+    /// <summary>
+    /// Touch points states types.
+    /// </summary>
+    /// <remarks>
+    /// See also the original CEF documentation in
+    /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/internal/cef_types.h">cef/include/internal/cef_types.h</see>.
+    /// </remarks>
+    public enum CfxTouchEventType {
+        Released = unchecked((int)0),
+        Pressed,
+        Moved,
+        Cancelled
     }
     /// <summary>
     /// Transition type for a request. Made up of one source value and 0 or more
@@ -1630,33 +1809,41 @@ namespace Chromium {
         /// If set the request will fail if it cannot be served from the cache (or some
         /// equivalent local store). Setting this value is equivalent to specifying the
         /// "Cache-Control: only-if-cached" request header. Setting this value in
-        /// combination with UR_FLAG_SKIP_CACHE will cause the request to fail.
+        /// combination with UR_FLAG_SKIP_CACHE or UR_FLAG_DISABLE_CACHE will cause the
+        /// request to fail.
         /// </summary>
         OnlyFromCache = unchecked((int)1 << 1),
+        /// <summary>
+        /// If set the cache will not be used at all. Setting this value is equivalent
+        /// to specifying the "Cache-Control: no-store" request header. Setting this
+        /// value in combination with UR_FLAG_ONLY_FROM_CACHE will cause the request to
+        /// fail.
+        /// </summary>
+        DisableCache = unchecked((int)1 << 2),
         /// <summary>
         /// If set user name, password, and cookies may be sent with the request, and
         /// cookies may be saved from the response.
         /// </summary>
-        AllowStoredCredentials = unchecked((int)1 << 2),
+        AllowStoredCredentials = unchecked((int)1 << 3),
         /// <summary>
         /// If set upload progress events will be generated when a request has a body.
         /// </summary>
-        ReportUploadProgress = unchecked((int)1 << 3),
+        ReportUploadProgress = unchecked((int)1 << 4),
         /// <summary>
         /// If set the CfxURLRequestClient.OnDownloadData method will not be called.
         /// </summary>
-        NoDownloadData = unchecked((int)1 << 4),
+        NoDownloadData = unchecked((int)1 << 5),
         /// <summary>
         /// If set 5XX redirect errors will be propagated to the observer instead of
         /// automatically re-tried. This currently only applies for requests
         /// originated in the browser process.
         /// </summary>
-        NoRetryOn5xx = unchecked((int)1 << 5),
+        NoRetryOn5xx = unchecked((int)1 << 6),
         /// <summary>
         /// If set 3XX responses will cause the fetch to halt immediately rather than
         /// continue through the redirect.
         /// </summary>
-        StopOnRedirect = unchecked((int)1 << 6)
+        StopOnRedirect = unchecked((int)1 << 7)
     }
     /// <summary>
     /// Flags that represent CfxURLRequest status.
