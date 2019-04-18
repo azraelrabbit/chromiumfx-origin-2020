@@ -1,3 +1,9 @@
+
+** last entry in this file **
+CEF versions known to work with ChromiumFX X.Y.Z.N:
+- X.Y.Z
+
+
 * CEF versions known to work with ChromiumFX 3.3578.1:
 * CEF versions known to work with ChromiumFX 3.3578.0:
 - 3.3578.1860
