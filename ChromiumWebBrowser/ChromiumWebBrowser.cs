@@ -387,8 +387,7 @@ namespace Chromium.WebBrowser {
             // in order to avoid focus issues when creating browsers offscreen,
             // the browser must be created with a disabled child window.
             windowInfo.SetAsDisabledChild(Handle);
-
-            if(!CfxBrowserHost.CreateBrowser(windowInfo, client, initialUrl, browserSettings, requestContext))
+            if(!CfxBrowserHost.CreateBrowser(windowInfo, client, initialUrl, browserSettings, null, requestContext))
                 throw new ChromiumWebBrowserException("Failed to create browser instance.");
         }
 
