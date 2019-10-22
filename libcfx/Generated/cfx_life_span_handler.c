@@ -15,7 +15,7 @@ typedef struct _cfx_life_span_handler_t {
     gc_handle_t gc_handle;
     int wrapper_kind;
     // managed callbacks
-    void (CEF_CALLBACK *on_before_popup)(gc_handle_t self, int* __retval, cef_browser_t* browser, int *browser_release, cef_frame_t* frame, int *frame_release, char16 *target_url_str, int target_url_length, char16 *target_frame_name_str, int target_frame_name_length, cef_window_open_disposition_t target_disposition, int user_gesture, const cef_popup_features_t* popupFeatures, cef_window_info_t* windowInfo, cef_client_t** client, cef_browser_settings_t* settings, int* no_javascript_access);
+    void (CEF_CALLBACK *on_before_popup)(gc_handle_t self, int* __retval, cef_browser_t* browser, int *browser_release, cef_frame_t* frame, int *frame_release, char16 *target_url_str, int target_url_length, char16 *target_frame_name_str, int target_frame_name_length, cef_window_open_disposition_t target_disposition, int user_gesture, const cef_popup_features_t* popupFeatures, cef_window_info_t* windowInfo, cef_client_t** client, cef_browser_settings_t* settings, cef_dictionary_value_t** extra_info, int* no_javascript_access);
     void (CEF_CALLBACK *on_after_created)(gc_handle_t self, cef_browser_t* browser, int *browser_release);
     void (CEF_CALLBACK *do_close)(gc_handle_t self, int* __retval, cef_browser_t* browser, int *browser_release);
     void (CEF_CALLBACK *on_before_close)(gc_handle_t self, cef_browser_t* browser, int *browser_release);
@@ -56,14 +56,15 @@ static cfx_life_span_handler_t* cfx_life_span_handler_ctor(gc_handle_t gc_handle
 
 // on_before_popup
 
-int CEF_CALLBACK cfx_life_span_handler_on_before_popup(cef_life_span_handler_t* self, cef_browser_t* browser, cef_frame_t* frame, const cef_string_t* target_url, const cef_string_t* target_frame_name, cef_window_open_disposition_t target_disposition, int user_gesture, const cef_popup_features_t* popupFeatures, cef_window_info_t* windowInfo, cef_client_t** client, cef_browser_settings_t* settings, int* no_javascript_access) {
+int CEF_CALLBACK cfx_life_span_handler_on_before_popup(cef_life_span_handler_t* self, cef_browser_t* browser, cef_frame_t* frame, const cef_string_t* target_url, const cef_string_t* target_frame_name, cef_window_open_disposition_t target_disposition, int user_gesture, const cef_popup_features_t* popupFeatures, cef_window_info_t* windowInfo, cef_client_t** client, cef_browser_settings_t* settings, cef_dictionary_value_t** extra_info, int* no_javascript_access) {
     int __retval;
     int browser_release;
     int frame_release;
-    ((cfx_life_span_handler_t*)self)->on_before_popup(((cfx_life_span_handler_t*)self)->gc_handle, &__retval, browser, &browser_release, frame, &frame_release, target_url ? target_url->str : 0, target_url ? (int)target_url->length : 0, target_frame_name ? target_frame_name->str : 0, target_frame_name ? (int)target_frame_name->length : 0, target_disposition, user_gesture, popupFeatures, windowInfo, client, settings, no_javascript_access);
+    ((cfx_life_span_handler_t*)self)->on_before_popup(((cfx_life_span_handler_t*)self)->gc_handle, &__retval, browser, &browser_release, frame, &frame_release, target_url ? target_url->str : 0, target_url ? (int)target_url->length : 0, target_frame_name ? target_frame_name->str : 0, target_frame_name ? (int)target_frame_name->length : 0, target_disposition, user_gesture, popupFeatures, windowInfo, client, settings, extra_info, no_javascript_access);
     if(browser_release && browser) browser->base.release((cef_base_ref_counted_t*)browser);
     if(frame_release && frame) frame->base.release((cef_base_ref_counted_t*)frame);
     if(*client)((cef_base_ref_counted_t*)*client)->add_ref((cef_base_ref_counted_t*)*client);
+    if(*extra_info)((cef_base_ref_counted_t*)*extra_info)->add_ref((cef_base_ref_counted_t*)*extra_info);
     return __retval;
 }
 
@@ -96,7 +97,7 @@ void CEF_CALLBACK cfx_life_span_handler_on_before_close(cef_life_span_handler_t*
 static void cfx_life_span_handler_set_callback(cef_life_span_handler_t* self, int index, void* callback) {
     switch(index) {
     case 0:
-        ((cfx_life_span_handler_t*)self)->on_before_popup = (void (CEF_CALLBACK *)(gc_handle_t self, int* __retval, cef_browser_t* browser, int *browser_release, cef_frame_t* frame, int *frame_release, char16 *target_url_str, int target_url_length, char16 *target_frame_name_str, int target_frame_name_length, cef_window_open_disposition_t target_disposition, int user_gesture, const cef_popup_features_t* popupFeatures, cef_window_info_t* windowInfo, cef_client_t** client, cef_browser_settings_t* settings, int* no_javascript_access))callback;
+        ((cfx_life_span_handler_t*)self)->on_before_popup = (void (CEF_CALLBACK *)(gc_handle_t self, int* __retval, cef_browser_t* browser, int *browser_release, cef_frame_t* frame, int *frame_release, char16 *target_url_str, int target_url_length, char16 *target_frame_name_str, int target_frame_name_length, cef_window_open_disposition_t target_disposition, int user_gesture, const cef_popup_features_t* popupFeatures, cef_window_info_t* windowInfo, cef_client_t** client, cef_browser_settings_t* settings, cef_dictionary_value_t** extra_info, int* no_javascript_access))callback;
         self->on_before_popup = callback ? cfx_life_span_handler_on_before_popup : 0;
         break;
     case 1:

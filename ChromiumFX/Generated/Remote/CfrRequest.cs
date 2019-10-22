@@ -281,8 +281,8 @@ namespace Chromium.Remote {
 
         /// <summary>
         /// Returns the globally unique identifier for this request or 0 if not
-        /// specified. Can be used by CfrRequestHandler implementations in the
-        /// browser process to track a single request across multiple callbacks.
+        /// specified. Can be used by CfrResourceRequestHandler implementations in
+        /// the browser process to track a single request across multiple callbacks.
         /// </summary>
         /// <remarks>
         /// See also the original CEF documentation in
@@ -344,6 +344,44 @@ namespace Chromium.Remote {
             var call = new CfxRequestSetHeaderMapRemoteCall();
             call.@this = RemotePtr.ptr;
             call.headerMap = headerMap;
+            call.RequestExecution(connection);
+        }
+
+        /// <summary>
+        /// Returns the first header value for |name| or an NULL string if not found.
+        /// Will not return the Referer value if any. Use GetHeaderMap instead if
+        /// |name| might have multiple values.
+        /// </summary>
+        /// <remarks>
+        /// See also the original CEF documentation in
+        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_request_capi.h">cef/include/capi/cef_request_capi.h</see>.
+        /// </remarks>
+        public string GetHeaderByName(string name) {
+            var connection = RemotePtr.connection;
+            var call = new CfxRequestGetHeaderByNameRemoteCall();
+            call.@this = RemotePtr.ptr;
+            call.name = name;
+            call.RequestExecution(connection);
+            return call.__retval;
+        }
+
+        /// <summary>
+        /// Set the header |name| to |value|. If |overwrite| is true (1) any existing
+        /// values will be replaced with the new value. If |overwrite| is false (0) any
+        /// existing values will not be overwritten. The Referer value cannot be set
+        /// using this function.
+        /// </summary>
+        /// <remarks>
+        /// See also the original CEF documentation in
+        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_request_capi.h">cef/include/capi/cef_request_capi.h</see>.
+        /// </remarks>
+        public void SetHeaderByName(string name, string value, bool overwrite) {
+            var connection = RemotePtr.connection;
+            var call = new CfxRequestSetHeaderByNameRemoteCall();
+            call.@this = RemotePtr.ptr;
+            call.name = name;
+            call.value = value;
+            call.overwrite = overwrite;
             call.RequestExecution(connection);
         }
 

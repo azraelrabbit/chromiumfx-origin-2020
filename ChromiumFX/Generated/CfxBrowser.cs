@@ -298,17 +298,5 @@ namespace Chromium {
             CfxApi.Runtime.cfx_string_list_free(names_unwrapped);
             return names;
         }
-
-        /// <summary>
-        /// Send a message to the specified |targetProcess|. Returns true (1) if the
-        /// message was sent successfully.
-        /// </summary>
-        /// <remarks>
-        /// See also the original CEF documentation in
-        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_browser_capi.h">cef/include/capi/cef_browser_capi.h</see>.
-        /// </remarks>
-        public bool SendProcessMessage(CfxProcessId targetProcess, CfxProcessMessage message) {
-            return 0 != CfxApi.Browser.cfx_browser_send_process_message(NativePtr, (int)targetProcess, CfxProcessMessage.Unwrap(message));
-        }
     }
 }

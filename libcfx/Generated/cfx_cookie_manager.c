@@ -14,20 +14,10 @@ static cef_cookie_manager_t* cfx_cookie_manager_get_global_manager(cef_completio
     if(callback) ((cef_base_ref_counted_t*)callback)->add_ref((cef_base_ref_counted_t*)callback);
     return cef_cookie_manager_get_global_manager(callback);
 }
-// CEF_EXPORT cef_cookie_manager_t* cef_cookie_manager_get_blocking_manager();
-static cef_cookie_manager_t* cfx_cookie_manager_get_blocking_manager() {
-    return cef_cookie_manager_get_blocking_manager();
-}
-// CEF_EXPORT cef_cookie_manager_t* cef_cookie_manager_create_manager(const cef_string_t* path, int persist_session_cookies, cef_completion_callback_t* callback);
-static cef_cookie_manager_t* cfx_cookie_manager_create_manager(char16 *path_str, int path_length, int persist_session_cookies, cef_completion_callback_t* callback) {
-    cef_string_t path = { path_str, path_length, 0 };
-    if(callback) ((cef_base_ref_counted_t*)callback)->add_ref((cef_base_ref_counted_t*)callback);
-    return cef_cookie_manager_create_manager(&path, persist_session_cookies, callback);
-}
 // set_supported_schemes
-static void cfx_cookie_manager_set_supported_schemes(cef_cookie_manager_t* self, cef_string_list_t schemes, cef_completion_callback_t* callback) {
+static void cfx_cookie_manager_set_supported_schemes(cef_cookie_manager_t* self, cef_string_list_t schemes, int include_defaults, cef_completion_callback_t* callback) {
     if(callback) ((cef_base_ref_counted_t*)callback)->add_ref((cef_base_ref_counted_t*)callback);
-    self->set_supported_schemes(self, schemes, callback);
+    self->set_supported_schemes(self, schemes, include_defaults, callback);
 }
 
 // visit_all_cookies
@@ -56,13 +46,6 @@ static int cfx_cookie_manager_delete_cookies(cef_cookie_manager_t* self, char16 
     cef_string_t cookie_name = { cookie_name_str, cookie_name_length, 0 };
     if(callback) ((cef_base_ref_counted_t*)callback)->add_ref((cef_base_ref_counted_t*)callback);
     return self->delete_cookies(self, &url, &cookie_name, callback);
-}
-
-// set_storage_path
-static int cfx_cookie_manager_set_storage_path(cef_cookie_manager_t* self, char16 *path_str, int path_length, int persist_session_cookies, cef_completion_callback_t* callback) {
-    cef_string_t path = { path_str, path_length, 0 };
-    if(callback) ((cef_base_ref_counted_t*)callback)->add_ref((cef_base_ref_counted_t*)callback);
-    return self->set_storage_path(self, &path, persist_session_cookies, callback);
 }
 
 // flush_store

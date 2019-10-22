@@ -98,16 +98,18 @@ namespace Chromium.Remote {
 
         // on_browser_created
         [System.Runtime.InteropServices.UnmanagedFunctionPointer(System.Runtime.InteropServices.CallingConvention.StdCall, SetLastError = false)]
-        private delegate void on_browser_created_delegate(IntPtr gcHandlePtr, IntPtr browser, out int browser_release);
+        private delegate void on_browser_created_delegate(IntPtr gcHandlePtr, IntPtr browser, out int browser_release, IntPtr extra_info, out int extra_info_release);
         private static on_browser_created_delegate on_browser_created_native;
         private static IntPtr on_browser_created_native_ptr;
 
-        internal static void on_browser_created(IntPtr gcHandlePtr, IntPtr browser, out int browser_release) {
+        internal static void on_browser_created(IntPtr gcHandlePtr, IntPtr browser, out int browser_release, IntPtr extra_info, out int extra_info_release) {
             var call = new CfxRenderProcessHandlerOnBrowserCreatedRemoteEventCall();
             call.gcHandlePtr = gcHandlePtr;
             call.browser = browser;
+            call.extra_info = extra_info;
             call.RequestExecution();
             browser_release = call.browser_release;
+            extra_info_release = call.extra_info_release;
         }
 
         // on_browser_destroyed
@@ -215,18 +217,20 @@ namespace Chromium.Remote {
 
         // on_process_message_received
         [System.Runtime.InteropServices.UnmanagedFunctionPointer(System.Runtime.InteropServices.CallingConvention.StdCall, SetLastError = false)]
-        private delegate void on_process_message_received_delegate(IntPtr gcHandlePtr, out int __retval, IntPtr browser, out int browser_release, int source_process, IntPtr message, out int message_release);
+        private delegate void on_process_message_received_delegate(IntPtr gcHandlePtr, out int __retval, IntPtr browser, out int browser_release, IntPtr frame, out int frame_release, int source_process, IntPtr message, out int message_release);
         private static on_process_message_received_delegate on_process_message_received_native;
         private static IntPtr on_process_message_received_native_ptr;
 
-        internal static void on_process_message_received(IntPtr gcHandlePtr, out int __retval, IntPtr browser, out int browser_release, int source_process, IntPtr message, out int message_release) {
+        internal static void on_process_message_received(IntPtr gcHandlePtr, out int __retval, IntPtr browser, out int browser_release, IntPtr frame, out int frame_release, int source_process, IntPtr message, out int message_release) {
             var call = new CfxRenderProcessHandlerOnProcessMessageReceivedRemoteEventCall();
             call.gcHandlePtr = gcHandlePtr;
             call.browser = browser;
+            call.frame = frame;
             call.source_process = source_process;
             call.message = message;
             call.RequestExecution();
             browser_release = call.browser_release;
+            frame_release = call.frame_release;
             message_release = call.message_release;
             __retval = call.__retval;
         }

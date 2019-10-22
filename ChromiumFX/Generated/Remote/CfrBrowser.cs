@@ -348,24 +348,5 @@ namespace Chromium.Remote {
             call.RequestExecution(connection);
             return call.__retval;
         }
-
-        /// <summary>
-        /// Send a message to the specified |targetProcess|. Returns true (1) if the
-        /// message was sent successfully.
-        /// </summary>
-        /// <remarks>
-        /// See also the original CEF documentation in
-        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_browser_capi.h">cef/include/capi/cef_browser_capi.h</see>.
-        /// </remarks>
-        public bool SendProcessMessage(CfxProcessId targetProcess, CfrProcessMessage message) {
-            var connection = RemotePtr.connection;
-            var call = new CfxBrowserSendProcessMessageRemoteCall();
-            call.@this = RemotePtr.ptr;
-            call.targetProcess = (int)targetProcess;
-            if(!CfrObject.CheckConnection(message, connection)) throw new ArgumentException("Render process connection mismatch.", "message");
-            call.message = CfrObject.Unwrap(message).ptr;
-            call.RequestExecution(connection);
-            return call.__retval;
-        }
     }
 }

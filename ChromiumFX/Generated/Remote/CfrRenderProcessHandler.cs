@@ -103,7 +103,11 @@ namespace Chromium.Remote {
         /// <summary>
         /// Called after a browser has been created. When browsing cross-origin a new
         /// browser will be created before the old browser with the same identifier is
-        /// destroyed.
+        /// destroyed. |ExtraInfo| is a read-only value originating from
+        /// CfrBrowserHost.CfrBrowserHostCreateBrowser(),
+        /// CfrBrowserHost.CfrBrowserHostCreateBrowserSync(),
+        /// CfrLifeSpanHandler.OnBeforePopup() or
+        /// CfrBrowserView.CfrBrowserViewCreate().
         /// </summary>
         /// <remarks>
         /// See also the original CEF documentation in
@@ -435,7 +439,11 @@ namespace Chromium.Remote {
         /// <summary>
         /// Called after a browser has been created. When browsing cross-origin a new
         /// browser will be created before the old browser with the same identifier is
-        /// destroyed.
+        /// destroyed. |ExtraInfo| is a read-only value originating from
+        /// CfrBrowserHost.CfrBrowserHostCreateBrowser(),
+        /// CfrBrowserHost.CfrBrowserHostCreateBrowserSync(),
+        /// CfrLifeSpanHandler.OnBeforePopup() or
+        /// CfrBrowserView.CfrBrowserViewCreate().
         /// </summary>
         /// <remarks>
         /// See also the original CEF documentation in
@@ -446,7 +454,11 @@ namespace Chromium.Remote {
         /// <summary>
         /// Called after a browser has been created. When browsing cross-origin a new
         /// browser will be created before the old browser with the same identifier is
-        /// destroyed.
+        /// destroyed. |ExtraInfo| is a read-only value originating from
+        /// CfrBrowserHost.CfrBrowserHostCreateBrowser(),
+        /// CfrBrowserHost.CfrBrowserHostCreateBrowserSync(),
+        /// CfrLifeSpanHandler.OnBeforePopup() or
+        /// CfrBrowserView.CfrBrowserViewCreate().
         /// </summary>
         /// <remarks>
         /// See also the original CEF documentation in
@@ -457,6 +469,7 @@ namespace Chromium.Remote {
             private CfxRenderProcessHandlerOnBrowserCreatedRemoteEventCall call;
 
             internal CfrBrowser m_browser_wrapped;
+            internal CfrDictionaryValue m_extra_info_wrapped;
 
             internal CfrOnBrowserCreatedEventArgs(CfxRenderProcessHandlerOnBrowserCreatedRemoteEventCall call) { this.call = call; }
 
@@ -470,9 +483,19 @@ namespace Chromium.Remote {
                     return m_browser_wrapped;
                 }
             }
+            /// <summary>
+            /// Get the ExtraInfo parameter for the <see cref="CfrRenderProcessHandler.OnBrowserCreated"/> render process callback.
+            /// </summary>
+            public CfrDictionaryValue ExtraInfo {
+                get {
+                    CheckAccess();
+                    if(m_extra_info_wrapped == null) m_extra_info_wrapped = CfrDictionaryValue.Wrap(new RemotePtr(connection, call.extra_info));
+                    return m_extra_info_wrapped;
+                }
+            }
 
             public override string ToString() {
-                return String.Format("Browser={{{0}}}", Browser);
+                return String.Format("Browser={{{0}}}, ExtraInfo={{{1}}}", Browser, ExtraInfo);
             }
         }
 
@@ -876,6 +899,7 @@ namespace Chromium.Remote {
             private CfxRenderProcessHandlerOnProcessMessageReceivedRemoteEventCall call;
 
             internal CfrBrowser m_browser_wrapped;
+            internal CfrFrame m_frame_wrapped;
             internal CfrProcessMessage m_message_wrapped;
 
             internal bool m_returnValue;
@@ -891,6 +915,16 @@ namespace Chromium.Remote {
                     CheckAccess();
                     if(m_browser_wrapped == null) m_browser_wrapped = CfrBrowser.Wrap(new RemotePtr(connection, call.browser));
                     return m_browser_wrapped;
+                }
+            }
+            /// <summary>
+            /// Get the Frame parameter for the <see cref="CfrRenderProcessHandler.OnProcessMessageReceived"/> render process callback.
+            /// </summary>
+            public CfrFrame Frame {
+                get {
+                    CheckAccess();
+                    if(m_frame_wrapped == null) m_frame_wrapped = CfrFrame.Wrap(new RemotePtr(connection, call.frame));
+                    return m_frame_wrapped;
                 }
             }
             /// <summary>
@@ -925,7 +959,7 @@ namespace Chromium.Remote {
             }
 
             public override string ToString() {
-                return String.Format("Browser={{{0}}}, SourceProcess={{{1}}}, Message={{{2}}}", Browser, SourceProcess, Message);
+                return String.Format("Browser={{{0}}}, Frame={{{1}}}, SourceProcess={{{2}}}, Message={{{3}}}", Browser, Frame, SourceProcess, Message);
             }
         }
 

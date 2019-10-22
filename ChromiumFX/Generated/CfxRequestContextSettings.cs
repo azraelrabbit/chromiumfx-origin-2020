@@ -23,12 +23,14 @@ namespace Chromium {
         public CfxRequestContextSettings() : base(CfxApi.RequestContextSettings.cfx_request_context_settings_ctor, CfxApi.RequestContextSettings.cfx_request_context_settings_dtor) {}
 
         /// <summary>
-        /// The location where cache data will be stored on disk. If empty then
-        /// browsers will be created in "incognito mode" where in-memory caches are
-        /// used for storage and no data is persisted to disk. HTML5 databases such as
-        /// localStorage will only persist across sessions if a cache path is
-        /// specified. To share the global browser cache and related configuration set
-        /// this value to match the CfxSettings.CachePath value.
+        /// The location where cache data for this request context will be stored on
+        /// disk. If non-empty this must be either equal to or a child directory of
+        /// CfxSettings.RootCachePath. If empty then browsers will be created in
+        /// "incognito mode" where in-memory caches are used for storage and no data is
+        /// persisted to disk. HTML5 databases such as localStorage will only persist
+        /// across sessions if a cache path is specified. To share the global browser
+        /// cache and related configuration set this value to match the
+        /// CfxSettings.CachePath value.
         /// </summary>
         /// <remarks>
         /// See also the original CEF documentation in

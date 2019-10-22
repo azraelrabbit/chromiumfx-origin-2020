@@ -138,19 +138,16 @@ namespace Chromium {
         }
 
         /// <summary>
-        /// Returns the default cookie manager for this object. This will be the global
-        /// cookie manager if this object is the global request context. Otherwise,
-        /// this will be the default cookie manager used when this request context does
-        /// not receive a value via CfxRequestContextHandler.GetCookieManager().
-        /// If |callback| is non-NULL it will be executed asnychronously on the IO
-        /// thread after the manager's storage has been initialized.
+        /// Returns the cookie manager for this object. If |callback| is non-NULL it
+        /// will be executed asnychronously on the IO thread after the manager's
+        /// storage has been initialized.
         /// </summary>
         /// <remarks>
         /// See also the original CEF documentation in
         /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_request_context_capi.h">cef/include/capi/cef_request_context_capi.h</see>.
         /// </remarks>
-        public CfxCookieManager GetDefaultCookieManager(CfxCompletionCallback callback) {
-            return CfxCookieManager.Wrap(CfxApi.RequestContext.cfx_request_context_get_default_cookie_manager(NativePtr, CfxCompletionCallback.Unwrap(callback)));
+        public CfxCookieManager GetCookieManager(CfxCompletionCallback callback) {
+            return CfxCookieManager.Wrap(CfxApi.RequestContext.cfx_request_context_get_cookie_manager(NativePtr, CfxCompletionCallback.Unwrap(callback)));
         }
 
         /// <summary>
@@ -315,6 +312,19 @@ namespace Chromium {
         }
 
         /// <summary>
+        /// Clears all HTTP authentication credentials that were added as part of
+        /// handling GetAuthCredentials. If |callback| is non-NULL it will be executed
+        /// on the UI thread after completion.
+        /// </summary>
+        /// <remarks>
+        /// See also the original CEF documentation in
+        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_request_context_capi.h">cef/include/capi/cef_request_context_capi.h</see>.
+        /// </remarks>
+        public void ClearHttpAuthCredentials(CfxCompletionCallback callback) {
+            CfxApi.RequestContext.cfx_request_context_clear_http_auth_credentials(NativePtr, CfxCompletionCallback.Unwrap(callback));
+        }
+
+        /// <summary>
         /// Clears all active and idle connections that Chromium currently has. This is
         /// only recommended if you have released all other CEF objects but don't yet
         /// want to call Cfxshutdown(). If |callback| is non-NULL it will be executed
@@ -340,28 +350,6 @@ namespace Chromium {
             var origin_pinned = new PinnedString(origin);
             CfxApi.RequestContext.cfx_request_context_resolve_host(NativePtr, origin_pinned.Obj.PinnedPtr, origin_pinned.Length, CfxResolveCallback.Unwrap(callback));
             origin_pinned.Obj.Free();
-        }
-
-        /// <summary>
-        /// Attempts to resolve |origin| to a list of associated IP addresses using
-        /// cached data. |resolvedIps| will be populated with the list of resolved IP
-        /// addresses or NULL if no cached data is available. Returns ERR_NONE on
-        /// success. This function must be called on the browser process IO thread.
-        /// </summary>
-        /// <remarks>
-        /// See also the original CEF documentation in
-        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_request_context_capi.h">cef/include/capi/cef_request_context_capi.h</see>.
-        /// </remarks>
-        public CfxErrorCode ResolveHostCached(string origin, System.Collections.Generic.List<string> resolvedIps) {
-            var origin_pinned = new PinnedString(origin);
-            PinnedString[] resolvedIps_handles;
-            var resolvedIps_unwrapped = StringFunctions.UnwrapCfxStringList(resolvedIps, out resolvedIps_handles);
-            var __retval = CfxApi.RequestContext.cfx_request_context_resolve_host_cached(NativePtr, origin_pinned.Obj.PinnedPtr, origin_pinned.Length, resolvedIps_unwrapped);
-            origin_pinned.Obj.Free();
-            StringFunctions.FreePinnedStrings(resolvedIps_handles);
-            StringFunctions.CfxStringListCopyToManaged(resolvedIps_unwrapped, resolvedIps);
-            CfxApi.Runtime.cfx_string_list_free(resolvedIps_unwrapped);
-            return (CfxErrorCode)__retval;
         }
 
         /// <summary>

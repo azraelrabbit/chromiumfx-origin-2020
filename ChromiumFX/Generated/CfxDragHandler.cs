@@ -59,24 +59,27 @@ namespace Chromium {
 
         // on_draggable_regions_changed
         [System.Runtime.InteropServices.UnmanagedFunctionPointer(System.Runtime.InteropServices.CallingConvention.StdCall, SetLastError = false)]
-        private delegate void on_draggable_regions_changed_delegate(IntPtr gcHandlePtr, IntPtr browser, out int browser_release, UIntPtr regionsCount, IntPtr regions, int regions_structsize);
+        private delegate void on_draggable_regions_changed_delegate(IntPtr gcHandlePtr, IntPtr browser, out int browser_release, IntPtr frame, out int frame_release, UIntPtr regionsCount, IntPtr regions, int regions_structsize);
         private static on_draggable_regions_changed_delegate on_draggable_regions_changed_native;
         private static IntPtr on_draggable_regions_changed_native_ptr;
 
-        internal static void on_draggable_regions_changed(IntPtr gcHandlePtr, IntPtr browser, out int browser_release, UIntPtr regionsCount, IntPtr regions, int regions_structsize) {
+        internal static void on_draggable_regions_changed(IntPtr gcHandlePtr, IntPtr browser, out int browser_release, IntPtr frame, out int frame_release, UIntPtr regionsCount, IntPtr regions, int regions_structsize) {
             var self = (CfxDragHandler)System.Runtime.InteropServices.GCHandle.FromIntPtr(gcHandlePtr).Target;
             if(self == null || self.CallbacksDisabled) {
                 browser_release = 1;
+                frame_release = 1;
                 return;
             }
             var e = new CfxOnDraggableRegionsChangedEventArgs();
             e.m_browser = browser;
+            e.m_frame = frame;
             e.m_regions = regions;
             e.m_regions_structsize = regions_structsize;
             e.m_regionsCount = regionsCount;
             self.m_OnDraggableRegionsChanged?.Invoke(self, e);
             e.m_isInvalid = true;
             browser_release = e.m_browser_wrapped == null? 1 : 0;
+            frame_release = e.m_frame_wrapped == null? 1 : 0;
             if(e.m_regions_managed != null) {
                 for(int i = 0; i < e.m_regions_managed.Length; ++i) {
                     e.m_regions_managed[i].Dispose();
@@ -275,6 +278,8 @@ namespace Chromium {
 
             internal IntPtr m_browser;
             internal CfxBrowser m_browser_wrapped;
+            internal IntPtr m_frame;
+            internal CfxFrame m_frame_wrapped;
             internal IntPtr m_regions;
             internal int m_regions_structsize;
             internal UIntPtr m_regionsCount;
@@ -290,6 +295,16 @@ namespace Chromium {
                     CheckAccess();
                     if(m_browser_wrapped == null) m_browser_wrapped = CfxBrowser.Wrap(m_browser);
                     return m_browser_wrapped;
+                }
+            }
+            /// <summary>
+            /// Get the Frame parameter for the <see cref="CfxDragHandler.OnDraggableRegionsChanged"/> callback.
+            /// </summary>
+            public CfxFrame Frame {
+                get {
+                    CheckAccess();
+                    if(m_frame_wrapped == null) m_frame_wrapped = CfxFrame.Wrap(m_frame);
+                    return m_frame_wrapped;
                 }
             }
             /// <summary>
@@ -312,7 +327,7 @@ namespace Chromium {
             }
 
             public override string ToString() {
-                return String.Format("Browser={{{0}}}, Regions={{{1}}}", Browser, Regions);
+                return String.Format("Browser={{{0}}}, Frame={{{1}}}, Regions={{{2}}}", Browser, Frame, Regions);
             }
         }
 

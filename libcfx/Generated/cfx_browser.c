@@ -111,10 +111,4 @@ static void cfx_browser_get_frame_names(cef_browser_t* self, cef_string_list_t n
     self->get_frame_names(self, names);
 }
 
-// send_process_message
-static int cfx_browser_send_process_message(cef_browser_t* self, cef_process_id_t target_process, cef_process_message_t* message) {
-    if(message) ((cef_base_ref_counted_t*)message)->add_ref((cef_base_ref_counted_t*)message);
-    return self->send_process_message(self, target_process, message);
-}
-
 

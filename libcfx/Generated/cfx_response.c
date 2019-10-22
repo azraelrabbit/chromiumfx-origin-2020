@@ -60,6 +60,17 @@ static void cfx_response_set_mime_type(cef_response_t* self, char16 *mimeType_st
     self->set_mime_type(self, &mimeType);
 }
 
+// get_charset
+static cef_string_userfree_t cfx_response_get_charset(cef_response_t* self) {
+    return self->get_charset(self);
+}
+
+// set_charset
+static void cfx_response_set_charset(cef_response_t* self, char16 *charset_str, int charset_length) {
+    cef_string_t charset = { charset_str, charset_length, 0 };
+    self->set_charset(self, &charset);
+}
+
 // get_header
 static cef_string_userfree_t cfx_response_get_header(cef_response_t* self, char16 *name_str, int name_length) {
     cef_string_t name = { name_str, name_length, 0 };

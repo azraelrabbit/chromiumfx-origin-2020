@@ -77,6 +77,19 @@ static void cfx_request_set_header_map(cef_request_t* self, cef_string_multimap_
     self->set_header_map(self, headerMap);
 }
 
+// get_header_by_name
+static cef_string_userfree_t cfx_request_get_header_by_name(cef_request_t* self, char16 *name_str, int name_length) {
+    cef_string_t name = { name_str, name_length, 0 };
+    return self->get_header_by_name(self, &name);
+}
+
+// set_header_by_name
+static void cfx_request_set_header_by_name(cef_request_t* self, char16 *name_str, int name_length, char16 *value_str, int value_length, int overwrite) {
+    cef_string_t name = { name_str, name_length, 0 };
+    cef_string_t value = { value_str, value_length, 0 };
+    self->set_header_by_name(self, &name, &value, overwrite);
+}
+
 // set
 static void cfx_request_set(cef_request_t* self, char16 *url_str, int url_length, char16 *method_str, int method_length, cef_post_data_t* postData, cef_string_multimap_t headerMap) {
     cef_string_t url = { url_str, url_length, 0 };

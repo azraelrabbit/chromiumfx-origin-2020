@@ -16,8 +16,8 @@ typedef struct _cfx_request_context_handler_t {
     int wrapper_kind;
     // managed callbacks
     void (CEF_CALLBACK *on_request_context_initialized)(gc_handle_t self, cef_request_context_t* request_context, int *request_context_release);
-    void (CEF_CALLBACK *get_cookie_manager)(gc_handle_t self, cef_cookie_manager_t** __retval);
     void (CEF_CALLBACK *on_before_plugin_load)(gc_handle_t self, int* __retval, char16 *mime_type_str, int mime_type_length, char16 *plugin_url_str, int plugin_url_length, int is_main_frame, char16 *top_origin_url_str, int top_origin_url_length, cef_web_plugin_info_t* plugin_info, int *plugin_info_release, cef_plugin_policy_t* plugin_policy);
+    void (CEF_CALLBACK *get_resource_request_handler)(gc_handle_t self, cef_resource_request_handler_t** __retval, cef_browser_t* browser, int *browser_release, cef_frame_t* frame, int *frame_release, cef_request_t* request, int *request_release, int is_navigation, int is_download, char16 *request_initiator_str, int request_initiator_length, int* disable_default_handling);
 } cfx_request_context_handler_t;
 
 void CEF_CALLBACK _cfx_request_context_handler_add_ref(struct _cef_base_ref_counted_t* base) {
@@ -65,17 +65,6 @@ void CEF_CALLBACK cfx_request_context_handler_on_request_context_initialized(cef
     if(request_context_release && request_context) request_context->base.release((cef_base_ref_counted_t*)request_context);
 }
 
-// get_cookie_manager
-
-cef_cookie_manager_t* CEF_CALLBACK cfx_request_context_handler_get_cookie_manager(cef_request_context_handler_t* self) {
-    cef_cookie_manager_t* __retval;
-    ((cfx_request_context_handler_t*)self)->get_cookie_manager(((cfx_request_context_handler_t*)self)->gc_handle, &__retval);
-    if(__retval) {
-        ((cef_base_ref_counted_t*)__retval)->add_ref((cef_base_ref_counted_t*)__retval);
-    }
-    return __retval;
-}
-
 // on_before_plugin_load
 
 int CEF_CALLBACK cfx_request_context_handler_on_before_plugin_load(cef_request_context_handler_t* self, const cef_string_t* mime_type, const cef_string_t* plugin_url, int is_main_frame, const cef_string_t* top_origin_url, cef_web_plugin_info_t* plugin_info, cef_plugin_policy_t* plugin_policy) {
@@ -86,6 +75,23 @@ int CEF_CALLBACK cfx_request_context_handler_on_before_plugin_load(cef_request_c
     return __retval;
 }
 
+// get_resource_request_handler
+
+cef_resource_request_handler_t* CEF_CALLBACK cfx_request_context_handler_get_resource_request_handler(cef_request_context_handler_t* self, cef_browser_t* browser, cef_frame_t* frame, cef_request_t* request, int is_navigation, int is_download, const cef_string_t* request_initiator, int* disable_default_handling) {
+    cef_resource_request_handler_t* __retval;
+    int browser_release;
+    int frame_release;
+    int request_release;
+    ((cfx_request_context_handler_t*)self)->get_resource_request_handler(((cfx_request_context_handler_t*)self)->gc_handle, &__retval, browser, &browser_release, frame, &frame_release, request, &request_release, is_navigation, is_download, request_initiator ? request_initiator->str : 0, request_initiator ? (int)request_initiator->length : 0, disable_default_handling);
+    if(browser_release && browser) browser->base.release((cef_base_ref_counted_t*)browser);
+    if(frame_release && frame) frame->base.release((cef_base_ref_counted_t*)frame);
+    if(request_release && request) request->base.release((cef_base_ref_counted_t*)request);
+    if(__retval) {
+        ((cef_base_ref_counted_t*)__retval)->add_ref((cef_base_ref_counted_t*)__retval);
+    }
+    return __retval;
+}
+
 static void cfx_request_context_handler_set_callback(cef_request_context_handler_t* self, int index, void* callback) {
     switch(index) {
     case 0:
@@ -93,12 +99,12 @@ static void cfx_request_context_handler_set_callback(cef_request_context_handler
         self->on_request_context_initialized = callback ? cfx_request_context_handler_on_request_context_initialized : 0;
         break;
     case 1:
-        ((cfx_request_context_handler_t*)self)->get_cookie_manager = (void (CEF_CALLBACK *)(gc_handle_t self, cef_cookie_manager_t** __retval))callback;
-        self->get_cookie_manager = callback ? cfx_request_context_handler_get_cookie_manager : 0;
-        break;
-    case 2:
         ((cfx_request_context_handler_t*)self)->on_before_plugin_load = (void (CEF_CALLBACK *)(gc_handle_t self, int* __retval, char16 *mime_type_str, int mime_type_length, char16 *plugin_url_str, int plugin_url_length, int is_main_frame, char16 *top_origin_url_str, int top_origin_url_length, cef_web_plugin_info_t* plugin_info, int *plugin_info_release, cef_plugin_policy_t* plugin_policy))callback;
         self->on_before_plugin_load = callback ? cfx_request_context_handler_on_before_plugin_load : 0;
+        break;
+    case 2:
+        ((cfx_request_context_handler_t*)self)->get_resource_request_handler = (void (CEF_CALLBACK *)(gc_handle_t self, cef_resource_request_handler_t** __retval, cef_browser_t* browser, int *browser_release, cef_frame_t* frame, int *frame_release, cef_request_t* request, int *request_release, int is_navigation, int is_download, char16 *request_initiator_str, int request_initiator_length, int* disable_default_handling))callback;
+        self->get_resource_request_handler = callback ? cfx_request_context_handler_get_resource_request_handler : 0;
         break;
     }
 }

@@ -14,7 +14,7 @@ namespace Chromium {
 
     /// <summary>
     /// Structure to implement for visiting cookie values. The functions of this
-    /// structure will always be called on the IO thread.
+    /// structure will always be called on the UI thread.
     /// </summary>
     /// <remarks>
     /// See also the original CEF documentation in

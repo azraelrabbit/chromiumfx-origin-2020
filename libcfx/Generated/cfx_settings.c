@@ -19,7 +19,9 @@ static cef_settings_t* cfx_settings_ctor() {
 static void cfx_settings_dtor(cef_settings_t* self) {
     if(self->browser_subprocess_path.dtor) self->browser_subprocess_path.dtor(self->browser_subprocess_path.str);
     if(self->framework_dir_path.dtor) self->framework_dir_path.dtor(self->framework_dir_path.str);
+    if(self->main_bundle_path.dtor) self->main_bundle_path.dtor(self->main_bundle_path.str);
     if(self->cache_path.dtor) self->cache_path.dtor(self->cache_path.str);
+    if(self->root_cache_path.dtor) self->root_cache_path.dtor(self->root_cache_path.str);
     if(self->user_data_path.dtor) self->user_data_path.dtor(self->user_data_path.str);
     if(self->user_agent.dtor) self->user_agent.dtor(self->user_agent.str);
     if(self->product_version.dtor) self->product_version.dtor(self->product_version.str);
@@ -29,6 +31,7 @@ static void cfx_settings_dtor(cef_settings_t* self) {
     if(self->resources_dir_path.dtor) self->resources_dir_path.dtor(self->resources_dir_path.str);
     if(self->locales_dir_path.dtor) self->locales_dir_path.dtor(self->locales_dir_path.str);
     if(self->accept_language_list.dtor) self->accept_language_list.dtor(self->accept_language_list.str);
+    if(self->application_client_id_for_file_scanning.dtor) self->application_client_id_for_file_scanning.dtor(self->application_client_id_for_file_scanning.str);
     free(self);
 }
 
@@ -56,6 +59,15 @@ static void cfx_settings_set_framework_dir_path(cef_settings_t *self, char16 *fr
 static void cfx_settings_get_framework_dir_path(cef_settings_t *self, char16 **framework_dir_path_str, int *framework_dir_path_length) {
     *framework_dir_path_str = self->framework_dir_path.str;
     *framework_dir_path_length = (int)self->framework_dir_path.length;
+}
+
+// cef_settings_t->main_bundle_path
+static void cfx_settings_set_main_bundle_path(cef_settings_t *self, char16 *main_bundle_path_str, int main_bundle_path_length) {
+    cef_string_utf16_set(main_bundle_path_str, main_bundle_path_length, &(self->main_bundle_path), 1);
+}
+static void cfx_settings_get_main_bundle_path(cef_settings_t *self, char16 **main_bundle_path_str, int *main_bundle_path_length) {
+    *main_bundle_path_str = self->main_bundle_path.str;
+    *main_bundle_path_length = (int)self->main_bundle_path.length;
 }
 
 // cef_settings_t->multi_threaded_message_loop
@@ -97,6 +109,15 @@ static void cfx_settings_set_cache_path(cef_settings_t *self, char16 *cache_path
 static void cfx_settings_get_cache_path(cef_settings_t *self, char16 **cache_path_str, int *cache_path_length) {
     *cache_path_str = self->cache_path.str;
     *cache_path_length = (int)self->cache_path.length;
+}
+
+// cef_settings_t->root_cache_path
+static void cfx_settings_set_root_cache_path(cef_settings_t *self, char16 *root_cache_path_str, int root_cache_path_length) {
+    cef_string_utf16_set(root_cache_path_str, root_cache_path_length, &(self->root_cache_path), 1);
+}
+static void cfx_settings_get_root_cache_path(cef_settings_t *self, char16 **root_cache_path_str, int *root_cache_path_length) {
+    *root_cache_path_str = self->root_cache_path.str;
+    *root_cache_path_length = (int)self->root_cache_path.length;
 }
 
 // cef_settings_t->user_data_path
@@ -250,6 +271,15 @@ static void cfx_settings_set_accept_language_list(cef_settings_t *self, char16 *
 static void cfx_settings_get_accept_language_list(cef_settings_t *self, char16 **accept_language_list_str, int *accept_language_list_length) {
     *accept_language_list_str = self->accept_language_list.str;
     *accept_language_list_length = (int)self->accept_language_list.length;
+}
+
+// cef_settings_t->application_client_id_for_file_scanning
+static void cfx_settings_set_application_client_id_for_file_scanning(cef_settings_t *self, char16 *application_client_id_for_file_scanning_str, int application_client_id_for_file_scanning_length) {
+    cef_string_utf16_set(application_client_id_for_file_scanning_str, application_client_id_for_file_scanning_length, &(self->application_client_id_for_file_scanning), 1);
+}
+static void cfx_settings_get_application_client_id_for_file_scanning(cef_settings_t *self, char16 **application_client_id_for_file_scanning_str, int *application_client_id_for_file_scanning_length) {
+    *application_client_id_for_file_scanning_str = self->application_client_id_for_file_scanning.str;
+    *application_client_id_for_file_scanning_length = (int)self->application_client_id_for_file_scanning.length;
 }
 
 

@@ -592,4 +592,65 @@ namespace Chromium.Remote {
         }
     }
 
+    internal class CfxFrameCreateUrlRequestRemoteCall : RemoteCall {
+
+        internal CfxFrameCreateUrlRequestRemoteCall()
+            : base(RemoteCallId.CfxFrameCreateUrlRequestRemoteCall) {}
+
+        internal IntPtr @this;
+        internal IntPtr request;
+        internal IntPtr client;
+        internal IntPtr __retval;
+
+        protected override void WriteArgs(StreamHandler h) {
+            h.Write(@this);
+            h.Write(request);
+            h.Write(client);
+        }
+
+        protected override void ReadArgs(StreamHandler h) {
+            h.Read(out @this);
+            h.Read(out request);
+            h.Read(out client);
+        }
+
+        protected override void WriteReturn(StreamHandler h) {
+            h.Write(__retval);
+        }
+
+        protected override void ReadReturn(StreamHandler h) {
+            h.Read(out __retval);
+        }
+
+        protected override void RemoteProcedure() {
+            __retval = CfxApi.Frame.cfx_frame_create_urlrequest(@this, request, client);
+        }
+    }
+
+    internal class CfxFrameSendProcessMessageRemoteCall : RemoteCall {
+
+        internal CfxFrameSendProcessMessageRemoteCall()
+            : base(RemoteCallId.CfxFrameSendProcessMessageRemoteCall) {}
+
+        internal IntPtr @this;
+        internal int targetProcess;
+        internal IntPtr message;
+
+        protected override void WriteArgs(StreamHandler h) {
+            h.Write(@this);
+            h.Write(targetProcess);
+            h.Write(message);
+        }
+
+        protected override void ReadArgs(StreamHandler h) {
+            h.Read(out @this);
+            h.Read(out targetProcess);
+            h.Read(out message);
+        }
+
+        protected override void RemoteProcedure() {
+            CfxApi.Frame.cfx_frame_send_process_message(@this, (int)targetProcess, message);
+        }
+    }
+
 }

@@ -45,10 +45,10 @@ static cef_string_userfree_t cfx_request_context_get_cache_path(cef_request_cont
     return self->get_cache_path(self);
 }
 
-// get_default_cookie_manager
-static cef_cookie_manager_t* cfx_request_context_get_default_cookie_manager(cef_request_context_t* self, cef_completion_callback_t* callback) {
+// get_cookie_manager
+static cef_cookie_manager_t* cfx_request_context_get_cookie_manager(cef_request_context_t* self, cef_completion_callback_t* callback) {
     if(callback) ((cef_base_ref_counted_t*)callback)->add_ref((cef_base_ref_counted_t*)callback);
-    return self->get_default_cookie_manager(self, callback);
+    return self->get_cookie_manager(self, callback);
 }
 
 // register_scheme_handler_factory
@@ -108,6 +108,12 @@ static void cfx_request_context_clear_certificate_exceptions(cef_request_context
     self->clear_certificate_exceptions(self, callback);
 }
 
+// clear_http_auth_credentials
+static void cfx_request_context_clear_http_auth_credentials(cef_request_context_t* self, cef_completion_callback_t* callback) {
+    if(callback) ((cef_base_ref_counted_t*)callback)->add_ref((cef_base_ref_counted_t*)callback);
+    self->clear_http_auth_credentials(self, callback);
+}
+
 // close_all_connections
 static void cfx_request_context_close_all_connections(cef_request_context_t* self, cef_completion_callback_t* callback) {
     if(callback) ((cef_base_ref_counted_t*)callback)->add_ref((cef_base_ref_counted_t*)callback);
@@ -119,12 +125,6 @@ static void cfx_request_context_resolve_host(cef_request_context_t* self, char16
     cef_string_t origin = { origin_str, origin_length, 0 };
     if(callback) ((cef_base_ref_counted_t*)callback)->add_ref((cef_base_ref_counted_t*)callback);
     self->resolve_host(self, &origin, callback);
-}
-
-// resolve_host_cached
-static cef_errorcode_t cfx_request_context_resolve_host_cached(cef_request_context_t* self, char16 *origin_str, int origin_length, cef_string_list_t resolved_ips) {
-    cef_string_t origin = { origin_str, origin_length, 0 };
-    return self->resolve_host_cached(self, &origin, resolved_ips);
 }
 
 // load_extension

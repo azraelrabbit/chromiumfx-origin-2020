@@ -9,10 +9,11 @@
 
 using System;
 
-namespace Chromium {
+namespace Chromium.Remote {
+
     /// <summary>
     /// Structure used to make a URL request. URL requests are not associated with a
-    /// browser instance so no CfxClient callbacks will be executed. URL requests
+    /// browser instance so no CfrClient callbacks will be executed. URL requests
     /// can be created on any valid CEF thread in either the browser or render
     /// process. Once created the functions of the URL request object must be
     /// accessed on the same thread that created it.
@@ -21,52 +22,27 @@ namespace Chromium {
     /// See also the original CEF documentation in
     /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_urlrequest_capi.h">cef/include/capi/cef_urlrequest_capi.h</see>.
     /// </remarks>
-    public class CfxUrlRequest : CfxBaseLibrary {
+    public class CfrUrlRequest : CfrBaseLibrary {
 
-        internal static CfxUrlRequest Wrap(IntPtr nativePtr) {
-            if(nativePtr == IntPtr.Zero) return null;
+        internal static CfrUrlRequest Wrap(RemotePtr remotePtr) {
+            if(remotePtr == RemotePtr.Zero) return null;
+            var weakCache = CfxRemoteCallContext.CurrentContext.connection.weakCache;
             bool isNew = false;
-            var wrapper = (CfxUrlRequest)weakCache.GetOrAdd(nativePtr, () =>  {
+            var wrapper = (CfrUrlRequest)weakCache.GetOrAdd(remotePtr.ptr, () =>  {
                 isNew = true;
-                return new CfxUrlRequest(nativePtr);
+                return new CfrUrlRequest(remotePtr);
             });
             if(!isNew) {
-                CfxApi.cfx_release(nativePtr);
+                var call = new CfxApiReleaseRemoteCall();
+                call.nativePtr = remotePtr.ptr;
+                call.RequestExecution(remotePtr.connection);
             }
             return wrapper;
         }
 
 
-        internal CfxUrlRequest(IntPtr nativePtr) : base(nativePtr) {}
 
-        /// <summary>
-        /// Create a new URL request that is not associated with a specific browser or
-        /// frame. Use CfxFrame.CreateURLRequest instead if you want the request to
-        /// have this association, in which case it may be handled differently (see
-        /// documentation on that function). Requests may originate from the both browser
-        /// process and the render process.
-        /// 
-        /// For requests originating from the browser process:
-        ///   - It may be intercepted by the client via CfxResourceRequestHandler or
-        ///     CfxSchemeHandlerFactory.
-        ///   - POST data may only contain only a single element of type PDE_TYPE_FILE
-        ///     or PDE_TYPE_BYTES.
-        ///   - If |requestContext| is empty the global request context will be used.
-        /// For requests originating from the render process:
-        ///   - It cannot be intercepted by the client so only http(s) and blob schemes
-        ///     are supported.
-        ///   - POST data may only contain a single element of type PDE_TYPE_BYTES.
-        ///   - The |requestContext| parameter must be NULL.
-        /// 
-        /// The |request| object will be marked as read-only after calling this function.
-        /// </summary>
-        /// <remarks>
-        /// See also the original CEF documentation in
-        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_urlrequest_capi.h">cef/include/capi/cef_urlrequest_capi.h</see>.
-        /// </remarks>
-        public static CfxUrlRequest Create(CfxRequest request, CfxUrlRequestClient client, CfxRequestContext requestContext) {
-            return CfxUrlRequest.Wrap(CfxApi.UrlRequest.cfx_urlrequest_create(CfxRequest.Unwrap(request), CfxUrlRequestClient.Unwrap(client), CfxRequestContext.Unwrap(requestContext)));
-        }
+        private CfrUrlRequest(RemotePtr remotePtr) : base(remotePtr) {}
 
         /// <summary>
         /// Returns the request object used to create this URL request. The returned
@@ -76,9 +52,13 @@ namespace Chromium {
         /// See also the original CEF documentation in
         /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_urlrequest_capi.h">cef/include/capi/cef_urlrequest_capi.h</see>.
         /// </remarks>
-        public CfxRequest Request {
+        public CfrRequest Request {
             get {
-                return CfxRequest.Wrap(CfxApi.UrlRequest.cfx_urlrequest_get_request(NativePtr));
+                var connection = RemotePtr.connection;
+                var call = new CfxUrlRequestGetRequestRemoteCall();
+                call.@this = RemotePtr.ptr;
+                call.RequestExecution(connection);
+                return CfrRequest.Wrap(new RemotePtr(connection, call.__retval));
             }
         }
 
@@ -89,9 +69,13 @@ namespace Chromium {
         /// See also the original CEF documentation in
         /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_urlrequest_capi.h">cef/include/capi/cef_urlrequest_capi.h</see>.
         /// </remarks>
-        public CfxUrlRequestClient Client {
+        public CfrUrlRequestClient Client {
             get {
-                return CfxUrlRequestClient.Wrap(CfxApi.UrlRequest.cfx_urlrequest_get_client(NativePtr));
+                var connection = RemotePtr.connection;
+                var call = new CfxUrlRequestGetClientRemoteCall();
+                call.@this = RemotePtr.ptr;
+                call.RequestExecution(connection);
+                return CfrUrlRequestClient.Wrap(new RemotePtr(connection, call.__retval));
             }
         }
 
@@ -104,7 +88,11 @@ namespace Chromium {
         /// </remarks>
         public CfxUrlRequestStatus RequestStatus {
             get {
-                return (CfxUrlRequestStatus)CfxApi.UrlRequest.cfx_urlrequest_get_request_status(NativePtr);
+                var connection = RemotePtr.connection;
+                var call = new CfxUrlRequestGetRequestStatusRemoteCall();
+                call.@this = RemotePtr.ptr;
+                call.RequestExecution(connection);
+                return (CfxUrlRequestStatus)call.__retval;
             }
         }
 
@@ -118,7 +106,11 @@ namespace Chromium {
         /// </remarks>
         public CfxErrorCode RequestError {
             get {
-                return (CfxErrorCode)CfxApi.UrlRequest.cfx_urlrequest_get_request_error(NativePtr);
+                var connection = RemotePtr.connection;
+                var call = new CfxUrlRequestGetRequestErrorRemoteCall();
+                call.@this = RemotePtr.ptr;
+                call.RequestExecution(connection);
+                return (CfxErrorCode)call.__retval;
             }
         }
 
@@ -131,9 +123,13 @@ namespace Chromium {
         /// See also the original CEF documentation in
         /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_urlrequest_capi.h">cef/include/capi/cef_urlrequest_capi.h</see>.
         /// </remarks>
-        public CfxResponse Response {
+        public CfrResponse Response {
             get {
-                return CfxResponse.Wrap(CfxApi.UrlRequest.cfx_urlrequest_get_response(NativePtr));
+                var connection = RemotePtr.connection;
+                var call = new CfxUrlRequestGetResponseRemoteCall();
+                call.@this = RemotePtr.ptr;
+                call.RequestExecution(connection);
+                return CfrResponse.Wrap(new RemotePtr(connection, call.__retval));
             }
         }
 
@@ -146,7 +142,11 @@ namespace Chromium {
         /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_urlrequest_capi.h">cef/include/capi/cef_urlrequest_capi.h</see>.
         /// </remarks>
         public bool ResponseWasCached() {
-            return 0 != CfxApi.UrlRequest.cfx_urlrequest_response_was_cached(NativePtr);
+            var connection = RemotePtr.connection;
+            var call = new CfxUrlRequestResponseWasCachedRemoteCall();
+            call.@this = RemotePtr.ptr;
+            call.RequestExecution(connection);
+            return call.__retval;
         }
 
         /// <summary>
@@ -157,7 +157,10 @@ namespace Chromium {
         /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_urlrequest_capi.h">cef/include/capi/cef_urlrequest_capi.h</see>.
         /// </remarks>
         public void Cancel() {
-            CfxApi.UrlRequest.cfx_urlrequest_cancel(NativePtr);
+            var connection = RemotePtr.connection;
+            var call = new CfxUrlRequestCancelRemoteCall();
+            call.@this = RemotePtr.ptr;
+            call.RequestExecution(connection);
         }
     }
 }

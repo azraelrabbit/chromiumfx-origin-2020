@@ -43,15 +43,18 @@ namespace Chromium {
         /// |windowInfo|. All values will be copied internally and the actual window will
         /// be created on the UI thread. If |requestContext| is NULL the global request
         /// context will be used. This function can be called on any browser process
-        /// thread and will not block.
+        /// thread and will not block. The optional |extraInfo| parameter provides an
+        /// opportunity to specify extra information specific to the created browser that
+        /// will be passed to CfxRenderProcessHandler.OnBrowserCreated() in the
+        /// render process.
         /// </summary>
         /// <remarks>
         /// See also the original CEF documentation in
         /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_browser_capi.h">cef/include/capi/cef_browser_capi.h</see>.
         /// </remarks>
-        public static bool CreateBrowser(CfxWindowInfo windowInfo, CfxClient client, string url, CfxBrowserSettings settings, CfxRequestContext requestContext) {
+        public static bool CreateBrowser(CfxWindowInfo windowInfo, CfxClient client, string url, CfxBrowserSettings settings, CfxDictionaryValue extraInfo, CfxRequestContext requestContext) {
             var url_pinned = new PinnedString(url);
-            var __retval = CfxApi.BrowserHost.cfx_browser_host_create_browser(CfxWindowInfo.Unwrap(windowInfo), CfxClient.Unwrap(client), url_pinned.Obj.PinnedPtr, url_pinned.Length, CfxBrowserSettings.Unwrap(settings), CfxRequestContext.Unwrap(requestContext));
+            var __retval = CfxApi.BrowserHost.cfx_browser_host_create_browser(CfxWindowInfo.Unwrap(windowInfo), CfxClient.Unwrap(client), url_pinned.Obj.PinnedPtr, url_pinned.Length, CfxBrowserSettings.Unwrap(settings), CfxDictionaryValue.Unwrap(extraInfo), CfxRequestContext.Unwrap(requestContext));
             url_pinned.Obj.Free();
             return 0 != __retval;
         }
@@ -59,15 +62,18 @@ namespace Chromium {
         /// <summary>
         /// Create a new browser window using the window parameters specified by
         /// |windowInfo|. If |requestContext| is NULL the global request context will be
-        /// used. This function can only be called on the browser process UI thread.
+        /// used. This function can only be called on the browser process UI thread. The
+        /// optional |extraInfo| parameter provides an opportunity to specify extra
+        /// information specific to the created browser that will be passed to
+        /// CfxRenderProcessHandler.OnBrowserCreated() in the render process.
         /// </summary>
         /// <remarks>
         /// See also the original CEF documentation in
         /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_browser_capi.h">cef/include/capi/cef_browser_capi.h</see>.
         /// </remarks>
-        public static CfxBrowser CreateBrowserSync(CfxWindowInfo windowInfo, CfxClient client, string url, CfxBrowserSettings settings, CfxRequestContext requestContext) {
+        public static CfxBrowser CreateBrowserSync(CfxWindowInfo windowInfo, CfxClient client, string url, CfxBrowserSettings settings, CfxDictionaryValue extraInfo, CfxRequestContext requestContext) {
             var url_pinned = new PinnedString(url);
-            var __retval = CfxApi.BrowserHost.cfx_browser_host_create_browser_sync(CfxWindowInfo.Unwrap(windowInfo), CfxClient.Unwrap(client), url_pinned.Obj.PinnedPtr, url_pinned.Length, CfxBrowserSettings.Unwrap(settings), CfxRequestContext.Unwrap(requestContext));
+            var __retval = CfxApi.BrowserHost.cfx_browser_host_create_browser_sync(CfxWindowInfo.Unwrap(windowInfo), CfxClient.Unwrap(client), url_pinned.Obj.PinnedPtr, url_pinned.Length, CfxBrowserSettings.Unwrap(settings), CfxDictionaryValue.Unwrap(extraInfo), CfxRequestContext.Unwrap(requestContext));
             url_pinned.Obj.Free();
             return CfxBrowser.Wrap(__retval);
         }

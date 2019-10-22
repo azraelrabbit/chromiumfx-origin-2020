@@ -66,13 +66,11 @@ static void (*cef_visit_web_plugin_info_ptr)(cef_web_plugin_info_visitor_t* visi
 static cef_string_userfree_t (*cef_write_json_ptr)(cef_value_t* node, cef_json_writer_options_t options);
 static int (*cef_zip_directory_ptr)(const cef_string_t* src_dir, const cef_string_t* dest_file, int include_hidden_files);
 static cef_binary_value_t* (*cef_binary_value_create_ptr)(const void* data, size_t data_size);
-static int (*cef_browser_host_create_browser_ptr)(const cef_window_info_t* windowInfo, cef_client_t* client, const cef_string_t* url, const cef_browser_settings_t* settings, cef_request_context_t* request_context);
-static cef_browser_t* (*cef_browser_host_create_browser_sync_ptr)(const cef_window_info_t* windowInfo, cef_client_t* client, const cef_string_t* url, const cef_browser_settings_t* settings, cef_request_context_t* request_context);
+static int (*cef_browser_host_create_browser_ptr)(const cef_window_info_t* windowInfo, cef_client_t* client, const cef_string_t* url, const cef_browser_settings_t* settings, cef_dictionary_value_t* extra_info, cef_request_context_t* request_context);
+static cef_browser_t* (*cef_browser_host_create_browser_sync_ptr)(const cef_window_info_t* windowInfo, cef_client_t* client, const cef_string_t* url, const cef_browser_settings_t* settings, cef_dictionary_value_t* extra_info, cef_request_context_t* request_context);
 static cef_command_line_t* (*cef_command_line_create_ptr)();
 static cef_command_line_t* (*cef_command_line_get_global_ptr)();
 static cef_cookie_manager_t* (*cef_cookie_manager_get_global_manager_ptr)(cef_completion_callback_t* callback);
-static cef_cookie_manager_t* (*cef_cookie_manager_get_blocking_manager_ptr)();
-static cef_cookie_manager_t* (*cef_cookie_manager_create_manager_ptr)(const cef_string_t* path, int persist_session_cookies, cef_completion_callback_t* callback);
 static cef_dictionary_value_t* (*cef_dictionary_value_create_ptr)();
 static cef_drag_data_t* (*cef_drag_data_create_ptr)();
 static cef_image_t* (*cef_image_create_ptr)();
@@ -201,13 +199,11 @@ static void cfx_load_cef_function_pointers(void *libcef) {
     cef_write_json_ptr = (cef_string_userfree_t (*)(cef_value_t*, cef_json_writer_options_t))cfx_platform_get_fptr(libcef, "cef_write_json");
     cef_zip_directory_ptr = (int (*)(const cef_string_t*, const cef_string_t*, int))cfx_platform_get_fptr(libcef, "cef_zip_directory");
     cef_binary_value_create_ptr = (cef_binary_value_t* (*)(const void*, size_t))cfx_platform_get_fptr(libcef, "cef_binary_value_create");
-    cef_browser_host_create_browser_ptr = (int (*)(const cef_window_info_t*, cef_client_t*, const cef_string_t*, const cef_browser_settings_t*, cef_request_context_t*))cfx_platform_get_fptr(libcef, "cef_browser_host_create_browser");
-    cef_browser_host_create_browser_sync_ptr = (cef_browser_t* (*)(const cef_window_info_t*, cef_client_t*, const cef_string_t*, const cef_browser_settings_t*, cef_request_context_t*))cfx_platform_get_fptr(libcef, "cef_browser_host_create_browser_sync");
+    cef_browser_host_create_browser_ptr = (int (*)(const cef_window_info_t*, cef_client_t*, const cef_string_t*, const cef_browser_settings_t*, cef_dictionary_value_t*, cef_request_context_t*))cfx_platform_get_fptr(libcef, "cef_browser_host_create_browser");
+    cef_browser_host_create_browser_sync_ptr = (cef_browser_t* (*)(const cef_window_info_t*, cef_client_t*, const cef_string_t*, const cef_browser_settings_t*, cef_dictionary_value_t*, cef_request_context_t*))cfx_platform_get_fptr(libcef, "cef_browser_host_create_browser_sync");
     cef_command_line_create_ptr = (cef_command_line_t* (*)())cfx_platform_get_fptr(libcef, "cef_command_line_create");
     cef_command_line_get_global_ptr = (cef_command_line_t* (*)())cfx_platform_get_fptr(libcef, "cef_command_line_get_global");
     cef_cookie_manager_get_global_manager_ptr = (cef_cookie_manager_t* (*)(cef_completion_callback_t*))cfx_platform_get_fptr(libcef, "cef_cookie_manager_get_global_manager");
-    cef_cookie_manager_get_blocking_manager_ptr = (cef_cookie_manager_t* (*)())cfx_platform_get_fptr(libcef, "cef_cookie_manager_get_blocking_manager");
-    cef_cookie_manager_create_manager_ptr = (cef_cookie_manager_t* (*)(const cef_string_t*, int, cef_completion_callback_t*))cfx_platform_get_fptr(libcef, "cef_cookie_manager_create_manager");
     cef_dictionary_value_create_ptr = (cef_dictionary_value_t* (*)())cfx_platform_get_fptr(libcef, "cef_dictionary_value_create");
     cef_drag_data_create_ptr = (cef_drag_data_t* (*)())cfx_platform_get_fptr(libcef, "cef_drag_data_create");
     cef_image_create_ptr = (cef_image_t* (*)())cfx_platform_get_fptr(libcef, "cef_image_create");
@@ -342,8 +338,6 @@ static void cfx_load_cef_function_pointers(void *libcef) {
 #define cef_command_line_create cef_command_line_create_ptr
 #define cef_command_line_get_global cef_command_line_get_global_ptr
 #define cef_cookie_manager_get_global_manager cef_cookie_manager_get_global_manager_ptr
-#define cef_cookie_manager_get_blocking_manager cef_cookie_manager_get_blocking_manager_ptr
-#define cef_cookie_manager_create_manager cef_cookie_manager_create_manager_ptr
 #define cef_dictionary_value_create cef_dictionary_value_create_ptr
 #define cef_drag_data_create cef_drag_data_create_ptr
 #define cef_image_create cef_image_create_ptr

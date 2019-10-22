@@ -27,17 +27,9 @@ namespace Chromium {
         internal static void SetNativeCallbacks() {
             on_before_browse_native = on_before_browse;
             on_open_urlfrom_tab_native = on_open_urlfrom_tab;
-            on_before_resource_load_native = on_before_resource_load;
-            get_resource_handler_native = get_resource_handler;
-            on_resource_redirect_native = on_resource_redirect;
-            on_resource_response_native = on_resource_response;
-            get_resource_response_filter_native = get_resource_response_filter;
-            on_resource_load_complete_native = on_resource_load_complete;
+            get_resource_request_handler_native = get_resource_request_handler;
             get_auth_credentials_native = get_auth_credentials;
-            can_get_cookies_native = can_get_cookies;
-            can_set_cookie_native = can_set_cookie;
             on_quota_request_native = on_quota_request;
-            on_protocol_execution_native = on_protocol_execution;
             on_certificate_error_native = on_certificate_error;
             on_select_client_certificate_native = on_select_client_certificate;
             on_plugin_crashed_native = on_plugin_crashed;
@@ -46,17 +38,9 @@ namespace Chromium {
 
             on_before_browse_native_ptr = System.Runtime.InteropServices.Marshal.GetFunctionPointerForDelegate(on_before_browse_native);
             on_open_urlfrom_tab_native_ptr = System.Runtime.InteropServices.Marshal.GetFunctionPointerForDelegate(on_open_urlfrom_tab_native);
-            on_before_resource_load_native_ptr = System.Runtime.InteropServices.Marshal.GetFunctionPointerForDelegate(on_before_resource_load_native);
-            get_resource_handler_native_ptr = System.Runtime.InteropServices.Marshal.GetFunctionPointerForDelegate(get_resource_handler_native);
-            on_resource_redirect_native_ptr = System.Runtime.InteropServices.Marshal.GetFunctionPointerForDelegate(on_resource_redirect_native);
-            on_resource_response_native_ptr = System.Runtime.InteropServices.Marshal.GetFunctionPointerForDelegate(on_resource_response_native);
-            get_resource_response_filter_native_ptr = System.Runtime.InteropServices.Marshal.GetFunctionPointerForDelegate(get_resource_response_filter_native);
-            on_resource_load_complete_native_ptr = System.Runtime.InteropServices.Marshal.GetFunctionPointerForDelegate(on_resource_load_complete_native);
+            get_resource_request_handler_native_ptr = System.Runtime.InteropServices.Marshal.GetFunctionPointerForDelegate(get_resource_request_handler_native);
             get_auth_credentials_native_ptr = System.Runtime.InteropServices.Marshal.GetFunctionPointerForDelegate(get_auth_credentials_native);
-            can_get_cookies_native_ptr = System.Runtime.InteropServices.Marshal.GetFunctionPointerForDelegate(can_get_cookies_native);
-            can_set_cookie_native_ptr = System.Runtime.InteropServices.Marshal.GetFunctionPointerForDelegate(can_set_cookie_native);
             on_quota_request_native_ptr = System.Runtime.InteropServices.Marshal.GetFunctionPointerForDelegate(on_quota_request_native);
-            on_protocol_execution_native_ptr = System.Runtime.InteropServices.Marshal.GetFunctionPointerForDelegate(on_protocol_execution_native);
             on_certificate_error_native_ptr = System.Runtime.InteropServices.Marshal.GetFunctionPointerForDelegate(on_certificate_error_native);
             on_select_client_certificate_native_ptr = System.Runtime.InteropServices.Marshal.GetFunctionPointerForDelegate(on_select_client_certificate_native);
             on_plugin_crashed_native_ptr = System.Runtime.InteropServices.Marshal.GetFunctionPointerForDelegate(on_plugin_crashed_native);
@@ -121,206 +105,57 @@ namespace Chromium {
             __retval = e.m_returnValue ? 1 : 0;
         }
 
-        // on_before_resource_load
+        // get_resource_request_handler
         [System.Runtime.InteropServices.UnmanagedFunctionPointer(System.Runtime.InteropServices.CallingConvention.StdCall, SetLastError = false)]
-        private delegate void on_before_resource_load_delegate(IntPtr gcHandlePtr, out int __retval, IntPtr browser, out int browser_release, IntPtr frame, out int frame_release, IntPtr request, out int request_release, IntPtr callback, out int callback_release);
-        private static on_before_resource_load_delegate on_before_resource_load_native;
-        private static IntPtr on_before_resource_load_native_ptr;
+        private delegate void get_resource_request_handler_delegate(IntPtr gcHandlePtr, out IntPtr __retval, IntPtr browser, out int browser_release, IntPtr frame, out int frame_release, IntPtr request, out int request_release, int is_navigation, int is_download, IntPtr request_initiator_str, int request_initiator_length, out int disable_default_handling);
+        private static get_resource_request_handler_delegate get_resource_request_handler_native;
+        private static IntPtr get_resource_request_handler_native_ptr;
 
-        internal static void on_before_resource_load(IntPtr gcHandlePtr, out int __retval, IntPtr browser, out int browser_release, IntPtr frame, out int frame_release, IntPtr request, out int request_release, IntPtr callback, out int callback_release) {
-            var self = (CfxRequestHandler)System.Runtime.InteropServices.GCHandle.FromIntPtr(gcHandlePtr).Target;
-            if(self == null || self.CallbacksDisabled) {
-                __retval = default(int);
-                browser_release = 1;
-                frame_release = 1;
-                request_release = 1;
-                callback_release = 1;
-                return;
-            }
-            var e = new CfxOnBeforeResourceLoadEventArgs();
-            e.m_browser = browser;
-            e.m_frame = frame;
-            e.m_request = request;
-            e.m_callback = callback;
-            self.m_OnBeforeResourceLoad?.Invoke(self, e);
-            e.m_isInvalid = true;
-            browser_release = e.m_browser_wrapped == null? 1 : 0;
-            frame_release = e.m_frame_wrapped == null? 1 : 0;
-            request_release = e.m_request_wrapped == null? 1 : 0;
-            callback_release = e.m_callback_wrapped == null? 1 : 0;
-            __retval = (int)e.m_returnValue;
-        }
-
-        // get_resource_handler
-        [System.Runtime.InteropServices.UnmanagedFunctionPointer(System.Runtime.InteropServices.CallingConvention.StdCall, SetLastError = false)]
-        private delegate void get_resource_handler_delegate(IntPtr gcHandlePtr, out IntPtr __retval, IntPtr browser, out int browser_release, IntPtr frame, out int frame_release, IntPtr request, out int request_release);
-        private static get_resource_handler_delegate get_resource_handler_native;
-        private static IntPtr get_resource_handler_native_ptr;
-
-        internal static void get_resource_handler(IntPtr gcHandlePtr, out IntPtr __retval, IntPtr browser, out int browser_release, IntPtr frame, out int frame_release, IntPtr request, out int request_release) {
+        internal static void get_resource_request_handler(IntPtr gcHandlePtr, out IntPtr __retval, IntPtr browser, out int browser_release, IntPtr frame, out int frame_release, IntPtr request, out int request_release, int is_navigation, int is_download, IntPtr request_initiator_str, int request_initiator_length, out int disable_default_handling) {
             var self = (CfxRequestHandler)System.Runtime.InteropServices.GCHandle.FromIntPtr(gcHandlePtr).Target;
             if(self == null || self.CallbacksDisabled) {
                 __retval = default(IntPtr);
                 browser_release = 1;
                 frame_release = 1;
                 request_release = 1;
+                disable_default_handling = default(int);
                 return;
             }
-            var e = new CfxGetResourceHandlerEventArgs();
+            var e = new CfxRequestHandlerGetResourceRequestHandlerEventArgs();
             e.m_browser = browser;
             e.m_frame = frame;
             e.m_request = request;
-            self.m_GetResourceHandler?.Invoke(self, e);
+            e.m_is_navigation = is_navigation;
+            e.m_is_download = is_download;
+            e.m_request_initiator_str = request_initiator_str;
+            e.m_request_initiator_length = request_initiator_length;
+            self.m_GetResourceRequestHandler?.Invoke(self, e);
             e.m_isInvalid = true;
             browser_release = e.m_browser_wrapped == null? 1 : 0;
             frame_release = e.m_frame_wrapped == null? 1 : 0;
             request_release = e.m_request_wrapped == null? 1 : 0;
-            __retval = CfxResourceHandler.Unwrap(e.m_returnValue);
-        }
-
-        // on_resource_redirect
-        [System.Runtime.InteropServices.UnmanagedFunctionPointer(System.Runtime.InteropServices.CallingConvention.StdCall, SetLastError = false)]
-        private delegate void on_resource_redirect_delegate(IntPtr gcHandlePtr, IntPtr browser, out int browser_release, IntPtr frame, out int frame_release, IntPtr request, out int request_release, IntPtr response, out int response_release, ref IntPtr new_url_str, ref int new_url_length);
-        private static on_resource_redirect_delegate on_resource_redirect_native;
-        private static IntPtr on_resource_redirect_native_ptr;
-
-        internal static void on_resource_redirect(IntPtr gcHandlePtr, IntPtr browser, out int browser_release, IntPtr frame, out int frame_release, IntPtr request, out int request_release, IntPtr response, out int response_release, ref IntPtr new_url_str, ref int new_url_length) {
-            var self = (CfxRequestHandler)System.Runtime.InteropServices.GCHandle.FromIntPtr(gcHandlePtr).Target;
-            if(self == null || self.CallbacksDisabled) {
-                browser_release = 1;
-                frame_release = 1;
-                request_release = 1;
-                response_release = 1;
-                return;
-            }
-            var e = new CfxOnResourceRedirectEventArgs();
-            e.m_browser = browser;
-            e.m_frame = frame;
-            e.m_request = request;
-            e.m_response = response;
-            e.m_new_url_str = new_url_str;
-            e.m_new_url_length = new_url_length;
-            self.m_OnResourceRedirect?.Invoke(self, e);
-            e.m_isInvalid = true;
-            browser_release = e.m_browser_wrapped == null? 1 : 0;
-            frame_release = e.m_frame_wrapped == null? 1 : 0;
-            request_release = e.m_request_wrapped == null? 1 : 0;
-            response_release = e.m_response_wrapped == null? 1 : 0;
-            if(e.m_new_url_changed) {
-                var new_url_pinned = new PinnedString(e.m_new_url_wrapped);
-                new_url_str = new_url_pinned.Obj.PinnedPtr;
-                new_url_length = new_url_pinned.Length;
-            }
-        }
-
-        // on_resource_response
-        [System.Runtime.InteropServices.UnmanagedFunctionPointer(System.Runtime.InteropServices.CallingConvention.StdCall, SetLastError = false)]
-        private delegate void on_resource_response_delegate(IntPtr gcHandlePtr, out int __retval, IntPtr browser, out int browser_release, IntPtr frame, out int frame_release, IntPtr request, out int request_release, IntPtr response, out int response_release);
-        private static on_resource_response_delegate on_resource_response_native;
-        private static IntPtr on_resource_response_native_ptr;
-
-        internal static void on_resource_response(IntPtr gcHandlePtr, out int __retval, IntPtr browser, out int browser_release, IntPtr frame, out int frame_release, IntPtr request, out int request_release, IntPtr response, out int response_release) {
-            var self = (CfxRequestHandler)System.Runtime.InteropServices.GCHandle.FromIntPtr(gcHandlePtr).Target;
-            if(self == null || self.CallbacksDisabled) {
-                __retval = default(int);
-                browser_release = 1;
-                frame_release = 1;
-                request_release = 1;
-                response_release = 1;
-                return;
-            }
-            var e = new CfxOnResourceResponseEventArgs();
-            e.m_browser = browser;
-            e.m_frame = frame;
-            e.m_request = request;
-            e.m_response = response;
-            self.m_OnResourceResponse?.Invoke(self, e);
-            e.m_isInvalid = true;
-            browser_release = e.m_browser_wrapped == null? 1 : 0;
-            frame_release = e.m_frame_wrapped == null? 1 : 0;
-            request_release = e.m_request_wrapped == null? 1 : 0;
-            response_release = e.m_response_wrapped == null? 1 : 0;
-            __retval = e.m_returnValue ? 1 : 0;
-        }
-
-        // get_resource_response_filter
-        [System.Runtime.InteropServices.UnmanagedFunctionPointer(System.Runtime.InteropServices.CallingConvention.StdCall, SetLastError = false)]
-        private delegate void get_resource_response_filter_delegate(IntPtr gcHandlePtr, out IntPtr __retval, IntPtr browser, out int browser_release, IntPtr frame, out int frame_release, IntPtr request, out int request_release, IntPtr response, out int response_release);
-        private static get_resource_response_filter_delegate get_resource_response_filter_native;
-        private static IntPtr get_resource_response_filter_native_ptr;
-
-        internal static void get_resource_response_filter(IntPtr gcHandlePtr, out IntPtr __retval, IntPtr browser, out int browser_release, IntPtr frame, out int frame_release, IntPtr request, out int request_release, IntPtr response, out int response_release) {
-            var self = (CfxRequestHandler)System.Runtime.InteropServices.GCHandle.FromIntPtr(gcHandlePtr).Target;
-            if(self == null || self.CallbacksDisabled) {
-                __retval = default(IntPtr);
-                browser_release = 1;
-                frame_release = 1;
-                request_release = 1;
-                response_release = 1;
-                return;
-            }
-            var e = new CfxGetResourceResponseFilterEventArgs();
-            e.m_browser = browser;
-            e.m_frame = frame;
-            e.m_request = request;
-            e.m_response = response;
-            self.m_GetResourceResponseFilter?.Invoke(self, e);
-            e.m_isInvalid = true;
-            browser_release = e.m_browser_wrapped == null? 1 : 0;
-            frame_release = e.m_frame_wrapped == null? 1 : 0;
-            request_release = e.m_request_wrapped == null? 1 : 0;
-            response_release = e.m_response_wrapped == null? 1 : 0;
-            __retval = CfxResponseFilter.Unwrap(e.m_returnValue);
-        }
-
-        // on_resource_load_complete
-        [System.Runtime.InteropServices.UnmanagedFunctionPointer(System.Runtime.InteropServices.CallingConvention.StdCall, SetLastError = false)]
-        private delegate void on_resource_load_complete_delegate(IntPtr gcHandlePtr, IntPtr browser, out int browser_release, IntPtr frame, out int frame_release, IntPtr request, out int request_release, IntPtr response, out int response_release, int status, long received_content_length);
-        private static on_resource_load_complete_delegate on_resource_load_complete_native;
-        private static IntPtr on_resource_load_complete_native_ptr;
-
-        internal static void on_resource_load_complete(IntPtr gcHandlePtr, IntPtr browser, out int browser_release, IntPtr frame, out int frame_release, IntPtr request, out int request_release, IntPtr response, out int response_release, int status, long received_content_length) {
-            var self = (CfxRequestHandler)System.Runtime.InteropServices.GCHandle.FromIntPtr(gcHandlePtr).Target;
-            if(self == null || self.CallbacksDisabled) {
-                browser_release = 1;
-                frame_release = 1;
-                request_release = 1;
-                response_release = 1;
-                return;
-            }
-            var e = new CfxOnResourceLoadCompleteEventArgs();
-            e.m_browser = browser;
-            e.m_frame = frame;
-            e.m_request = request;
-            e.m_response = response;
-            e.m_status = status;
-            e.m_received_content_length = received_content_length;
-            self.m_OnResourceLoadComplete?.Invoke(self, e);
-            e.m_isInvalid = true;
-            browser_release = e.m_browser_wrapped == null? 1 : 0;
-            frame_release = e.m_frame_wrapped == null? 1 : 0;
-            request_release = e.m_request_wrapped == null? 1 : 0;
-            response_release = e.m_response_wrapped == null? 1 : 0;
+            disable_default_handling = e.m_disable_default_handling;
+            __retval = CfxResourceRequestHandler.Unwrap(e.m_returnValue);
         }
 
         // get_auth_credentials
         [System.Runtime.InteropServices.UnmanagedFunctionPointer(System.Runtime.InteropServices.CallingConvention.StdCall, SetLastError = false)]
-        private delegate void get_auth_credentials_delegate(IntPtr gcHandlePtr, out int __retval, IntPtr browser, out int browser_release, IntPtr frame, out int frame_release, int isProxy, IntPtr host_str, int host_length, int port, IntPtr realm_str, int realm_length, IntPtr scheme_str, int scheme_length, IntPtr callback, out int callback_release);
+        private delegate void get_auth_credentials_delegate(IntPtr gcHandlePtr, out int __retval, IntPtr browser, out int browser_release, IntPtr origin_url_str, int origin_url_length, int isProxy, IntPtr host_str, int host_length, int port, IntPtr realm_str, int realm_length, IntPtr scheme_str, int scheme_length, IntPtr callback, out int callback_release);
         private static get_auth_credentials_delegate get_auth_credentials_native;
         private static IntPtr get_auth_credentials_native_ptr;
 
-        internal static void get_auth_credentials(IntPtr gcHandlePtr, out int __retval, IntPtr browser, out int browser_release, IntPtr frame, out int frame_release, int isProxy, IntPtr host_str, int host_length, int port, IntPtr realm_str, int realm_length, IntPtr scheme_str, int scheme_length, IntPtr callback, out int callback_release) {
+        internal static void get_auth_credentials(IntPtr gcHandlePtr, out int __retval, IntPtr browser, out int browser_release, IntPtr origin_url_str, int origin_url_length, int isProxy, IntPtr host_str, int host_length, int port, IntPtr realm_str, int realm_length, IntPtr scheme_str, int scheme_length, IntPtr callback, out int callback_release) {
             var self = (CfxRequestHandler)System.Runtime.InteropServices.GCHandle.FromIntPtr(gcHandlePtr).Target;
             if(self == null || self.CallbacksDisabled) {
                 __retval = default(int);
                 browser_release = 1;
-                frame_release = 1;
                 callback_release = 1;
                 return;
             }
             var e = new CfxRequestHandlerGetAuthCredentialsEventArgs();
             e.m_browser = browser;
-            e.m_frame = frame;
+            e.m_origin_url_str = origin_url_str;
+            e.m_origin_url_length = origin_url_length;
             e.m_isProxy = isProxy;
             e.m_host_str = host_str;
             e.m_host_length = host_length;
@@ -333,63 +168,7 @@ namespace Chromium {
             self.m_GetAuthCredentials?.Invoke(self, e);
             e.m_isInvalid = true;
             browser_release = e.m_browser_wrapped == null? 1 : 0;
-            frame_release = e.m_frame_wrapped == null? 1 : 0;
             callback_release = e.m_callback_wrapped == null? 1 : 0;
-            __retval = e.m_returnValue ? 1 : 0;
-        }
-
-        // can_get_cookies
-        [System.Runtime.InteropServices.UnmanagedFunctionPointer(System.Runtime.InteropServices.CallingConvention.StdCall, SetLastError = false)]
-        private delegate void can_get_cookies_delegate(IntPtr gcHandlePtr, out int __retval, IntPtr browser, out int browser_release, IntPtr frame, out int frame_release, IntPtr request, out int request_release);
-        private static can_get_cookies_delegate can_get_cookies_native;
-        private static IntPtr can_get_cookies_native_ptr;
-
-        internal static void can_get_cookies(IntPtr gcHandlePtr, out int __retval, IntPtr browser, out int browser_release, IntPtr frame, out int frame_release, IntPtr request, out int request_release) {
-            var self = (CfxRequestHandler)System.Runtime.InteropServices.GCHandle.FromIntPtr(gcHandlePtr).Target;
-            if(self == null || self.CallbacksDisabled) {
-                __retval = default(int);
-                browser_release = 1;
-                frame_release = 1;
-                request_release = 1;
-                return;
-            }
-            var e = new CfxCanGetCookiesEventArgs();
-            e.m_browser = browser;
-            e.m_frame = frame;
-            e.m_request = request;
-            self.m_CanGetCookies?.Invoke(self, e);
-            e.m_isInvalid = true;
-            browser_release = e.m_browser_wrapped == null? 1 : 0;
-            frame_release = e.m_frame_wrapped == null? 1 : 0;
-            request_release = e.m_request_wrapped == null? 1 : 0;
-            __retval = e.m_returnValue ? 1 : 0;
-        }
-
-        // can_set_cookie
-        [System.Runtime.InteropServices.UnmanagedFunctionPointer(System.Runtime.InteropServices.CallingConvention.StdCall, SetLastError = false)]
-        private delegate void can_set_cookie_delegate(IntPtr gcHandlePtr, out int __retval, IntPtr browser, out int browser_release, IntPtr frame, out int frame_release, IntPtr request, out int request_release, IntPtr cookie);
-        private static can_set_cookie_delegate can_set_cookie_native;
-        private static IntPtr can_set_cookie_native_ptr;
-
-        internal static void can_set_cookie(IntPtr gcHandlePtr, out int __retval, IntPtr browser, out int browser_release, IntPtr frame, out int frame_release, IntPtr request, out int request_release, IntPtr cookie) {
-            var self = (CfxRequestHandler)System.Runtime.InteropServices.GCHandle.FromIntPtr(gcHandlePtr).Target;
-            if(self == null || self.CallbacksDisabled) {
-                __retval = default(int);
-                browser_release = 1;
-                frame_release = 1;
-                request_release = 1;
-                return;
-            }
-            var e = new CfxRequestHandlerCanSetCookieEventArgs();
-            e.m_browser = browser;
-            e.m_frame = frame;
-            e.m_request = request;
-            e.m_cookie = cookie;
-            self.m_CanSetCookie?.Invoke(self, e);
-            e.m_isInvalid = true;
-            browser_release = e.m_browser_wrapped == null? 1 : 0;
-            frame_release = e.m_frame_wrapped == null? 1 : 0;
-            request_release = e.m_request_wrapped == null? 1 : 0;
             __retval = e.m_returnValue ? 1 : 0;
         }
 
@@ -418,29 +197,6 @@ namespace Chromium {
             browser_release = e.m_browser_wrapped == null? 1 : 0;
             callback_release = e.m_callback_wrapped == null? 1 : 0;
             __retval = e.m_returnValue ? 1 : 0;
-        }
-
-        // on_protocol_execution
-        [System.Runtime.InteropServices.UnmanagedFunctionPointer(System.Runtime.InteropServices.CallingConvention.StdCall, SetLastError = false)]
-        private delegate void on_protocol_execution_delegate(IntPtr gcHandlePtr, IntPtr browser, out int browser_release, IntPtr url_str, int url_length, out int allow_os_execution);
-        private static on_protocol_execution_delegate on_protocol_execution_native;
-        private static IntPtr on_protocol_execution_native_ptr;
-
-        internal static void on_protocol_execution(IntPtr gcHandlePtr, IntPtr browser, out int browser_release, IntPtr url_str, int url_length, out int allow_os_execution) {
-            var self = (CfxRequestHandler)System.Runtime.InteropServices.GCHandle.FromIntPtr(gcHandlePtr).Target;
-            if(self == null || self.CallbacksDisabled) {
-                browser_release = 1;
-                allow_os_execution = default(int);
-                return;
-            }
-            var e = new CfxOnProtocolExecutionEventArgs();
-            e.m_browser = browser;
-            e.m_url_str = url_str;
-            e.m_url_length = url_length;
-            self.m_OnProtocolExecution?.Invoke(self, e);
-            e.m_isInvalid = true;
-            browser_release = e.m_browser_wrapped == null? 1 : 0;
-            allow_os_execution = e.m_allow_os_execution;
         }
 
         // on_certificate_error
@@ -648,199 +404,53 @@ namespace Chromium {
         private CfxOnOpenUrlfromTabEventHandler m_OnOpenUrlfromTab;
 
         /// <summary>
-        /// Called on the IO thread before a resource request is loaded. The |Request|
-        /// object may be modified. Return RV_CONTINUE to continue the request
-        /// immediately. Return RV_CONTINUE_ASYNC and call CfxRequestCallback::
-        /// cont() at a later time to continue or cancel the request asynchronously.
-        /// Return RV_CANCEL to cancel the request immediately.
+        /// Called on the browser process IO thread before a resource request is
+        /// initiated. The |Browser| and |Frame| values represent the source of the
+        /// request. |Request| represents the request contents and cannot be modified
+        /// in this callback. |IsNavigation| will be true (1) if the resource request
+        /// is a navigation. |IsDownload| will be true (1) if the resource request is
+        /// a download. |RequestInitiator| is the origin (scheme + domain) of the page
+        /// that initiated the request. Set |DisableDefaultHandling| to true (1) to
+        /// disable default handling of the request, in which case it will need to be
+        /// handled via CfxResourceRequestHandler.GetResourceHandler or it will
+        /// be canceled. To allow the resource load to proceed with default handling
+        /// return NULL. To specify a handler for the resource return a
+        /// CfxResourceRequestHandler object. If this callback returns NULL the
+        /// same function will be called on the associated CfxRequestContextHandler,
+        /// if any.
         /// </summary>
         /// <remarks>
         /// See also the original CEF documentation in
         /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_request_handler_capi.h">cef/include/capi/cef_request_handler_capi.h</see>.
         /// </remarks>
-        public event CfxOnBeforeResourceLoadEventHandler OnBeforeResourceLoad {
+        public event CfxRequestHandlerGetResourceRequestHandlerEventHandler GetResourceRequestHandler {
             add {
                 lock(eventLock) {
-                    if(m_OnBeforeResourceLoad == null) {
-                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 2, on_before_resource_load_native_ptr);
+                    if(m_GetResourceRequestHandler == null) {
+                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 2, get_resource_request_handler_native_ptr);
                     }
-                    m_OnBeforeResourceLoad += value;
+                    m_GetResourceRequestHandler += value;
                 }
             }
             remove {
                 lock(eventLock) {
-                    m_OnBeforeResourceLoad -= value;
-                    if(m_OnBeforeResourceLoad == null) {
+                    m_GetResourceRequestHandler -= value;
+                    if(m_GetResourceRequestHandler == null) {
                         CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 2, IntPtr.Zero);
                     }
                 }
             }
         }
 
-        private CfxOnBeforeResourceLoadEventHandler m_OnBeforeResourceLoad;
-
-        /// <summary>
-        /// Called on the IO thread before a resource is loaded. To allow the resource
-        /// to load normally return NULL. To specify a handler for the resource return
-        /// a CfxResourceHandler object. The |Request| object should not be
-        /// modified in this callback.
-        /// </summary>
-        /// <remarks>
-        /// See also the original CEF documentation in
-        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_request_handler_capi.h">cef/include/capi/cef_request_handler_capi.h</see>.
-        /// </remarks>
-        public event CfxGetResourceHandlerEventHandler GetResourceHandler {
-            add {
-                lock(eventLock) {
-                    if(m_GetResourceHandler == null) {
-                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 3, get_resource_handler_native_ptr);
-                    }
-                    m_GetResourceHandler += value;
-                }
-            }
-            remove {
-                lock(eventLock) {
-                    m_GetResourceHandler -= value;
-                    if(m_GetResourceHandler == null) {
-                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 3, IntPtr.Zero);
-                    }
-                }
-            }
-        }
-
-        private CfxGetResourceHandlerEventHandler m_GetResourceHandler;
-
-        /// <summary>
-        /// Called on the IO thread when a resource load is redirected. The |Request|
-        /// parameter will contain the old URL and other request-related information.
-        /// The |Response| parameter will contain the response that resulted in the
-        /// redirect. The |NewUrl| parameter will contain the new URL and can be
-        /// changed if desired. The |Request| object cannot be modified in this
-        /// callback.
-        /// </summary>
-        /// <remarks>
-        /// See also the original CEF documentation in
-        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_request_handler_capi.h">cef/include/capi/cef_request_handler_capi.h</see>.
-        /// </remarks>
-        public event CfxOnResourceRedirectEventHandler OnResourceRedirect {
-            add {
-                lock(eventLock) {
-                    if(m_OnResourceRedirect == null) {
-                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 4, on_resource_redirect_native_ptr);
-                    }
-                    m_OnResourceRedirect += value;
-                }
-            }
-            remove {
-                lock(eventLock) {
-                    m_OnResourceRedirect -= value;
-                    if(m_OnResourceRedirect == null) {
-                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 4, IntPtr.Zero);
-                    }
-                }
-            }
-        }
-
-        private CfxOnResourceRedirectEventHandler m_OnResourceRedirect;
-
-        /// <summary>
-        /// Called on the IO thread when a resource response is received. To allow the
-        /// resource to load normally return false (0). To redirect or retry the
-        /// resource modify |Request| (url, headers or post body) and return true (1).
-        /// The |Response| object cannot be modified in this callback.
-        /// </summary>
-        /// <remarks>
-        /// See also the original CEF documentation in
-        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_request_handler_capi.h">cef/include/capi/cef_request_handler_capi.h</see>.
-        /// </remarks>
-        public event CfxOnResourceResponseEventHandler OnResourceResponse {
-            add {
-                lock(eventLock) {
-                    if(m_OnResourceResponse == null) {
-                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 5, on_resource_response_native_ptr);
-                    }
-                    m_OnResourceResponse += value;
-                }
-            }
-            remove {
-                lock(eventLock) {
-                    m_OnResourceResponse -= value;
-                    if(m_OnResourceResponse == null) {
-                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 5, IntPtr.Zero);
-                    }
-                }
-            }
-        }
-
-        private CfxOnResourceResponseEventHandler m_OnResourceResponse;
-
-        /// <summary>
-        /// Called on the IO thread to optionally filter resource response content.
-        /// |Request| and |Response| represent the request and response respectively
-        /// and cannot be modified in this callback.
-        /// </summary>
-        /// <remarks>
-        /// See also the original CEF documentation in
-        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_request_handler_capi.h">cef/include/capi/cef_request_handler_capi.h</see>.
-        /// </remarks>
-        public event CfxGetResourceResponseFilterEventHandler GetResourceResponseFilter {
-            add {
-                lock(eventLock) {
-                    if(m_GetResourceResponseFilter == null) {
-                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 6, get_resource_response_filter_native_ptr);
-                    }
-                    m_GetResourceResponseFilter += value;
-                }
-            }
-            remove {
-                lock(eventLock) {
-                    m_GetResourceResponseFilter -= value;
-                    if(m_GetResourceResponseFilter == null) {
-                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 6, IntPtr.Zero);
-                    }
-                }
-            }
-        }
-
-        private CfxGetResourceResponseFilterEventHandler m_GetResourceResponseFilter;
-
-        /// <summary>
-        /// Called on the IO thread when a resource load has completed. |Request| and
-        /// |Response| represent the request and response respectively and cannot be
-        /// modified in this callback. |Status| indicates the load completion status.
-        /// |ReceivedContentLength| is the number of response bytes actually read.
-        /// </summary>
-        /// <remarks>
-        /// See also the original CEF documentation in
-        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_request_handler_capi.h">cef/include/capi/cef_request_handler_capi.h</see>.
-        /// </remarks>
-        public event CfxOnResourceLoadCompleteEventHandler OnResourceLoadComplete {
-            add {
-                lock(eventLock) {
-                    if(m_OnResourceLoadComplete == null) {
-                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 7, on_resource_load_complete_native_ptr);
-                    }
-                    m_OnResourceLoadComplete += value;
-                }
-            }
-            remove {
-                lock(eventLock) {
-                    m_OnResourceLoadComplete -= value;
-                    if(m_OnResourceLoadComplete == null) {
-                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 7, IntPtr.Zero);
-                    }
-                }
-            }
-        }
-
-        private CfxOnResourceLoadCompleteEventHandler m_OnResourceLoadComplete;
+        private CfxRequestHandlerGetResourceRequestHandlerEventHandler m_GetResourceRequestHandler;
 
         /// <summary>
         /// Called on the IO thread when the browser needs credentials from the user.
-        /// |IsProxy| indicates whether the host is a proxy server. |Host| contains the
-        /// hostname and |Port| contains the port number. |Realm| is the realm of the
-        /// challenge and may be NULL. |Scheme| is the authentication scheme used, such
-        /// as "basic" or "digest", and will be NULL if the source of the request is an
+        /// |OriginUrl| is the origin making this authentication request. |IsProxy|
+        /// indicates whether the host is a proxy server. |Host| contains the hostname
+        /// and |Port| contains the port number. |Realm| is the realm of the challenge
+        /// and may be NULL. |Scheme| is the authentication scheme used, such as
+        /// "basic" or "digest", and will be NULL if the source of the request is an
         /// FTP server. Return true (1) to continue the request and call
         /// CfxAuthCallback.Continue() either in this function or at a later time when
         /// the authentication information is available. Return false (0) to cancel the
@@ -854,7 +464,7 @@ namespace Chromium {
             add {
                 lock(eventLock) {
                     if(m_GetAuthCredentials == null) {
-                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 8, get_auth_credentials_native_ptr);
+                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 3, get_auth_credentials_native_ptr);
                     }
                     m_GetAuthCredentials += value;
                 }
@@ -863,75 +473,13 @@ namespace Chromium {
                 lock(eventLock) {
                     m_GetAuthCredentials -= value;
                     if(m_GetAuthCredentials == null) {
-                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 8, IntPtr.Zero);
+                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 3, IntPtr.Zero);
                     }
                 }
             }
         }
 
         private CfxRequestHandlerGetAuthCredentialsEventHandler m_GetAuthCredentials;
-
-        /// <summary>
-        /// Called on the IO thread before sending a network request with a "Cookie"
-        /// request header. Return true (1) to allow cookies to be included in the
-        /// network request or false (0) to block cookies. The |Request| object should
-        /// not be modified in this callback.
-        /// </summary>
-        /// <remarks>
-        /// See also the original CEF documentation in
-        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_request_handler_capi.h">cef/include/capi/cef_request_handler_capi.h</see>.
-        /// </remarks>
-        public event CfxCanGetCookiesEventHandler CanGetCookies {
-            add {
-                lock(eventLock) {
-                    if(m_CanGetCookies == null) {
-                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 9, can_get_cookies_native_ptr);
-                    }
-                    m_CanGetCookies += value;
-                }
-            }
-            remove {
-                lock(eventLock) {
-                    m_CanGetCookies -= value;
-                    if(m_CanGetCookies == null) {
-                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 9, IntPtr.Zero);
-                    }
-                }
-            }
-        }
-
-        private CfxCanGetCookiesEventHandler m_CanGetCookies;
-
-        /// <summary>
-        /// Called on the IO thread when receiving a network request with a "Set-
-        /// Cookie" response header value represented by |Cookie|. Return true (1) to
-        /// allow the cookie to be stored or false (0) to block the cookie. The
-        /// |Request| object should not be modified in this callback.
-        /// </summary>
-        /// <remarks>
-        /// See also the original CEF documentation in
-        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_request_handler_capi.h">cef/include/capi/cef_request_handler_capi.h</see>.
-        /// </remarks>
-        public event CfxRequestHandlerCanSetCookieEventHandler CanSetCookie {
-            add {
-                lock(eventLock) {
-                    if(m_CanSetCookie == null) {
-                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 10, can_set_cookie_native_ptr);
-                    }
-                    m_CanSetCookie += value;
-                }
-            }
-            remove {
-                lock(eventLock) {
-                    m_CanSetCookie -= value;
-                    if(m_CanSetCookie == null) {
-                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 10, IntPtr.Zero);
-                    }
-                }
-            }
-        }
-
-        private CfxRequestHandlerCanSetCookieEventHandler m_CanSetCookie;
 
         /// <summary>
         /// Called on the IO thread when JavaScript requests a specific storage quota
@@ -950,7 +498,7 @@ namespace Chromium {
             add {
                 lock(eventLock) {
                     if(m_OnQuotaRequest == null) {
-                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 11, on_quota_request_native_ptr);
+                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 4, on_quota_request_native_ptr);
                     }
                     m_OnQuotaRequest += value;
                 }
@@ -959,45 +507,13 @@ namespace Chromium {
                 lock(eventLock) {
                     m_OnQuotaRequest -= value;
                     if(m_OnQuotaRequest == null) {
-                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 11, IntPtr.Zero);
+                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 4, IntPtr.Zero);
                     }
                 }
             }
         }
 
         private CfxOnQuotaRequestEventHandler m_OnQuotaRequest;
-
-        /// <summary>
-        /// Called on the UI thread to handle requests for URLs with an unknown
-        /// protocol component. Set |AllowOsExecution| to true (1) to attempt
-        /// execution via the registered OS protocol handler, if any. SECURITY WARNING:
-        /// YOU SHOULD USE THIS METHOD TO ENFORCE RESTRICTIONS BASED ON SCHEME, HOST OR
-        /// OTHER URL ANALYSIS BEFORE ALLOWING OS EXECUTION.
-        /// </summary>
-        /// <remarks>
-        /// See also the original CEF documentation in
-        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_request_handler_capi.h">cef/include/capi/cef_request_handler_capi.h</see>.
-        /// </remarks>
-        public event CfxOnProtocolExecutionEventHandler OnProtocolExecution {
-            add {
-                lock(eventLock) {
-                    if(m_OnProtocolExecution == null) {
-                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 12, on_protocol_execution_native_ptr);
-                    }
-                    m_OnProtocolExecution += value;
-                }
-            }
-            remove {
-                lock(eventLock) {
-                    m_OnProtocolExecution -= value;
-                    if(m_OnProtocolExecution == null) {
-                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 12, IntPtr.Zero);
-                    }
-                }
-            }
-        }
-
-        private CfxOnProtocolExecutionEventHandler m_OnProtocolExecution;
 
         /// <summary>
         /// Called on the UI thread to handle requests for URLs with an invalid SSL
@@ -1015,7 +531,7 @@ namespace Chromium {
             add {
                 lock(eventLock) {
                     if(m_OnCertificateError == null) {
-                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 13, on_certificate_error_native_ptr);
+                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 5, on_certificate_error_native_ptr);
                     }
                     m_OnCertificateError += value;
                 }
@@ -1024,7 +540,7 @@ namespace Chromium {
                 lock(eventLock) {
                     m_OnCertificateError -= value;
                     if(m_OnCertificateError == null) {
-                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 13, IntPtr.Zero);
+                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 5, IntPtr.Zero);
                     }
                 }
             }
@@ -1053,7 +569,7 @@ namespace Chromium {
             add {
                 lock(eventLock) {
                     if(m_OnSelectClientCertificate == null) {
-                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 14, on_select_client_certificate_native_ptr);
+                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 6, on_select_client_certificate_native_ptr);
                     }
                     m_OnSelectClientCertificate += value;
                 }
@@ -1062,7 +578,7 @@ namespace Chromium {
                 lock(eventLock) {
                     m_OnSelectClientCertificate -= value;
                     if(m_OnSelectClientCertificate == null) {
-                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 14, IntPtr.Zero);
+                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 6, IntPtr.Zero);
                     }
                 }
             }
@@ -1082,7 +598,7 @@ namespace Chromium {
             add {
                 lock(eventLock) {
                     if(m_OnPluginCrashed == null) {
-                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 15, on_plugin_crashed_native_ptr);
+                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 7, on_plugin_crashed_native_ptr);
                     }
                     m_OnPluginCrashed += value;
                 }
@@ -1091,7 +607,7 @@ namespace Chromium {
                 lock(eventLock) {
                     m_OnPluginCrashed -= value;
                     if(m_OnPluginCrashed == null) {
-                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 15, IntPtr.Zero);
+                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 7, IntPtr.Zero);
                     }
                 }
             }
@@ -1112,7 +628,7 @@ namespace Chromium {
             add {
                 lock(eventLock) {
                     if(m_OnRenderViewReady == null) {
-                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 16, on_render_view_ready_native_ptr);
+                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 8, on_render_view_ready_native_ptr);
                     }
                     m_OnRenderViewReady += value;
                 }
@@ -1121,7 +637,7 @@ namespace Chromium {
                 lock(eventLock) {
                     m_OnRenderViewReady -= value;
                     if(m_OnRenderViewReady == null) {
-                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 16, IntPtr.Zero);
+                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 8, IntPtr.Zero);
                     }
                 }
             }
@@ -1141,7 +657,7 @@ namespace Chromium {
             add {
                 lock(eventLock) {
                     if(m_OnRenderProcessTerminated == null) {
-                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 17, on_render_process_terminated_native_ptr);
+                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 9, on_render_process_terminated_native_ptr);
                     }
                     m_OnRenderProcessTerminated += value;
                 }
@@ -1150,7 +666,7 @@ namespace Chromium {
                 lock(eventLock) {
                     m_OnRenderProcessTerminated -= value;
                     if(m_OnRenderProcessTerminated == null) {
-                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 17, IntPtr.Zero);
+                        CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 9, IntPtr.Zero);
                     }
                 }
             }
@@ -1167,69 +683,37 @@ namespace Chromium {
                 m_OnOpenUrlfromTab = null;
                 CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 1, IntPtr.Zero);
             }
-            if(m_OnBeforeResourceLoad != null) {
-                m_OnBeforeResourceLoad = null;
+            if(m_GetResourceRequestHandler != null) {
+                m_GetResourceRequestHandler = null;
                 CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 2, IntPtr.Zero);
-            }
-            if(m_GetResourceHandler != null) {
-                m_GetResourceHandler = null;
-                CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 3, IntPtr.Zero);
-            }
-            if(m_OnResourceRedirect != null) {
-                m_OnResourceRedirect = null;
-                CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 4, IntPtr.Zero);
-            }
-            if(m_OnResourceResponse != null) {
-                m_OnResourceResponse = null;
-                CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 5, IntPtr.Zero);
-            }
-            if(m_GetResourceResponseFilter != null) {
-                m_GetResourceResponseFilter = null;
-                CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 6, IntPtr.Zero);
-            }
-            if(m_OnResourceLoadComplete != null) {
-                m_OnResourceLoadComplete = null;
-                CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 7, IntPtr.Zero);
             }
             if(m_GetAuthCredentials != null) {
                 m_GetAuthCredentials = null;
-                CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 8, IntPtr.Zero);
-            }
-            if(m_CanGetCookies != null) {
-                m_CanGetCookies = null;
-                CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 9, IntPtr.Zero);
-            }
-            if(m_CanSetCookie != null) {
-                m_CanSetCookie = null;
-                CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 10, IntPtr.Zero);
+                CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 3, IntPtr.Zero);
             }
             if(m_OnQuotaRequest != null) {
                 m_OnQuotaRequest = null;
-                CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 11, IntPtr.Zero);
-            }
-            if(m_OnProtocolExecution != null) {
-                m_OnProtocolExecution = null;
-                CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 12, IntPtr.Zero);
+                CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 4, IntPtr.Zero);
             }
             if(m_OnCertificateError != null) {
                 m_OnCertificateError = null;
-                CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 13, IntPtr.Zero);
+                CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 5, IntPtr.Zero);
             }
             if(m_OnSelectClientCertificate != null) {
                 m_OnSelectClientCertificate = null;
-                CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 14, IntPtr.Zero);
+                CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 6, IntPtr.Zero);
             }
             if(m_OnPluginCrashed != null) {
                 m_OnPluginCrashed = null;
-                CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 15, IntPtr.Zero);
+                CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 7, IntPtr.Zero);
             }
             if(m_OnRenderViewReady != null) {
                 m_OnRenderViewReady = null;
-                CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 16, IntPtr.Zero);
+                CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 8, IntPtr.Zero);
             }
             if(m_OnRenderProcessTerminated != null) {
                 m_OnRenderProcessTerminated = null;
-                CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 17, IntPtr.Zero);
+                CfxApi.RequestHandler.cfx_request_handler_set_callback(NativePtr, 9, IntPtr.Zero);
             }
             base.OnDispose(nativePtr);
         }
@@ -1480,30 +964,48 @@ namespace Chromium {
         }
 
         /// <summary>
-        /// Called on the IO thread before a resource request is loaded. The |Request|
-        /// object may be modified. Return RV_CONTINUE to continue the request
-        /// immediately. Return RV_CONTINUE_ASYNC and call CfxRequestCallback::
-        /// cont() at a later time to continue or cancel the request asynchronously.
-        /// Return RV_CANCEL to cancel the request immediately.
+        /// Called on the browser process IO thread before a resource request is
+        /// initiated. The |Browser| and |Frame| values represent the source of the
+        /// request. |Request| represents the request contents and cannot be modified
+        /// in this callback. |IsNavigation| will be true (1) if the resource request
+        /// is a navigation. |IsDownload| will be true (1) if the resource request is
+        /// a download. |RequestInitiator| is the origin (scheme + domain) of the page
+        /// that initiated the request. Set |DisableDefaultHandling| to true (1) to
+        /// disable default handling of the request, in which case it will need to be
+        /// handled via CfxResourceRequestHandler.GetResourceHandler or it will
+        /// be canceled. To allow the resource load to proceed with default handling
+        /// return NULL. To specify a handler for the resource return a
+        /// CfxResourceRequestHandler object. If this callback returns NULL the
+        /// same function will be called on the associated CfxRequestContextHandler,
+        /// if any.
         /// </summary>
         /// <remarks>
         /// See also the original CEF documentation in
         /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_request_handler_capi.h">cef/include/capi/cef_request_handler_capi.h</see>.
         /// </remarks>
-        public delegate void CfxOnBeforeResourceLoadEventHandler(object sender, CfxOnBeforeResourceLoadEventArgs e);
+        public delegate void CfxRequestHandlerGetResourceRequestHandlerEventHandler(object sender, CfxRequestHandlerGetResourceRequestHandlerEventArgs e);
 
         /// <summary>
-        /// Called on the IO thread before a resource request is loaded. The |Request|
-        /// object may be modified. Return RV_CONTINUE to continue the request
-        /// immediately. Return RV_CONTINUE_ASYNC and call CfxRequestCallback::
-        /// cont() at a later time to continue or cancel the request asynchronously.
-        /// Return RV_CANCEL to cancel the request immediately.
+        /// Called on the browser process IO thread before a resource request is
+        /// initiated. The |Browser| and |Frame| values represent the source of the
+        /// request. |Request| represents the request contents and cannot be modified
+        /// in this callback. |IsNavigation| will be true (1) if the resource request
+        /// is a navigation. |IsDownload| will be true (1) if the resource request is
+        /// a download. |RequestInitiator| is the origin (scheme + domain) of the page
+        /// that initiated the request. Set |DisableDefaultHandling| to true (1) to
+        /// disable default handling of the request, in which case it will need to be
+        /// handled via CfxResourceRequestHandler.GetResourceHandler or it will
+        /// be canceled. To allow the resource load to proceed with default handling
+        /// return NULL. To specify a handler for the resource return a
+        /// CfxResourceRequestHandler object. If this callback returns NULL the
+        /// same function will be called on the associated CfxRequestContextHandler,
+        /// if any.
         /// </summary>
         /// <remarks>
         /// See also the original CEF documentation in
         /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_request_handler_capi.h">cef/include/capi/cef_request_handler_capi.h</see>.
         /// </remarks>
-        public class CfxOnBeforeResourceLoadEventArgs : CfxEventArgs {
+        public class CfxRequestHandlerGetResourceRequestHandlerEventArgs : CfxEventArgs {
 
             internal IntPtr m_browser;
             internal CfxBrowser m_browser_wrapped;
@@ -1511,16 +1013,20 @@ namespace Chromium {
             internal CfxFrame m_frame_wrapped;
             internal IntPtr m_request;
             internal CfxRequest m_request_wrapped;
-            internal IntPtr m_callback;
-            internal CfxRequestCallback m_callback_wrapped;
+            internal int m_is_navigation;
+            internal int m_is_download;
+            internal IntPtr m_request_initiator_str;
+            internal int m_request_initiator_length;
+            internal string m_request_initiator;
+            internal int m_disable_default_handling;
 
-            internal CfxReturnValue m_returnValue;
+            internal CfxResourceRequestHandler m_returnValue;
             private bool returnValueSet;
 
-            internal CfxOnBeforeResourceLoadEventArgs() {}
+            internal CfxRequestHandlerGetResourceRequestHandlerEventArgs() {}
 
             /// <summary>
-            /// Get the Browser parameter for the <see cref="CfxRequestHandler.OnBeforeResourceLoad"/> callback.
+            /// Get the Browser parameter for the <see cref="CfxRequestHandler.GetResourceRequestHandler"/> callback.
             /// </summary>
             public CfxBrowser Browser {
                 get {
@@ -1530,7 +1036,7 @@ namespace Chromium {
                 }
             }
             /// <summary>
-            /// Get the Frame parameter for the <see cref="CfxRequestHandler.OnBeforeResourceLoad"/> callback.
+            /// Get the Frame parameter for the <see cref="CfxRequestHandler.GetResourceRequestHandler"/> callback.
             /// </summary>
             public CfxFrame Frame {
                 get {
@@ -1540,7 +1046,7 @@ namespace Chromium {
                 }
             }
             /// <summary>
-            /// Get the Request parameter for the <see cref="CfxRequestHandler.OnBeforeResourceLoad"/> callback.
+            /// Get the Request parameter for the <see cref="CfxRequestHandler.GetResourceRequestHandler"/> callback.
             /// </summary>
             public CfxRequest Request {
                 get {
@@ -1550,306 +1056,47 @@ namespace Chromium {
                 }
             }
             /// <summary>
-            /// Get the Callback parameter for the <see cref="CfxRequestHandler.OnBeforeResourceLoad"/> callback.
+            /// Get the IsNavigation parameter for the <see cref="CfxRequestHandler.GetResourceRequestHandler"/> callback.
             /// </summary>
-            public CfxRequestCallback Callback {
+            public bool IsNavigation {
                 get {
                     CheckAccess();
-                    if(m_callback_wrapped == null) m_callback_wrapped = CfxRequestCallback.Wrap(m_callback);
-                    return m_callback_wrapped;
+                    return 0 != m_is_navigation;
                 }
             }
             /// <summary>
-            /// Set the return value for the <see cref="CfxRequestHandler.OnBeforeResourceLoad"/> callback.
-            /// Calling SetReturnValue() more then once per callback or from different event handlers will cause an exception to be thrown.
+            /// Get the IsDownload parameter for the <see cref="CfxRequestHandler.GetResourceRequestHandler"/> callback.
             /// </summary>
-            public void SetReturnValue(CfxReturnValue returnValue) {
-                CheckAccess();
-                if(returnValueSet) {
-                    throw new CfxException("The return value has already been set");
-                }
-                returnValueSet = true;
-                this.m_returnValue = returnValue;
-            }
-
-            public override string ToString() {
-                return String.Format("Browser={{{0}}}, Frame={{{1}}}, Request={{{2}}}, Callback={{{3}}}", Browser, Frame, Request, Callback);
-            }
-        }
-
-        /// <summary>
-        /// Called on the IO thread before a resource is loaded. To allow the resource
-        /// to load normally return NULL. To specify a handler for the resource return
-        /// a CfxResourceHandler object. The |Request| object should not be
-        /// modified in this callback.
-        /// </summary>
-        /// <remarks>
-        /// See also the original CEF documentation in
-        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_request_handler_capi.h">cef/include/capi/cef_request_handler_capi.h</see>.
-        /// </remarks>
-        public delegate void CfxGetResourceHandlerEventHandler(object sender, CfxGetResourceHandlerEventArgs e);
-
-        /// <summary>
-        /// Called on the IO thread before a resource is loaded. To allow the resource
-        /// to load normally return NULL. To specify a handler for the resource return
-        /// a CfxResourceHandler object. The |Request| object should not be
-        /// modified in this callback.
-        /// </summary>
-        /// <remarks>
-        /// See also the original CEF documentation in
-        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_request_handler_capi.h">cef/include/capi/cef_request_handler_capi.h</see>.
-        /// </remarks>
-        public class CfxGetResourceHandlerEventArgs : CfxEventArgs {
-
-            internal IntPtr m_browser;
-            internal CfxBrowser m_browser_wrapped;
-            internal IntPtr m_frame;
-            internal CfxFrame m_frame_wrapped;
-            internal IntPtr m_request;
-            internal CfxRequest m_request_wrapped;
-
-            internal CfxResourceHandler m_returnValue;
-            private bool returnValueSet;
-
-            internal CfxGetResourceHandlerEventArgs() {}
-
-            /// <summary>
-            /// Get the Browser parameter for the <see cref="CfxRequestHandler.GetResourceHandler"/> callback.
-            /// </summary>
-            public CfxBrowser Browser {
+            public bool IsDownload {
                 get {
                     CheckAccess();
-                    if(m_browser_wrapped == null) m_browser_wrapped = CfxBrowser.Wrap(m_browser);
-                    return m_browser_wrapped;
+                    return 0 != m_is_download;
                 }
             }
             /// <summary>
-            /// Get the Frame parameter for the <see cref="CfxRequestHandler.GetResourceHandler"/> callback.
+            /// Get the RequestInitiator parameter for the <see cref="CfxRequestHandler.GetResourceRequestHandler"/> callback.
             /// </summary>
-            public CfxFrame Frame {
+            public string RequestInitiator {
                 get {
                     CheckAccess();
-                    if(m_frame_wrapped == null) m_frame_wrapped = CfxFrame.Wrap(m_frame);
-                    return m_frame_wrapped;
+                    m_request_initiator = StringFunctions.PtrToStringUni(m_request_initiator_str, m_request_initiator_length);
+                    return m_request_initiator;
                 }
             }
             /// <summary>
-            /// Get the Request parameter for the <see cref="CfxRequestHandler.GetResourceHandler"/> callback.
+            /// Set the DisableDefaultHandling out parameter for the <see cref="CfxRequestHandler.GetResourceRequestHandler"/> callback.
             /// </summary>
-            public CfxRequest Request {
-                get {
-                    CheckAccess();
-                    if(m_request_wrapped == null) m_request_wrapped = CfxRequest.Wrap(m_request);
-                    return m_request_wrapped;
-                }
-            }
-            /// <summary>
-            /// Set the return value for the <see cref="CfxRequestHandler.GetResourceHandler"/> callback.
-            /// Calling SetReturnValue() more then once per callback or from different event handlers will cause an exception to be thrown.
-            /// </summary>
-            public void SetReturnValue(CfxResourceHandler returnValue) {
-                CheckAccess();
-                if(returnValueSet) {
-                    throw new CfxException("The return value has already been set");
-                }
-                returnValueSet = true;
-                this.m_returnValue = returnValue;
-            }
-
-            public override string ToString() {
-                return String.Format("Browser={{{0}}}, Frame={{{1}}}, Request={{{2}}}", Browser, Frame, Request);
-            }
-        }
-
-        /// <summary>
-        /// Called on the IO thread when a resource load is redirected. The |Request|
-        /// parameter will contain the old URL and other request-related information.
-        /// The |Response| parameter will contain the response that resulted in the
-        /// redirect. The |NewUrl| parameter will contain the new URL and can be
-        /// changed if desired. The |Request| object cannot be modified in this
-        /// callback.
-        /// </summary>
-        /// <remarks>
-        /// See also the original CEF documentation in
-        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_request_handler_capi.h">cef/include/capi/cef_request_handler_capi.h</see>.
-        /// </remarks>
-        public delegate void CfxOnResourceRedirectEventHandler(object sender, CfxOnResourceRedirectEventArgs e);
-
-        /// <summary>
-        /// Called on the IO thread when a resource load is redirected. The |Request|
-        /// parameter will contain the old URL and other request-related information.
-        /// The |Response| parameter will contain the response that resulted in the
-        /// redirect. The |NewUrl| parameter will contain the new URL and can be
-        /// changed if desired. The |Request| object cannot be modified in this
-        /// callback.
-        /// </summary>
-        /// <remarks>
-        /// See also the original CEF documentation in
-        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_request_handler_capi.h">cef/include/capi/cef_request_handler_capi.h</see>.
-        /// </remarks>
-        public class CfxOnResourceRedirectEventArgs : CfxEventArgs {
-
-            internal IntPtr m_browser;
-            internal CfxBrowser m_browser_wrapped;
-            internal IntPtr m_frame;
-            internal CfxFrame m_frame_wrapped;
-            internal IntPtr m_request;
-            internal CfxRequest m_request_wrapped;
-            internal IntPtr m_response;
-            internal CfxResponse m_response_wrapped;
-            internal IntPtr m_new_url_str;
-            internal int m_new_url_length;
-            internal string m_new_url_wrapped;
-            internal bool m_new_url_changed;
-
-            internal CfxOnResourceRedirectEventArgs() {}
-
-            /// <summary>
-            /// Get the Browser parameter for the <see cref="CfxRequestHandler.OnResourceRedirect"/> callback.
-            /// </summary>
-            public CfxBrowser Browser {
-                get {
-                    CheckAccess();
-                    if(m_browser_wrapped == null) m_browser_wrapped = CfxBrowser.Wrap(m_browser);
-                    return m_browser_wrapped;
-                }
-            }
-            /// <summary>
-            /// Get the Frame parameter for the <see cref="CfxRequestHandler.OnResourceRedirect"/> callback.
-            /// </summary>
-            public CfxFrame Frame {
-                get {
-                    CheckAccess();
-                    if(m_frame_wrapped == null) m_frame_wrapped = CfxFrame.Wrap(m_frame);
-                    return m_frame_wrapped;
-                }
-            }
-            /// <summary>
-            /// Get the Request parameter for the <see cref="CfxRequestHandler.OnResourceRedirect"/> callback.
-            /// </summary>
-            public CfxRequest Request {
-                get {
-                    CheckAccess();
-                    if(m_request_wrapped == null) m_request_wrapped = CfxRequest.Wrap(m_request);
-                    return m_request_wrapped;
-                }
-            }
-            /// <summary>
-            /// Get the Response parameter for the <see cref="CfxRequestHandler.OnResourceRedirect"/> callback.
-            /// </summary>
-            public CfxResponse Response {
-                get {
-                    CheckAccess();
-                    if(m_response_wrapped == null) m_response_wrapped = CfxResponse.Wrap(m_response);
-                    return m_response_wrapped;
-                }
-            }
-            /// <summary>
-            /// Get or set the NewUrl parameter for the <see cref="CfxRequestHandler.OnResourceRedirect"/> callback.
-            /// </summary>
-            public string NewUrl {
-                get {
-                    CheckAccess();
-                    if(!m_new_url_changed && m_new_url_wrapped == null) {
-                        m_new_url_wrapped = StringFunctions.PtrToStringUni(m_new_url_str, m_new_url_length);
-                    }
-                    return m_new_url_wrapped;
-                }
+            public bool DisableDefaultHandling {
                 set {
                     CheckAccess();
-                    m_new_url_wrapped = value;
-                    m_new_url_changed = true;
-                }
-            }
-
-            public override string ToString() {
-                return String.Format("Browser={{{0}}}, Frame={{{1}}}, Request={{{2}}}, Response={{{3}}}, NewUrl={{{4}}}", Browser, Frame, Request, Response, NewUrl);
-            }
-        }
-
-        /// <summary>
-        /// Called on the IO thread when a resource response is received. To allow the
-        /// resource to load normally return false (0). To redirect or retry the
-        /// resource modify |Request| (url, headers or post body) and return true (1).
-        /// The |Response| object cannot be modified in this callback.
-        /// </summary>
-        /// <remarks>
-        /// See also the original CEF documentation in
-        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_request_handler_capi.h">cef/include/capi/cef_request_handler_capi.h</see>.
-        /// </remarks>
-        public delegate void CfxOnResourceResponseEventHandler(object sender, CfxOnResourceResponseEventArgs e);
-
-        /// <summary>
-        /// Called on the IO thread when a resource response is received. To allow the
-        /// resource to load normally return false (0). To redirect or retry the
-        /// resource modify |Request| (url, headers or post body) and return true (1).
-        /// The |Response| object cannot be modified in this callback.
-        /// </summary>
-        /// <remarks>
-        /// See also the original CEF documentation in
-        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_request_handler_capi.h">cef/include/capi/cef_request_handler_capi.h</see>.
-        /// </remarks>
-        public class CfxOnResourceResponseEventArgs : CfxEventArgs {
-
-            internal IntPtr m_browser;
-            internal CfxBrowser m_browser_wrapped;
-            internal IntPtr m_frame;
-            internal CfxFrame m_frame_wrapped;
-            internal IntPtr m_request;
-            internal CfxRequest m_request_wrapped;
-            internal IntPtr m_response;
-            internal CfxResponse m_response_wrapped;
-
-            internal bool m_returnValue;
-            private bool returnValueSet;
-
-            internal CfxOnResourceResponseEventArgs() {}
-
-            /// <summary>
-            /// Get the Browser parameter for the <see cref="CfxRequestHandler.OnResourceResponse"/> callback.
-            /// </summary>
-            public CfxBrowser Browser {
-                get {
-                    CheckAccess();
-                    if(m_browser_wrapped == null) m_browser_wrapped = CfxBrowser.Wrap(m_browser);
-                    return m_browser_wrapped;
+                    m_disable_default_handling = value ? 1 : 0;
                 }
             }
             /// <summary>
-            /// Get the Frame parameter for the <see cref="CfxRequestHandler.OnResourceResponse"/> callback.
-            /// </summary>
-            public CfxFrame Frame {
-                get {
-                    CheckAccess();
-                    if(m_frame_wrapped == null) m_frame_wrapped = CfxFrame.Wrap(m_frame);
-                    return m_frame_wrapped;
-                }
-            }
-            /// <summary>
-            /// Get the Request parameter for the <see cref="CfxRequestHandler.OnResourceResponse"/> callback.
-            /// </summary>
-            public CfxRequest Request {
-                get {
-                    CheckAccess();
-                    if(m_request_wrapped == null) m_request_wrapped = CfxRequest.Wrap(m_request);
-                    return m_request_wrapped;
-                }
-            }
-            /// <summary>
-            /// Get the Response parameter for the <see cref="CfxRequestHandler.OnResourceResponse"/> callback.
-            /// </summary>
-            public CfxResponse Response {
-                get {
-                    CheckAccess();
-                    if(m_response_wrapped == null) m_response_wrapped = CfxResponse.Wrap(m_response);
-                    return m_response_wrapped;
-                }
-            }
-            /// <summary>
-            /// Set the return value for the <see cref="CfxRequestHandler.OnResourceResponse"/> callback.
+            /// Set the return value for the <see cref="CfxRequestHandler.GetResourceRequestHandler"/> callback.
             /// Calling SetReturnValue() more then once per callback or from different event handlers will cause an exception to be thrown.
             /// </summary>
-            public void SetReturnValue(bool returnValue) {
+            public void SetReturnValue(CfxResourceRequestHandler returnValue) {
                 CheckAccess();
                 if(returnValueSet) {
                     throw new CfxException("The return value has already been set");
@@ -1859,211 +1106,17 @@ namespace Chromium {
             }
 
             public override string ToString() {
-                return String.Format("Browser={{{0}}}, Frame={{{1}}}, Request={{{2}}}, Response={{{3}}}", Browser, Frame, Request, Response);
-            }
-        }
-
-        /// <summary>
-        /// Called on the IO thread to optionally filter resource response content.
-        /// |Request| and |Response| represent the request and response respectively
-        /// and cannot be modified in this callback.
-        /// </summary>
-        /// <remarks>
-        /// See also the original CEF documentation in
-        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_request_handler_capi.h">cef/include/capi/cef_request_handler_capi.h</see>.
-        /// </remarks>
-        public delegate void CfxGetResourceResponseFilterEventHandler(object sender, CfxGetResourceResponseFilterEventArgs e);
-
-        /// <summary>
-        /// Called on the IO thread to optionally filter resource response content.
-        /// |Request| and |Response| represent the request and response respectively
-        /// and cannot be modified in this callback.
-        /// </summary>
-        /// <remarks>
-        /// See also the original CEF documentation in
-        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_request_handler_capi.h">cef/include/capi/cef_request_handler_capi.h</see>.
-        /// </remarks>
-        public class CfxGetResourceResponseFilterEventArgs : CfxEventArgs {
-
-            internal IntPtr m_browser;
-            internal CfxBrowser m_browser_wrapped;
-            internal IntPtr m_frame;
-            internal CfxFrame m_frame_wrapped;
-            internal IntPtr m_request;
-            internal CfxRequest m_request_wrapped;
-            internal IntPtr m_response;
-            internal CfxResponse m_response_wrapped;
-
-            internal CfxResponseFilter m_returnValue;
-            private bool returnValueSet;
-
-            internal CfxGetResourceResponseFilterEventArgs() {}
-
-            /// <summary>
-            /// Get the Browser parameter for the <see cref="CfxRequestHandler.GetResourceResponseFilter"/> callback.
-            /// </summary>
-            public CfxBrowser Browser {
-                get {
-                    CheckAccess();
-                    if(m_browser_wrapped == null) m_browser_wrapped = CfxBrowser.Wrap(m_browser);
-                    return m_browser_wrapped;
-                }
-            }
-            /// <summary>
-            /// Get the Frame parameter for the <see cref="CfxRequestHandler.GetResourceResponseFilter"/> callback.
-            /// </summary>
-            public CfxFrame Frame {
-                get {
-                    CheckAccess();
-                    if(m_frame_wrapped == null) m_frame_wrapped = CfxFrame.Wrap(m_frame);
-                    return m_frame_wrapped;
-                }
-            }
-            /// <summary>
-            /// Get the Request parameter for the <see cref="CfxRequestHandler.GetResourceResponseFilter"/> callback.
-            /// </summary>
-            public CfxRequest Request {
-                get {
-                    CheckAccess();
-                    if(m_request_wrapped == null) m_request_wrapped = CfxRequest.Wrap(m_request);
-                    return m_request_wrapped;
-                }
-            }
-            /// <summary>
-            /// Get the Response parameter for the <see cref="CfxRequestHandler.GetResourceResponseFilter"/> callback.
-            /// </summary>
-            public CfxResponse Response {
-                get {
-                    CheckAccess();
-                    if(m_response_wrapped == null) m_response_wrapped = CfxResponse.Wrap(m_response);
-                    return m_response_wrapped;
-                }
-            }
-            /// <summary>
-            /// Set the return value for the <see cref="CfxRequestHandler.GetResourceResponseFilter"/> callback.
-            /// Calling SetReturnValue() more then once per callback or from different event handlers will cause an exception to be thrown.
-            /// </summary>
-            public void SetReturnValue(CfxResponseFilter returnValue) {
-                CheckAccess();
-                if(returnValueSet) {
-                    throw new CfxException("The return value has already been set");
-                }
-                returnValueSet = true;
-                this.m_returnValue = returnValue;
-            }
-
-            public override string ToString() {
-                return String.Format("Browser={{{0}}}, Frame={{{1}}}, Request={{{2}}}, Response={{{3}}}", Browser, Frame, Request, Response);
-            }
-        }
-
-        /// <summary>
-        /// Called on the IO thread when a resource load has completed. |Request| and
-        /// |Response| represent the request and response respectively and cannot be
-        /// modified in this callback. |Status| indicates the load completion status.
-        /// |ReceivedContentLength| is the number of response bytes actually read.
-        /// </summary>
-        /// <remarks>
-        /// See also the original CEF documentation in
-        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_request_handler_capi.h">cef/include/capi/cef_request_handler_capi.h</see>.
-        /// </remarks>
-        public delegate void CfxOnResourceLoadCompleteEventHandler(object sender, CfxOnResourceLoadCompleteEventArgs e);
-
-        /// <summary>
-        /// Called on the IO thread when a resource load has completed. |Request| and
-        /// |Response| represent the request and response respectively and cannot be
-        /// modified in this callback. |Status| indicates the load completion status.
-        /// |ReceivedContentLength| is the number of response bytes actually read.
-        /// </summary>
-        /// <remarks>
-        /// See also the original CEF documentation in
-        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_request_handler_capi.h">cef/include/capi/cef_request_handler_capi.h</see>.
-        /// </remarks>
-        public class CfxOnResourceLoadCompleteEventArgs : CfxEventArgs {
-
-            internal IntPtr m_browser;
-            internal CfxBrowser m_browser_wrapped;
-            internal IntPtr m_frame;
-            internal CfxFrame m_frame_wrapped;
-            internal IntPtr m_request;
-            internal CfxRequest m_request_wrapped;
-            internal IntPtr m_response;
-            internal CfxResponse m_response_wrapped;
-            internal int m_status;
-            internal long m_received_content_length;
-
-            internal CfxOnResourceLoadCompleteEventArgs() {}
-
-            /// <summary>
-            /// Get the Browser parameter for the <see cref="CfxRequestHandler.OnResourceLoadComplete"/> callback.
-            /// </summary>
-            public CfxBrowser Browser {
-                get {
-                    CheckAccess();
-                    if(m_browser_wrapped == null) m_browser_wrapped = CfxBrowser.Wrap(m_browser);
-                    return m_browser_wrapped;
-                }
-            }
-            /// <summary>
-            /// Get the Frame parameter for the <see cref="CfxRequestHandler.OnResourceLoadComplete"/> callback.
-            /// </summary>
-            public CfxFrame Frame {
-                get {
-                    CheckAccess();
-                    if(m_frame_wrapped == null) m_frame_wrapped = CfxFrame.Wrap(m_frame);
-                    return m_frame_wrapped;
-                }
-            }
-            /// <summary>
-            /// Get the Request parameter for the <see cref="CfxRequestHandler.OnResourceLoadComplete"/> callback.
-            /// </summary>
-            public CfxRequest Request {
-                get {
-                    CheckAccess();
-                    if(m_request_wrapped == null) m_request_wrapped = CfxRequest.Wrap(m_request);
-                    return m_request_wrapped;
-                }
-            }
-            /// <summary>
-            /// Get the Response parameter for the <see cref="CfxRequestHandler.OnResourceLoadComplete"/> callback.
-            /// </summary>
-            public CfxResponse Response {
-                get {
-                    CheckAccess();
-                    if(m_response_wrapped == null) m_response_wrapped = CfxResponse.Wrap(m_response);
-                    return m_response_wrapped;
-                }
-            }
-            /// <summary>
-            /// Get the Status parameter for the <see cref="CfxRequestHandler.OnResourceLoadComplete"/> callback.
-            /// </summary>
-            public CfxUrlRequestStatus Status {
-                get {
-                    CheckAccess();
-                    return (CfxUrlRequestStatus)m_status;
-                }
-            }
-            /// <summary>
-            /// Get the ReceivedContentLength parameter for the <see cref="CfxRequestHandler.OnResourceLoadComplete"/> callback.
-            /// </summary>
-            public long ReceivedContentLength {
-                get {
-                    CheckAccess();
-                    return m_received_content_length;
-                }
-            }
-
-            public override string ToString() {
-                return String.Format("Browser={{{0}}}, Frame={{{1}}}, Request={{{2}}}, Response={{{3}}}, Status={{{4}}}, ReceivedContentLength={{{5}}}", Browser, Frame, Request, Response, Status, ReceivedContentLength);
+                return String.Format("Browser={{{0}}}, Frame={{{1}}}, Request={{{2}}}, IsNavigation={{{3}}}, IsDownload={{{4}}}, RequestInitiator={{{5}}}", Browser, Frame, Request, IsNavigation, IsDownload, RequestInitiator);
             }
         }
 
         /// <summary>
         /// Called on the IO thread when the browser needs credentials from the user.
-        /// |IsProxy| indicates whether the host is a proxy server. |Host| contains the
-        /// hostname and |Port| contains the port number. |Realm| is the realm of the
-        /// challenge and may be NULL. |Scheme| is the authentication scheme used, such
-        /// as "basic" or "digest", and will be NULL if the source of the request is an
+        /// |OriginUrl| is the origin making this authentication request. |IsProxy|
+        /// indicates whether the host is a proxy server. |Host| contains the hostname
+        /// and |Port| contains the port number. |Realm| is the realm of the challenge
+        /// and may be NULL. |Scheme| is the authentication scheme used, such as
+        /// "basic" or "digest", and will be NULL if the source of the request is an
         /// FTP server. Return true (1) to continue the request and call
         /// CfxAuthCallback.Continue() either in this function or at a later time when
         /// the authentication information is available. Return false (0) to cancel the
@@ -2077,10 +1130,11 @@ namespace Chromium {
 
         /// <summary>
         /// Called on the IO thread when the browser needs credentials from the user.
-        /// |IsProxy| indicates whether the host is a proxy server. |Host| contains the
-        /// hostname and |Port| contains the port number. |Realm| is the realm of the
-        /// challenge and may be NULL. |Scheme| is the authentication scheme used, such
-        /// as "basic" or "digest", and will be NULL if the source of the request is an
+        /// |OriginUrl| is the origin making this authentication request. |IsProxy|
+        /// indicates whether the host is a proxy server. |Host| contains the hostname
+        /// and |Port| contains the port number. |Realm| is the realm of the challenge
+        /// and may be NULL. |Scheme| is the authentication scheme used, such as
+        /// "basic" or "digest", and will be NULL if the source of the request is an
         /// FTP server. Return true (1) to continue the request and call
         /// CfxAuthCallback.Continue() either in this function or at a later time when
         /// the authentication information is available. Return false (0) to cancel the
@@ -2094,8 +1148,9 @@ namespace Chromium {
 
             internal IntPtr m_browser;
             internal CfxBrowser m_browser_wrapped;
-            internal IntPtr m_frame;
-            internal CfxFrame m_frame_wrapped;
+            internal IntPtr m_origin_url_str;
+            internal int m_origin_url_length;
+            internal string m_origin_url;
             internal int m_isProxy;
             internal IntPtr m_host_str;
             internal int m_host_length;
@@ -2126,13 +1181,13 @@ namespace Chromium {
                 }
             }
             /// <summary>
-            /// Get the Frame parameter for the <see cref="CfxRequestHandler.GetAuthCredentials"/> callback.
+            /// Get the OriginUrl parameter for the <see cref="CfxRequestHandler.GetAuthCredentials"/> callback.
             /// </summary>
-            public CfxFrame Frame {
+            public string OriginUrl {
                 get {
                     CheckAccess();
-                    if(m_frame_wrapped == null) m_frame_wrapped = CfxFrame.Wrap(m_frame);
-                    return m_frame_wrapped;
+                    m_origin_url = StringFunctions.PtrToStringUni(m_origin_url_str, m_origin_url_length);
+                    return m_origin_url;
                 }
             }
             /// <summary>
@@ -2207,187 +1262,7 @@ namespace Chromium {
             }
 
             public override string ToString() {
-                return String.Format("Browser={{{0}}}, Frame={{{1}}}, IsProxy={{{2}}}, Host={{{3}}}, Port={{{4}}}, Realm={{{5}}}, Scheme={{{6}}}, Callback={{{7}}}", Browser, Frame, IsProxy, Host, Port, Realm, Scheme, Callback);
-            }
-        }
-
-        /// <summary>
-        /// Called on the IO thread before sending a network request with a "Cookie"
-        /// request header. Return true (1) to allow cookies to be included in the
-        /// network request or false (0) to block cookies. The |Request| object should
-        /// not be modified in this callback.
-        /// </summary>
-        /// <remarks>
-        /// See also the original CEF documentation in
-        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_request_handler_capi.h">cef/include/capi/cef_request_handler_capi.h</see>.
-        /// </remarks>
-        public delegate void CfxCanGetCookiesEventHandler(object sender, CfxCanGetCookiesEventArgs e);
-
-        /// <summary>
-        /// Called on the IO thread before sending a network request with a "Cookie"
-        /// request header. Return true (1) to allow cookies to be included in the
-        /// network request or false (0) to block cookies. The |Request| object should
-        /// not be modified in this callback.
-        /// </summary>
-        /// <remarks>
-        /// See also the original CEF documentation in
-        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_request_handler_capi.h">cef/include/capi/cef_request_handler_capi.h</see>.
-        /// </remarks>
-        public class CfxCanGetCookiesEventArgs : CfxEventArgs {
-
-            internal IntPtr m_browser;
-            internal CfxBrowser m_browser_wrapped;
-            internal IntPtr m_frame;
-            internal CfxFrame m_frame_wrapped;
-            internal IntPtr m_request;
-            internal CfxRequest m_request_wrapped;
-
-            internal bool m_returnValue;
-            private bool returnValueSet;
-
-            internal CfxCanGetCookiesEventArgs() {}
-
-            /// <summary>
-            /// Get the Browser parameter for the <see cref="CfxRequestHandler.CanGetCookies"/> callback.
-            /// </summary>
-            public CfxBrowser Browser {
-                get {
-                    CheckAccess();
-                    if(m_browser_wrapped == null) m_browser_wrapped = CfxBrowser.Wrap(m_browser);
-                    return m_browser_wrapped;
-                }
-            }
-            /// <summary>
-            /// Get the Frame parameter for the <see cref="CfxRequestHandler.CanGetCookies"/> callback.
-            /// </summary>
-            public CfxFrame Frame {
-                get {
-                    CheckAccess();
-                    if(m_frame_wrapped == null) m_frame_wrapped = CfxFrame.Wrap(m_frame);
-                    return m_frame_wrapped;
-                }
-            }
-            /// <summary>
-            /// Get the Request parameter for the <see cref="CfxRequestHandler.CanGetCookies"/> callback.
-            /// </summary>
-            public CfxRequest Request {
-                get {
-                    CheckAccess();
-                    if(m_request_wrapped == null) m_request_wrapped = CfxRequest.Wrap(m_request);
-                    return m_request_wrapped;
-                }
-            }
-            /// <summary>
-            /// Set the return value for the <see cref="CfxRequestHandler.CanGetCookies"/> callback.
-            /// Calling SetReturnValue() more then once per callback or from different event handlers will cause an exception to be thrown.
-            /// </summary>
-            public void SetReturnValue(bool returnValue) {
-                CheckAccess();
-                if(returnValueSet) {
-                    throw new CfxException("The return value has already been set");
-                }
-                returnValueSet = true;
-                this.m_returnValue = returnValue;
-            }
-
-            public override string ToString() {
-                return String.Format("Browser={{{0}}}, Frame={{{1}}}, Request={{{2}}}", Browser, Frame, Request);
-            }
-        }
-
-        /// <summary>
-        /// Called on the IO thread when receiving a network request with a "Set-
-        /// Cookie" response header value represented by |Cookie|. Return true (1) to
-        /// allow the cookie to be stored or false (0) to block the cookie. The
-        /// |Request| object should not be modified in this callback.
-        /// </summary>
-        /// <remarks>
-        /// See also the original CEF documentation in
-        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_request_handler_capi.h">cef/include/capi/cef_request_handler_capi.h</see>.
-        /// </remarks>
-        public delegate void CfxRequestHandlerCanSetCookieEventHandler(object sender, CfxRequestHandlerCanSetCookieEventArgs e);
-
-        /// <summary>
-        /// Called on the IO thread when receiving a network request with a "Set-
-        /// Cookie" response header value represented by |Cookie|. Return true (1) to
-        /// allow the cookie to be stored or false (0) to block the cookie. The
-        /// |Request| object should not be modified in this callback.
-        /// </summary>
-        /// <remarks>
-        /// See also the original CEF documentation in
-        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_request_handler_capi.h">cef/include/capi/cef_request_handler_capi.h</see>.
-        /// </remarks>
-        public class CfxRequestHandlerCanSetCookieEventArgs : CfxEventArgs {
-
-            internal IntPtr m_browser;
-            internal CfxBrowser m_browser_wrapped;
-            internal IntPtr m_frame;
-            internal CfxFrame m_frame_wrapped;
-            internal IntPtr m_request;
-            internal CfxRequest m_request_wrapped;
-            internal IntPtr m_cookie;
-            internal CfxCookie m_cookie_wrapped;
-
-            internal bool m_returnValue;
-            private bool returnValueSet;
-
-            internal CfxRequestHandlerCanSetCookieEventArgs() {}
-
-            /// <summary>
-            /// Get the Browser parameter for the <see cref="CfxRequestHandler.CanSetCookie"/> callback.
-            /// </summary>
-            public CfxBrowser Browser {
-                get {
-                    CheckAccess();
-                    if(m_browser_wrapped == null) m_browser_wrapped = CfxBrowser.Wrap(m_browser);
-                    return m_browser_wrapped;
-                }
-            }
-            /// <summary>
-            /// Get the Frame parameter for the <see cref="CfxRequestHandler.CanSetCookie"/> callback.
-            /// </summary>
-            public CfxFrame Frame {
-                get {
-                    CheckAccess();
-                    if(m_frame_wrapped == null) m_frame_wrapped = CfxFrame.Wrap(m_frame);
-                    return m_frame_wrapped;
-                }
-            }
-            /// <summary>
-            /// Get the Request parameter for the <see cref="CfxRequestHandler.CanSetCookie"/> callback.
-            /// </summary>
-            public CfxRequest Request {
-                get {
-                    CheckAccess();
-                    if(m_request_wrapped == null) m_request_wrapped = CfxRequest.Wrap(m_request);
-                    return m_request_wrapped;
-                }
-            }
-            /// <summary>
-            /// Get the Cookie parameter for the <see cref="CfxRequestHandler.CanSetCookie"/> callback.
-            /// </summary>
-            public CfxCookie Cookie {
-                get {
-                    CheckAccess();
-                    if(m_cookie_wrapped == null) m_cookie_wrapped = CfxCookie.Wrap(m_cookie);
-                    return m_cookie_wrapped;
-                }
-            }
-            /// <summary>
-            /// Set the return value for the <see cref="CfxRequestHandler.CanSetCookie"/> callback.
-            /// Calling SetReturnValue() more then once per callback or from different event handlers will cause an exception to be thrown.
-            /// </summary>
-            public void SetReturnValue(bool returnValue) {
-                CheckAccess();
-                if(returnValueSet) {
-                    throw new CfxException("The return value has already been set");
-                }
-                returnValueSet = true;
-                this.m_returnValue = returnValue;
-            }
-
-            public override string ToString() {
-                return String.Format("Browser={{{0}}}, Frame={{{1}}}, Request={{{2}}}, Cookie={{{3}}}", Browser, Frame, Request, Cookie);
+                return String.Format("Browser={{{0}}}, OriginUrl={{{1}}}, IsProxy={{{2}}}, Host={{{3}}}, Port={{{4}}}, Realm={{{5}}}, Scheme={{{6}}}, Callback={{{7}}}", Browser, OriginUrl, IsProxy, Host, Port, Realm, Scheme, Callback);
             }
         }
 
@@ -2489,76 +1364,6 @@ namespace Chromium {
 
             public override string ToString() {
                 return String.Format("Browser={{{0}}}, OriginUrl={{{1}}}, NewSize={{{2}}}, Callback={{{3}}}", Browser, OriginUrl, NewSize, Callback);
-            }
-        }
-
-        /// <summary>
-        /// Called on the UI thread to handle requests for URLs with an unknown
-        /// protocol component. Set |AllowOsExecution| to true (1) to attempt
-        /// execution via the registered OS protocol handler, if any. SECURITY WARNING:
-        /// YOU SHOULD USE THIS METHOD TO ENFORCE RESTRICTIONS BASED ON SCHEME, HOST OR
-        /// OTHER URL ANALYSIS BEFORE ALLOWING OS EXECUTION.
-        /// </summary>
-        /// <remarks>
-        /// See also the original CEF documentation in
-        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_request_handler_capi.h">cef/include/capi/cef_request_handler_capi.h</see>.
-        /// </remarks>
-        public delegate void CfxOnProtocolExecutionEventHandler(object sender, CfxOnProtocolExecutionEventArgs e);
-
-        /// <summary>
-        /// Called on the UI thread to handle requests for URLs with an unknown
-        /// protocol component. Set |AllowOsExecution| to true (1) to attempt
-        /// execution via the registered OS protocol handler, if any. SECURITY WARNING:
-        /// YOU SHOULD USE THIS METHOD TO ENFORCE RESTRICTIONS BASED ON SCHEME, HOST OR
-        /// OTHER URL ANALYSIS BEFORE ALLOWING OS EXECUTION.
-        /// </summary>
-        /// <remarks>
-        /// See also the original CEF documentation in
-        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_request_handler_capi.h">cef/include/capi/cef_request_handler_capi.h</see>.
-        /// </remarks>
-        public class CfxOnProtocolExecutionEventArgs : CfxEventArgs {
-
-            internal IntPtr m_browser;
-            internal CfxBrowser m_browser_wrapped;
-            internal IntPtr m_url_str;
-            internal int m_url_length;
-            internal string m_url;
-            internal int m_allow_os_execution;
-
-            internal CfxOnProtocolExecutionEventArgs() {}
-
-            /// <summary>
-            /// Get the Browser parameter for the <see cref="CfxRequestHandler.OnProtocolExecution"/> callback.
-            /// </summary>
-            public CfxBrowser Browser {
-                get {
-                    CheckAccess();
-                    if(m_browser_wrapped == null) m_browser_wrapped = CfxBrowser.Wrap(m_browser);
-                    return m_browser_wrapped;
-                }
-            }
-            /// <summary>
-            /// Get the Url parameter for the <see cref="CfxRequestHandler.OnProtocolExecution"/> callback.
-            /// </summary>
-            public string Url {
-                get {
-                    CheckAccess();
-                    m_url = StringFunctions.PtrToStringUni(m_url_str, m_url_length);
-                    return m_url;
-                }
-            }
-            /// <summary>
-            /// Set the AllowOsExecution out parameter for the <see cref="CfxRequestHandler.OnProtocolExecution"/> callback.
-            /// </summary>
-            public bool AllowOsExecution {
-                set {
-                    CheckAccess();
-                    m_allow_os_execution = value ? 1 : 0;
-                }
-            }
-
-            public override string ToString() {
-                return String.Format("Browser={{{0}}}, Url={{{1}}}", Browser, Url);
             }
         }
 
