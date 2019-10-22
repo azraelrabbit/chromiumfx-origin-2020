@@ -173,13 +173,15 @@ public class WrapperGenerator {
                     case "cef_create_new_temp_directory!new_temp_path":
                     case "cef_create_temp_directory_in_directory!new_dir":
                     case "cef_get_temp_directory!temp_dir":
-
+                        // replace inout parameter by out parameter
                         s.Parameters[i] = new Parameter(arg, new CefStringOutType());
                         break;
 
                     case "cef_display_handler::on_tooltip!text":
                     case "cef_menu_model_delegate::format_label!label":
                     case "cef_request_handler::on_resource_redirect!new_url":
+                    case "cef_resource_request_handler::on_resource_redirect!new_url":
+                        // leave parameter unchanged -> inout
                         break;
 
                     default:
@@ -190,6 +192,7 @@ public class WrapperGenerator {
                             break;
                         }
 
+                        // generator can't resolve -> check manually and add appropriate case label to switch above
                         Debug.Print("Check comments to see if string pointer argument is out our inout:");
                         Debug.Print("If in doubt, leave it inout.");
                         Debug.Print(function + "!" + arg.VarName);
