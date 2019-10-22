@@ -86,21 +86,24 @@ namespace Chromium {
 
         // on_browser_created
         [System.Runtime.InteropServices.UnmanagedFunctionPointer(System.Runtime.InteropServices.CallingConvention.StdCall, SetLastError = false)]
-        private delegate void on_browser_created_delegate(IntPtr gcHandlePtr, IntPtr browser, out int browser_release);
+        private delegate void on_browser_created_delegate(IntPtr gcHandlePtr, IntPtr browser, out int browser_release, IntPtr extra_info, out int extra_info_release);
         private static on_browser_created_delegate on_browser_created_native;
         private static IntPtr on_browser_created_native_ptr;
 
-        internal static void on_browser_created(IntPtr gcHandlePtr, IntPtr browser, out int browser_release) {
+        internal static void on_browser_created(IntPtr gcHandlePtr, IntPtr browser, out int browser_release, IntPtr extra_info, out int extra_info_release) {
             var self = (CfxRenderProcessHandler)System.Runtime.InteropServices.GCHandle.FromIntPtr(gcHandlePtr).Target;
             if(self == null || self.CallbacksDisabled) {
                 browser_release = 1;
+                extra_info_release = 1;
                 return;
             }
             var e = new CfxOnBrowserCreatedEventArgs();
             e.m_browser = browser;
+            e.m_extra_info = extra_info;
             self.m_OnBrowserCreated?.Invoke(self, e);
             e.m_isInvalid = true;
             browser_release = e.m_browser_wrapped == null? 1 : 0;
+            extra_info_release = e.m_extra_info_wrapped == null? 1 : 0;
         }
 
         // on_browser_destroyed
@@ -248,25 +251,28 @@ namespace Chromium {
 
         // on_process_message_received
         [System.Runtime.InteropServices.UnmanagedFunctionPointer(System.Runtime.InteropServices.CallingConvention.StdCall, SetLastError = false)]
-        private delegate void on_process_message_received_delegate(IntPtr gcHandlePtr, out int __retval, IntPtr browser, out int browser_release, int source_process, IntPtr message, out int message_release);
+        private delegate void on_process_message_received_delegate(IntPtr gcHandlePtr, out int __retval, IntPtr browser, out int browser_release, IntPtr frame, out int frame_release, int source_process, IntPtr message, out int message_release);
         private static on_process_message_received_delegate on_process_message_received_native;
         private static IntPtr on_process_message_received_native_ptr;
 
-        internal static void on_process_message_received(IntPtr gcHandlePtr, out int __retval, IntPtr browser, out int browser_release, int source_process, IntPtr message, out int message_release) {
+        internal static void on_process_message_received(IntPtr gcHandlePtr, out int __retval, IntPtr browser, out int browser_release, IntPtr frame, out int frame_release, int source_process, IntPtr message, out int message_release) {
             var self = (CfxRenderProcessHandler)System.Runtime.InteropServices.GCHandle.FromIntPtr(gcHandlePtr).Target;
             if(self == null || self.CallbacksDisabled) {
                 __retval = default(int);
                 browser_release = 1;
+                frame_release = 1;
                 message_release = 1;
                 return;
             }
             var e = new CfxOnProcessMessageReceivedEventArgs();
             e.m_browser = browser;
+            e.m_frame = frame;
             e.m_source_process = source_process;
             e.m_message = message;
             self.m_OnProcessMessageReceived?.Invoke(self, e);
             e.m_isInvalid = true;
             browser_release = e.m_browser_wrapped == null? 1 : 0;
+            frame_release = e.m_frame_wrapped == null? 1 : 0;
             message_release = e.m_message_wrapped == null? 1 : 0;
             __retval = e.m_returnValue ? 1 : 0;
         }
@@ -335,7 +341,11 @@ namespace Chromium {
         /// <summary>
         /// Called after a browser has been created. When browsing cross-origin a new
         /// browser will be created before the old browser with the same identifier is
-        /// destroyed.
+        /// destroyed. |ExtraInfo| is a read-only value originating from
+        /// CfxBrowserHost.CfxBrowserHostCreateBrowser(),
+        /// CfxBrowserHost.CfxBrowserHostCreateBrowserSync(),
+        /// CfxLifeSpanHandler.OnBeforePopup() or
+        /// CfxBrowserView.CfxBrowserViewCreate().
         /// </summary>
         /// <remarks>
         /// See also the original CEF documentation in
@@ -686,7 +696,11 @@ namespace Chromium {
         /// <summary>
         /// Called after a browser has been created. When browsing cross-origin a new
         /// browser will be created before the old browser with the same identifier is
-        /// destroyed.
+        /// destroyed. |ExtraInfo| is a read-only value originating from
+        /// CfxBrowserHost.CfxBrowserHostCreateBrowser(),
+        /// CfxBrowserHost.CfxBrowserHostCreateBrowserSync(),
+        /// CfxLifeSpanHandler.OnBeforePopup() or
+        /// CfxBrowserView.CfxBrowserViewCreate().
         /// </summary>
         /// <remarks>
         /// See also the original CEF documentation in
@@ -697,7 +711,11 @@ namespace Chromium {
         /// <summary>
         /// Called after a browser has been created. When browsing cross-origin a new
         /// browser will be created before the old browser with the same identifier is
-        /// destroyed.
+        /// destroyed. |ExtraInfo| is a read-only value originating from
+        /// CfxBrowserHost.CfxBrowserHostCreateBrowser(),
+        /// CfxBrowserHost.CfxBrowserHostCreateBrowserSync(),
+        /// CfxLifeSpanHandler.OnBeforePopup() or
+        /// CfxBrowserView.CfxBrowserViewCreate().
         /// </summary>
         /// <remarks>
         /// See also the original CEF documentation in
@@ -707,6 +725,8 @@ namespace Chromium {
 
             internal IntPtr m_browser;
             internal CfxBrowser m_browser_wrapped;
+            internal IntPtr m_extra_info;
+            internal CfxDictionaryValue m_extra_info_wrapped;
 
             internal CfxOnBrowserCreatedEventArgs() {}
 
@@ -720,9 +740,19 @@ namespace Chromium {
                     return m_browser_wrapped;
                 }
             }
+            /// <summary>
+            /// Get the ExtraInfo parameter for the <see cref="CfxRenderProcessHandler.OnBrowserCreated"/> callback.
+            /// </summary>
+            public CfxDictionaryValue ExtraInfo {
+                get {
+                    CheckAccess();
+                    if(m_extra_info_wrapped == null) m_extra_info_wrapped = CfxDictionaryValue.Wrap(m_extra_info);
+                    return m_extra_info_wrapped;
+                }
+            }
 
             public override string ToString() {
-                return String.Format("Browser={{{0}}}", Browser);
+                return String.Format("Browser={{{0}}}, ExtraInfo={{{1}}}", Browser, ExtraInfo);
             }
         }
 

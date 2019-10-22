@@ -95,6 +95,29 @@ namespace Chromium {
         }
 
         /// <summary>
+        /// The path to the main bundle on macOS. If this value is empty then it
+        /// defaults to the top-level app bundle. Also configurable using
+        /// the "main-bundle-path" command-line switch.
+        /// </summary>
+        /// <remarks>
+        /// See also the original CEF documentation in
+        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/internal/cef_types.h">cef/include/internal/cef_types.h</see>.
+        /// </remarks>
+        public string MainBundlePath {
+            get {
+                IntPtr value_str;
+                int value_length;
+                CfxApi.Settings.cfx_settings_get_main_bundle_path(nativePtrUnchecked, out value_str, out value_length);
+                return StringFunctions.PtrToStringUni(value_str, value_length);
+            }
+            set {
+                var value_pinned = new PinnedString(value);
+                CfxApi.Settings.cfx_settings_set_main_bundle_path(nativePtrUnchecked, value_pinned.Obj.PinnedPtr, value_pinned.Length);
+                value_pinned.Obj.Free();
+            }
+        }
+
+        /// <summary>
         /// Set to true (1) to have the browser process message loop run in a separate
         /// thread. If false (0) than the CfxDoMessageLoopWork() function must be
         /// called from your application message loop. This option is only supported on
@@ -182,12 +205,14 @@ namespace Chromium {
         }
 
         /// <summary>
-        /// The location where cache data will be stored on disk. If empty then
-        /// browsers will be created in "incognito mode" where in-memory caches are
-        /// used for storage and no data is persisted to disk. HTML5 databases such as
-        /// localStorage will only persist across sessions if a cache path is
-        /// specified. Can be overridden for individual CfxRequestContext instances via
-        /// the CfxRequestContextSettings.CachePath value.
+        /// The location where data for the global browser cache will be stored on
+        /// disk. If non-empty this must be either equal to or a child directory of
+        /// CfxSettings.RootCachePath. If empty then browsers will be created in
+        /// "incognito mode" where in-memory caches are used for storage and no data is
+        /// persisted to disk. HTML5 databases such as localStorage will only persist
+        /// across sessions if a cache path is specified. Can be overridden for
+        /// individual CfxRequestContext instances via the
+        /// CfxRequestContextSettings.CachePath value.
         /// </summary>
         /// <remarks>
         /// See also the original CEF documentation in
@@ -203,6 +228,32 @@ namespace Chromium {
             set {
                 var value_pinned = new PinnedString(value);
                 CfxApi.Settings.cfx_settings_set_cache_path(nativePtrUnchecked, value_pinned.Obj.PinnedPtr, value_pinned.Length);
+                value_pinned.Obj.Free();
+            }
+        }
+
+        /// <summary>
+        /// The root directory that all CfxSettings.CachePath and
+        /// CfxRequestContextSettings.CachePath values must have in common. If this
+        /// value is empty and CfxSettings.CachePath is non-empty then this value will
+        /// default to the CfxSettings.CachePath value. Failure to set this value
+        /// correctly may result in the sandbox blocking read/write access to the
+        /// cache_path directory.
+        /// </summary>
+        /// <remarks>
+        /// See also the original CEF documentation in
+        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/internal/cef_types.h">cef/include/internal/cef_types.h</see>.
+        /// </remarks>
+        public string RootCachePath {
+            get {
+                IntPtr value_str;
+                int value_length;
+                CfxApi.Settings.cfx_settings_get_root_cache_path(nativePtrUnchecked, out value_str, out value_length);
+                return StringFunctions.PtrToStringUni(value_str, value_length);
+            }
+            set {
+                var value_pinned = new PinnedString(value);
+                CfxApi.Settings.cfx_settings_set_root_cache_path(nativePtrUnchecked, value_pinned.Obj.PinnedPtr, value_pinned.Length);
                 value_pinned.Obj.Free();
             }
         }
@@ -637,6 +688,30 @@ namespace Chromium {
             set {
                 var value_pinned = new PinnedString(value);
                 CfxApi.Settings.cfx_settings_set_accept_language_list(nativePtrUnchecked, value_pinned.Obj.PinnedPtr, value_pinned.Length);
+                value_pinned.Obj.Free();
+            }
+        }
+
+        /// <summary>
+        /// GUID string used for identifying the application. This is passed to the
+        /// system AV function for scanning downloaded files. By default, the GUID
+        /// will be an empty string and the file will be treated as an untrusted
+        /// file when the GUID is empty.
+        /// </summary>
+        /// <remarks>
+        /// See also the original CEF documentation in
+        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/internal/cef_types.h">cef/include/internal/cef_types.h</see>.
+        /// </remarks>
+        public string ApplicationClientIdForFileScanning {
+            get {
+                IntPtr value_str;
+                int value_length;
+                CfxApi.Settings.cfx_settings_get_application_client_id_for_file_scanning(nativePtrUnchecked, out value_str, out value_length);
+                return StringFunctions.PtrToStringUni(value_str, value_length);
+            }
+            set {
+                var value_pinned = new PinnedString(value);
+                CfxApi.Settings.cfx_settings_set_application_client_id_for_file_scanning(nativePtrUnchecked, value_pinned.Obj.PinnedPtr, value_pinned.Length);
                 value_pinned.Obj.Free();
             }
         }

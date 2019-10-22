@@ -37,7 +37,7 @@ namespace Chromium.Remote {
         /// See also the original CEF documentation in
         /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_stream_capi.h">cef/include/capi/cef_stream_capi.h</see>.
         /// </remarks>
-        public event CfrReadEventHandler Read {
+        public event CfrReadHandlerReadEventHandler Read {
             add {
                 if(m_Read == null) {
                     var call = new CfxReadHandlerSetCallbackRemoteCall();
@@ -60,7 +60,7 @@ namespace Chromium.Remote {
             }
         }
 
-        internal CfrReadEventHandler m_Read;
+        internal CfrReadHandlerReadEventHandler m_Read;
 
 
         /// <summary>
@@ -209,7 +209,7 @@ namespace Chromium.Remote {
         /// See also the original CEF documentation in
         /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_stream_capi.h">cef/include/capi/cef_stream_capi.h</see>.
         /// </remarks>
-        public delegate void CfrReadEventHandler(object sender, CfrReadEventArgs e);
+        public delegate void CfrReadHandlerReadEventHandler(object sender, CfrReadHandlerReadEventArgs e);
 
         /// <summary>
         /// Read raw binary data.
@@ -218,7 +218,7 @@ namespace Chromium.Remote {
         /// See also the original CEF documentation in
         /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_stream_capi.h">cef/include/capi/cef_stream_capi.h</see>.
         /// </remarks>
-        public class CfrReadEventArgs : CfrEventArgs {
+        public class CfrReadHandlerReadEventArgs : CfrEventArgs {
 
             private CfxReadHandlerReadRemoteEventCall call;
 
@@ -226,7 +226,7 @@ namespace Chromium.Remote {
             internal ulong m_returnValue;
             private bool returnValueSet;
 
-            internal CfrReadEventArgs(CfxReadHandlerReadRemoteEventCall call) { this.call = call; }
+            internal CfrReadHandlerReadEventArgs(CfxReadHandlerReadRemoteEventCall call) { this.call = call; }
 
             /// <summary>
             /// Get the Ptr parameter for the <see cref="CfrReadHandler.Read"/> render process callback.

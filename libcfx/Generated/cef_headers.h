@@ -9,7 +9,6 @@
 
 #include "include/capi/cef_accessibility_handler_capi.h"
 #include "include/capi/cef_app_capi.h"
-#include "include/capi/cef_audio_handler_capi.h"
 #include "include/capi/cef_auth_callback_capi.h"
 #include "include/capi/cef_base_capi.h"
 #include "include/capi/cef_browser_capi.h"
@@ -50,6 +49,7 @@
 #include "include/capi/cef_process_util_capi.h"
 #include "include/capi/cef_render_handler_capi.h"
 #include "include/capi/cef_render_process_handler_capi.h"
+#include "include/capi/cef_request_callback_capi.h"
 #include "include/capi/cef_request_capi.h"
 #include "include/capi/cef_request_context_capi.h"
 #include "include/capi/cef_request_context_handler_capi.h"
@@ -57,6 +57,7 @@
 #include "include/capi/cef_resource_bundle_capi.h"
 #include "include/capi/cef_resource_bundle_handler_capi.h"
 #include "include/capi/cef_resource_handler_capi.h"
+#include "include/capi/cef_resource_request_handler_capi.h"
 #include "include/capi/cef_response_capi.h"
 #include "include/capi/cef_response_filter_capi.h"
 #include "include/capi/cef_scheme_capi.h"

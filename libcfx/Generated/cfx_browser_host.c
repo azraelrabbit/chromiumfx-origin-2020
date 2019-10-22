@@ -9,19 +9,21 @@
 
 // cef_browser_host
 
-// CEF_EXPORT int cef_browser_host_create_browser(const cef_window_info_t* windowInfo, cef_client_t* client, const cef_string_t* url, const cef_browser_settings_t* settings, cef_request_context_t* request_context);
-static int cfx_browser_host_create_browser(const cef_window_info_t* windowInfo, cef_client_t* client, char16 *url_str, int url_length, const cef_browser_settings_t* settings, cef_request_context_t* request_context) {
+// CEF_EXPORT int cef_browser_host_create_browser(const cef_window_info_t* windowInfo, cef_client_t* client, const cef_string_t* url, const cef_browser_settings_t* settings, cef_dictionary_value_t* extra_info, cef_request_context_t* request_context);
+static int cfx_browser_host_create_browser(const cef_window_info_t* windowInfo, cef_client_t* client, char16 *url_str, int url_length, const cef_browser_settings_t* settings, cef_dictionary_value_t* extra_info, cef_request_context_t* request_context) {
     if(client) ((cef_base_ref_counted_t*)client)->add_ref((cef_base_ref_counted_t*)client);
     cef_string_t url = { url_str, url_length, 0 };
+    if(extra_info) ((cef_base_ref_counted_t*)extra_info)->add_ref((cef_base_ref_counted_t*)extra_info);
     if(request_context) ((cef_base_ref_counted_t*)request_context)->add_ref((cef_base_ref_counted_t*)request_context);
-    return cef_browser_host_create_browser(windowInfo, client, &url, settings, request_context);
+    return cef_browser_host_create_browser(windowInfo, client, &url, settings, extra_info, request_context);
 }
-// CEF_EXPORT cef_browser_t* cef_browser_host_create_browser_sync(const cef_window_info_t* windowInfo, cef_client_t* client, const cef_string_t* url, const cef_browser_settings_t* settings, cef_request_context_t* request_context);
-static cef_browser_t* cfx_browser_host_create_browser_sync(const cef_window_info_t* windowInfo, cef_client_t* client, char16 *url_str, int url_length, const cef_browser_settings_t* settings, cef_request_context_t* request_context) {
+// CEF_EXPORT cef_browser_t* cef_browser_host_create_browser_sync(const cef_window_info_t* windowInfo, cef_client_t* client, const cef_string_t* url, const cef_browser_settings_t* settings, cef_dictionary_value_t* extra_info, cef_request_context_t* request_context);
+static cef_browser_t* cfx_browser_host_create_browser_sync(const cef_window_info_t* windowInfo, cef_client_t* client, char16 *url_str, int url_length, const cef_browser_settings_t* settings, cef_dictionary_value_t* extra_info, cef_request_context_t* request_context) {
     if(client) ((cef_base_ref_counted_t*)client)->add_ref((cef_base_ref_counted_t*)client);
     cef_string_t url = { url_str, url_length, 0 };
+    if(extra_info) ((cef_base_ref_counted_t*)extra_info)->add_ref((cef_base_ref_counted_t*)extra_info);
     if(request_context) ((cef_base_ref_counted_t*)request_context)->add_ref((cef_base_ref_counted_t*)request_context);
-    return cef_browser_host_create_browser_sync(windowInfo, client, &url, settings, request_context);
+    return cef_browser_host_create_browser_sync(windowInfo, client, &url, settings, extra_info, request_context);
 }
 // get_browser
 static cef_browser_t* cfx_browser_host_get_browser(cef_browser_host_t* self) {

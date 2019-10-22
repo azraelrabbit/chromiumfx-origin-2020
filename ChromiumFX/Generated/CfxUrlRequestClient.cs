@@ -286,9 +286,11 @@ namespace Chromium {
         /// |IsProxy| indicates whether the host is a proxy server. |Host| contains the
         /// hostname and |Port| contains the port number. Return true (1) to continue
         /// the request and call CfxAuthCallback.Continue() when the authentication
-        /// information is available. Return false (0) to cancel the request. This
-        /// function will only be called for requests initiated from the browser
-        /// process.
+        /// information is available. If the request has an associated browser/frame
+        /// then returning false (0) will result in a call to GetAuthCredentials on the
+        /// CfxRequestHandler associated with that browser, if any. Otherwise,
+        /// returning false (0) will cancel the request immediately. This function will
+        /// only be called for requests initiated from the browser process.
         /// </summary>
         /// <remarks>
         /// See also the original CEF documentation in
@@ -582,9 +584,11 @@ namespace Chromium {
         /// |IsProxy| indicates whether the host is a proxy server. |Host| contains the
         /// hostname and |Port| contains the port number. Return true (1) to continue
         /// the request and call CfxAuthCallback.Continue() when the authentication
-        /// information is available. Return false (0) to cancel the request. This
-        /// function will only be called for requests initiated from the browser
-        /// process.
+        /// information is available. If the request has an associated browser/frame
+        /// then returning false (0) will result in a call to GetAuthCredentials on the
+        /// CfxRequestHandler associated with that browser, if any. Otherwise,
+        /// returning false (0) will cancel the request immediately. This function will
+        /// only be called for requests initiated from the browser process.
         /// </summary>
         /// <remarks>
         /// See also the original CEF documentation in
@@ -597,9 +601,11 @@ namespace Chromium {
         /// |IsProxy| indicates whether the host is a proxy server. |Host| contains the
         /// hostname and |Port| contains the port number. Return true (1) to continue
         /// the request and call CfxAuthCallback.Continue() when the authentication
-        /// information is available. Return false (0) to cancel the request. This
-        /// function will only be called for requests initiated from the browser
-        /// process.
+        /// information is available. If the request has an associated browser/frame
+        /// then returning false (0) will result in a call to GetAuthCredentials on the
+        /// CfxRequestHandler associated with that browser, if any. Otherwise,
+        /// returning false (0) will cancel the request immediately. This function will
+        /// only be called for requests initiated from the browser process.
         /// </summary>
         /// <remarks>
         /// See also the original CEF documentation in

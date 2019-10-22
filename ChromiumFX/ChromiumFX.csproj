@@ -51,7 +51,6 @@
     <Compile Include="Generated\CfxApi.cs" />
     <Compile Include="Generated\CfxApiLoader.cs" />
     <Compile Include="Generated\CfxApp.cs" />
-    <Compile Include="Generated\CfxAudioHandler.cs" />
     <Compile Include="Generated\CfxAuthCallback.cs" />
     <Compile Include="Generated\CfxBeforeDownloadCallback.cs" />
     <Compile Include="Generated\CfxBinaryValue.cs" />
@@ -68,6 +67,7 @@
     <Compile Include="Generated\CfxContextMenuHandler.cs" />
     <Compile Include="Generated\CfxContextMenuParams.cs" />
     <Compile Include="Generated\CfxCookie.cs" />
+    <Compile Include="Generated\CfxCookieAccessFilter.cs" />
     <Compile Include="Generated\CfxCookieManager.cs" />
     <Compile Include="Generated\CfxCookieVisitor.cs" />
     <Compile Include="Generated\CfxCursorInfo.cs" />
@@ -137,6 +137,9 @@
     <Compile Include="Generated\CfxResourceBundle.cs" />
     <Compile Include="Generated\CfxResourceBundleHandler.cs" />
     <Compile Include="Generated\CfxResourceHandler.cs" />
+    <Compile Include="Generated\CfxResourceReadCallback.cs" />
+    <Compile Include="Generated\CfxResourceRequestHandler.cs" />
+    <Compile Include="Generated\CfxResourceSkipCallback.cs" />
     <Compile Include="Generated\CfxResponse.cs" />
     <Compile Include="Generated\CfxResponseFilter.cs" />
     <Compile Include="Generated\CfxRunContextMenuCallback.cs" />
@@ -186,6 +189,7 @@
     <Compile Include="Generated\CfxXmlReader.cs" />
     <Compile Include="Generated\CfxZipReader.cs" />
     <Compile Include="Generated\Remote\CfrApp.cs" />
+    <Compile Include="Generated\Remote\CfrAuthCallback.cs" />
     <Compile Include="Generated\Remote\CfrBinaryValue.cs" />
     <Compile Include="Generated\Remote\CfrBrowser.cs" />
     <Compile Include="Generated\Remote\CfrCallback.cs" />
@@ -218,6 +222,8 @@
     <Compile Include="Generated\Remote\CfrTaskRunner.cs" />
     <Compile Include="Generated\Remote\CfrThread.cs" />
     <Compile Include="Generated\Remote\CfrTime.cs" />
+    <Compile Include="Generated\Remote\CfrUrlRequest.cs" />
+    <Compile Include="Generated\Remote\CfrUrlRequestClient.cs" />
     <Compile Include="Generated\Remote\CfrV8Accessor.cs" />
     <Compile Include="Generated\Remote\CfrV8ArrayBufferReleaseCallback.cs" />
     <Compile Include="Generated\Remote\CfrV8Context.cs" />
@@ -234,6 +240,7 @@
     <Compile Include="Generated\Remote\CfrZipReader.cs" />
     <Compile Include="Generated\Remote\CfxAppRemoteCalls.cs" />
     <Compile Include="Generated\Remote\CfxAppRemoteClient.cs" />
+    <Compile Include="Generated\Remote\CfxAuthCallbackRemoteCalls.cs" />
     <Compile Include="Generated\Remote\CfxBinaryValueRemoteCalls.cs" />
     <Compile Include="Generated\Remote\CfxBrowserRemoteCalls.cs" />
     <Compile Include="Generated\Remote\CfxCallbackRemoteCalls.cs" />
@@ -274,6 +281,9 @@
     <Compile Include="Generated\Remote\CfxTaskRunnerRemoteCalls.cs" />
     <Compile Include="Generated\Remote\CfxThreadRemoteCalls.cs" />
     <Compile Include="Generated\Remote\CfxTimeRemoteCalls.cs" />
+    <Compile Include="Generated\Remote\CfxUrlRequestClientRemoteCalls.cs" />
+    <Compile Include="Generated\Remote\CfxUrlRequestClientRemoteClient.cs" />
+    <Compile Include="Generated\Remote\CfxUrlRequestRemoteCalls.cs" />
     <Compile Include="Generated\Remote\CfxV8AccessorRemoteCalls.cs" />
     <Compile Include="Generated\Remote\CfxV8AccessorRemoteClient.cs" />
     <Compile Include="Generated\Remote\CfxV8ArrayBufferReleaseCallbackRemoteCalls.cs" />

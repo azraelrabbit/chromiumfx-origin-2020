@@ -50,6 +50,27 @@ namespace Parser {
             p.SetFile(Path.Combine("cef", "include", "internal", "cef_types.h"));
             p.Parse(apiNode);
 
+            var errorCodeEnum = apiNode.CefEnums.Find(e => e.Name == "cef_errorcode");
+            if(errorCodeEnum != null) {
+                // CEF now uses preprocessor directives to pull enum values from include/base/internal/cef_net_error_list.h
+                // This is a hack to pull the values manually
+                if(errorCodeEnum.Members.Count == 1) {
+                    var fn = Path.Combine("cef", "include", "base", "internal", "cef_net_error_list.h");
+                    if(!File.Exists(fn)) {
+                        Debug.Print("error list file not found - please check.");
+                        Debugger.Break();
+                    }
+                    p.SetFile(fn);
+                    (p as CefInternalsParser).ParseNetErrorValues(errorCodeEnum.Members);
+                } else {
+                    Debug.Print("enum cef_errorcode_t unexpected member count - please check.");
+                    Debugger.Break();
+                }
+            } else {
+                Debug.Print("enum cef_errorcode_t is missing - please check.");
+                Debugger.Break();
+            }
+
             CefApiNode tmpApi = new CefApiNode();
 
             p.SetFile(Path.Combine("cef", "include", "internal", "cef_time.h"));
@@ -136,6 +157,12 @@ namespace Parser {
         protected bool Done {
             get {
                 return scanner.Done;
+            }
+        }
+
+        protected Match Match {
+            get {
+                return scanner.Match;
             }
         }
 

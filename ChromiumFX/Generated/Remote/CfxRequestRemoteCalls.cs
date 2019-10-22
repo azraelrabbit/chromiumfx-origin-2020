@@ -367,6 +367,73 @@ namespace Chromium.Remote {
         }
     }
 
+    internal class CfxRequestGetHeaderByNameRemoteCall : RemoteCall {
+
+        internal CfxRequestGetHeaderByNameRemoteCall()
+            : base(RemoteCallId.CfxRequestGetHeaderByNameRemoteCall) {}
+
+        internal IntPtr @this;
+        internal string name;
+        internal string __retval;
+
+        protected override void WriteArgs(StreamHandler h) {
+            h.Write(@this);
+            h.Write(name);
+        }
+
+        protected override void ReadArgs(StreamHandler h) {
+            h.Read(out @this);
+            h.Read(out name);
+        }
+
+        protected override void WriteReturn(StreamHandler h) {
+            h.Write(__retval);
+        }
+
+        protected override void ReadReturn(StreamHandler h) {
+            h.Read(out __retval);
+        }
+
+        protected override void RemoteProcedure() {
+            var name_pinned = new PinnedString(name);
+            __retval = StringFunctions.ConvertStringUserfree(CfxApi.Request.cfx_request_get_header_by_name(@this, name_pinned.Obj.PinnedPtr, name_pinned.Length));
+            name_pinned.Obj.Free();
+        }
+    }
+
+    internal class CfxRequestSetHeaderByNameRemoteCall : RemoteCall {
+
+        internal CfxRequestSetHeaderByNameRemoteCall()
+            : base(RemoteCallId.CfxRequestSetHeaderByNameRemoteCall) {}
+
+        internal IntPtr @this;
+        internal string name;
+        internal string value;
+        internal bool overwrite;
+
+        protected override void WriteArgs(StreamHandler h) {
+            h.Write(@this);
+            h.Write(name);
+            h.Write(value);
+            h.Write(overwrite);
+        }
+
+        protected override void ReadArgs(StreamHandler h) {
+            h.Read(out @this);
+            h.Read(out name);
+            h.Read(out value);
+            h.Read(out overwrite);
+        }
+
+        protected override void RemoteProcedure() {
+            var name_pinned = new PinnedString(name);
+            var value_pinned = new PinnedString(value);
+            CfxApi.Request.cfx_request_set_header_by_name(@this, name_pinned.Obj.PinnedPtr, name_pinned.Length, value_pinned.Obj.PinnedPtr, value_pinned.Length, overwrite ? 1 : 0);
+            name_pinned.Obj.Free();
+            value_pinned.Obj.Free();
+        }
+    }
+
     internal class CfxRequestSetRemoteCall : RemoteCall {
 
         internal CfxRequestSetRemoteCall()

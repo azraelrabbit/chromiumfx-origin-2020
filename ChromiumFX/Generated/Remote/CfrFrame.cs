@@ -421,5 +421,63 @@ namespace Chromium.Remote {
             call.visitor = CfrObject.Unwrap(visitor).ptr;
             call.RequestExecution(connection);
         }
+
+        /// <summary>
+        /// Create a new URL request that will be treated as originating from this
+        /// frame and the associated browser. This request may be intercepted by the
+        /// client via CfrResourceRequestHandler or CfrSchemeHandlerFactory.
+        /// Use CfrUrlRequest.Create instead if you do not want the request to have
+        /// this association, in which case it may be handled differently (see
+        /// documentation on that function). Requests may originate from both the
+        /// browser process and the render process.
+        /// 
+        /// For requests originating from the browser process:
+        ///   - POST data may only contain a single element of type PDE_TYPE_FILE or
+        ///     PDE_TYPE_BYTES.
+        /// For requests originating from the render process:
+        ///   - POST data may only contain a single element of type PDE_TYPE_BYTES.
+        ///   - If the response contains Content-Disposition or Mime-Type header values
+        ///     that would not normally be rendered then the response may receive
+        ///     special handling inside the browser (for example, via the file download
+        ///     code path instead of the URL request code path).
+        /// 
+        /// The |request| object will be marked as read-only after calling this
+        /// function.
+        /// </summary>
+        /// <remarks>
+        /// See also the original CEF documentation in
+        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_frame_capi.h">cef/include/capi/cef_frame_capi.h</see>.
+        /// </remarks>
+        public CfrUrlRequest CreateUrlRequest(CfrRequest request, CfrUrlRequestClient client) {
+            var connection = RemotePtr.connection;
+            var call = new CfxFrameCreateUrlRequestRemoteCall();
+            call.@this = RemotePtr.ptr;
+            if(!CfrObject.CheckConnection(request, connection)) throw new ArgumentException("Render process connection mismatch.", "request");
+            call.request = CfrObject.Unwrap(request).ptr;
+            if(!CfrObject.CheckConnection(client, connection)) throw new ArgumentException("Render process connection mismatch.", "client");
+            call.client = CfrObject.Unwrap(client).ptr;
+            call.RequestExecution(connection);
+            return CfrUrlRequest.Wrap(new RemotePtr(connection, call.__retval));
+        }
+
+        /// <summary>
+        /// Send a message to the specified |targetProcess|. Message delivery is not
+        /// guaranteed in all cases (for example, if the browser is closing,
+        /// navigating, or if the target process crashes). Send an ACK message back
+        /// from the target process if confirmation is required.
+        /// </summary>
+        /// <remarks>
+        /// See also the original CEF documentation in
+        /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_frame_capi.h">cef/include/capi/cef_frame_capi.h</see>.
+        /// </remarks>
+        public void SendProcessMessage(CfxProcessId targetProcess, CfrProcessMessage message) {
+            var connection = RemotePtr.connection;
+            var call = new CfxFrameSendProcessMessageRemoteCall();
+            call.@this = RemotePtr.ptr;
+            call.targetProcess = (int)targetProcess;
+            if(!CfrObject.CheckConnection(message, connection)) throw new ArgumentException("Render process connection mismatch.", "message");
+            call.message = CfrObject.Unwrap(message).ptr;
+            call.RequestExecution(connection);
+        }
     }
 }

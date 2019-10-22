@@ -22,6 +22,8 @@ namespace Chromium.WebBrowser {
         internal readonly byte[] data;
         internal readonly string mimeType;
 
+        WebResourceHandler handler;
+
         /// <summary>
         /// Creates a WebResource for registration with a
         /// ChromiumWebBrowser control.
@@ -75,7 +77,8 @@ namespace Chromium.WebBrowser {
         }
 
         internal CfxResourceHandler GetResourceHandler() {
-            return new WebResourceHandler(this);
+            if(handler == null) handler = new WebResourceHandler(this);
+            return handler;
         }
     }
 
@@ -87,13 +90,14 @@ namespace Chromium.WebBrowser {
         internal WebResourceHandler(WebResource webResource) {
             this.webResource = webResource;
             this.GetResponseHeaders += new CfxGetResponseHeadersEventHandler(ResourceHandler_GetResponseHeaders);
-            this.ProcessRequest += new CfxProcessRequestEventHandler(ResourceHandler_ProcessRequest);
-            this.ReadResponse += new CfxReadResponseEventHandler(ResourceHandler_ReadResponse);
+            this.Open += WebResourceHandler_Open;
+            this.Skip += WebResourceHandler_Skip;
+            this.Read += WebResourceHandler_Read;
         }
 
-        void ResourceHandler_ProcessRequest(object sender, CfxProcessRequestEventArgs e) {
+        private void WebResourceHandler_Open(object sender, CfxOpenEventArgs e) {
             bytesDone = 0;
-            e.Callback.Continue();
+            e.HandleRequest = true;
             e.SetReturnValue(true);
         }
 
@@ -104,8 +108,10 @@ namespace Chromium.WebBrowser {
             e.Response.StatusText = "OK";
         }
 
-        void ResourceHandler_ReadResponse(object sender, CfxReadResponseEventArgs e) {
+        private void WebResourceHandler_Read(object sender, CfxResourceHandlerReadEventArgs e) {
             int bytesToCopy = webResource.data.Length - bytesDone;
+            if(bytesToCopy == 0)
+                return;
             if(bytesToCopy > e.BytesToRead)
                 bytesToCopy = e.BytesToRead;
             Marshal.Copy(webResource.data, bytesDone, e.DataOut, bytesToCopy);
@@ -113,6 +119,11 @@ namespace Chromium.WebBrowser {
             bytesDone += bytesToCopy;
             e.SetReturnValue(true);
         }
-    }
 
+        private void WebResourceHandler_Skip(object sender, CfxSkipEventArgs e) {
+            bytesDone += (int)e.BytesToSkip;
+            e.BytesSkipped = e.BytesToSkip;
+            e.SetReturnValue(true);
+        }
+    }
 }

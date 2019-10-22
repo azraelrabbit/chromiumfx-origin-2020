@@ -110,23 +110,29 @@ namespace Chromium.Remote {
 
         internal IntPtr browser;
         internal int browser_release;
+        internal IntPtr extra_info;
+        internal int extra_info_release;
 
         protected override void WriteArgs(StreamHandler h) {
             h.Write(gcHandlePtr);
             h.Write(browser);
+            h.Write(extra_info);
         }
 
         protected override void ReadArgs(StreamHandler h) {
             h.Read(out gcHandlePtr);
             h.Read(out browser);
+            h.Read(out extra_info);
         }
 
         protected override void WriteReturn(StreamHandler h) {
             h.Write(browser_release);
+            h.Write(extra_info_release);
         }
 
         protected override void ReadReturn(StreamHandler h) {
             h.Read(out browser_release);
+            h.Read(out extra_info_release);
         }
 
         protected override void RemoteProcedure() {
@@ -139,6 +145,7 @@ namespace Chromium.Remote {
             self.m_OnBrowserCreated?.Invoke(self, e);
             e.connection = null;
             browser_release = e.m_browser_wrapped == null? 1 : 0;
+            extra_info_release = e.m_extra_info_wrapped == null? 1 : 0;
         }
     }
 
@@ -451,6 +458,8 @@ namespace Chromium.Remote {
 
         internal IntPtr browser;
         internal int browser_release;
+        internal IntPtr frame;
+        internal int frame_release;
         internal int source_process;
         internal IntPtr message;
         internal int message_release;
@@ -460,6 +469,7 @@ namespace Chromium.Remote {
         protected override void WriteArgs(StreamHandler h) {
             h.Write(gcHandlePtr);
             h.Write(browser);
+            h.Write(frame);
             h.Write(source_process);
             h.Write(message);
         }
@@ -467,18 +477,21 @@ namespace Chromium.Remote {
         protected override void ReadArgs(StreamHandler h) {
             h.Read(out gcHandlePtr);
             h.Read(out browser);
+            h.Read(out frame);
             h.Read(out source_process);
             h.Read(out message);
         }
 
         protected override void WriteReturn(StreamHandler h) {
             h.Write(browser_release);
+            h.Write(frame_release);
             h.Write(message_release);
             h.Write(__retval);
         }
 
         protected override void ReadReturn(StreamHandler h) {
             h.Read(out browser_release);
+            h.Read(out frame_release);
             h.Read(out message_release);
             h.Read(out __retval);
         }
@@ -493,6 +506,7 @@ namespace Chromium.Remote {
             self.m_OnProcessMessageReceived?.Invoke(self, e);
             e.connection = null;
             browser_release = e.m_browser_wrapped == null? 1 : 0;
+            frame_release = e.m_frame_wrapped == null? 1 : 0;
             message_release = e.m_message_wrapped == null? 1 : 0;
             __retval = e.m_returnValue ? 1 : 0;
         }

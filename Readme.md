@@ -56,6 +56,9 @@ licensing information. See also [cef/LICENSE.txt](https://bitbucket.org/chromium
 
 This is a summary of the most important changes and those relevant to embedders (API changes etc.).
 
+### Version 77.1.18.0 ###
+- Update to CEF 77.1.18 with API changes.
+
 ### Version 73.1.13.0 ###
 - Update to CEF 73.1.13 with API changes.
 

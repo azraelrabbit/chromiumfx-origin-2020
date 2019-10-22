@@ -44,6 +44,7 @@ cef_register_scheme_handler_factory
 cef_register_web_plugin_crash
 cef_register_widevine_cdm
 cef_request_context_
+cef_resource_request_
 cef_remove_cross_origin_whitelist_entry
 cef_remove_web_plugin_path
 cef_run_message_loop

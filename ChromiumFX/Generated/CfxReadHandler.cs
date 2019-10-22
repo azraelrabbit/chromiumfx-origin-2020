@@ -50,7 +50,7 @@ namespace Chromium {
                 __retval = default(UIntPtr);
                 return;
             }
-            var e = new CfxReadEventArgs();
+            var e = new CfxReadHandlerReadEventArgs();
             e.m_ptr = ptr;
             e.m_size = size;
             e.m_n = n;
@@ -142,7 +142,7 @@ namespace Chromium {
         /// See also the original CEF documentation in
         /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_stream_capi.h">cef/include/capi/cef_stream_capi.h</see>.
         /// </remarks>
-        public event CfxReadEventHandler Read {
+        public event CfxReadHandlerReadEventHandler Read {
             add {
                 lock(eventLock) {
                     if(m_Read == null) {
@@ -161,7 +161,7 @@ namespace Chromium {
             }
         }
 
-        private CfxReadEventHandler m_Read;
+        private CfxReadHandlerReadEventHandler m_Read;
 
         /// <summary>
         /// Seek to the specified offset position. |Whence| may be any one of SEEK_CUR,
@@ -313,7 +313,7 @@ namespace Chromium {
         /// See also the original CEF documentation in
         /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_stream_capi.h">cef/include/capi/cef_stream_capi.h</see>.
         /// </remarks>
-        public delegate void CfxReadEventHandler(object sender, CfxReadEventArgs e);
+        public delegate void CfxReadHandlerReadEventHandler(object sender, CfxReadHandlerReadEventArgs e);
 
         /// <summary>
         /// Read raw binary data.
@@ -322,7 +322,7 @@ namespace Chromium {
         /// See also the original CEF documentation in
         /// <see href="https://bitbucket.org/chromiumfx/chromiumfx/src/tip/cef/include/capi/cef_stream_capi.h">cef/include/capi/cef_stream_capi.h</see>.
         /// </remarks>
-        public class CfxReadEventArgs : CfxEventArgs {
+        public class CfxReadHandlerReadEventArgs : CfxEventArgs {
 
             internal IntPtr m_ptr;
             internal UIntPtr m_size;
@@ -331,7 +331,7 @@ namespace Chromium {
             internal ulong m_returnValue;
             private bool returnValueSet;
 
-            internal CfxReadEventArgs() {}
+            internal CfxReadHandlerReadEventArgs() {}
 
             /// <summary>
             /// Get the Ptr parameter for the <see cref="CfxReadHandler.Read"/> callback.

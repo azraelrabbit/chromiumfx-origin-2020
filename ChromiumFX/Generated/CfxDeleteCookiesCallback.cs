@@ -51,7 +51,7 @@ namespace Chromium {
 
         /// <summary>
         /// Method that will be called upon completion. |NumDeleted| will be the
-        /// number of cookies that were deleted or -1 if unknown.
+        /// number of cookies that were deleted.
         /// </summary>
         /// <remarks>
         /// See also the original CEF documentation in
@@ -92,7 +92,7 @@ namespace Chromium {
 
         /// <summary>
         /// Method that will be called upon completion. |NumDeleted| will be the
-        /// number of cookies that were deleted or -1 if unknown.
+        /// number of cookies that were deleted.
         /// </summary>
         /// <remarks>
         /// See also the original CEF documentation in
@@ -102,7 +102,7 @@ namespace Chromium {
 
         /// <summary>
         /// Method that will be called upon completion. |NumDeleted| will be the
-        /// number of cookies that were deleted or -1 if unknown.
+        /// number of cookies that were deleted.
         /// </summary>
         /// <remarks>
         /// See also the original CEF documentation in

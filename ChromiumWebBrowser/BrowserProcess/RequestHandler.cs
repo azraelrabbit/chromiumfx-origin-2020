@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.Threading;
 using Chromium.Event;
 
 namespace Chromium.WebBrowser {
@@ -16,14 +16,23 @@ namespace Chromium.WebBrowser {
 
         internal BrowserClient client;
 
+        private CfxResourceRequestHandler resourceRequestHandler;
+
         internal RequestHandler(BrowserClient client) {
             this.client = client;
-
-            this.GetResourceHandler += new CfxGetResourceHandlerEventHandler(RequestHandler_GetResourceHandler);
-            
+            resourceRequestHandler = new CfxResourceRequestHandler();
+            this.GetResourceRequestHandler += RequestHandler_GetResourceRequestHandler;
+            resourceRequestHandler.GetResourceHandler += ResourceRequestHandler_GetResourceHandler;
         }
 
-        void RequestHandler_GetResourceHandler(object sender, CfxGetResourceHandlerEventArgs e) {
+        private void RequestHandler_GetResourceRequestHandler(object sender, CfxRequestHandlerGetResourceRequestHandlerEventArgs e) {
+            if(client.browser.webResources.ContainsKey(e.Request.Url)) {
+                e.DisableDefaultHandling = true;
+                e.SetReturnValue(resourceRequestHandler);
+            }
+        }
+
+        private void ResourceRequestHandler_GetResourceHandler(object sender, CfxGetResourceHandlerEventArgs e) {
             WebResource resource;
             if(client.browser.webResources.TryGetValue(e.Request.Url, out resource)) {
                 e.SetReturnValue(resource.GetResourceHandler());

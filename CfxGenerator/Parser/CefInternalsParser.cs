@@ -76,6 +76,7 @@ namespace Parser {
             while(
                 ParseCefEnumValue(e.Members)
                 || SkipCommentBlock()
+                || SkipPreprocessorDirective()
             ) ;
             success = Scan(@"}\s*(\w+)_t\s*;", () => e.Name = Group01);
             Unmark(success);
@@ -94,6 +95,26 @@ namespace Parser {
                 members.Add(member);
             }
             Skip(",");
+            Unmark(success);
+            return success;
+        }
+
+        public void ParseNetErrorValues(List<EnumValueNode> members) {
+            Skip(".*800-899 DNS resolver errors", System.Text.RegularExpressions.RegexOptions.Singleline);
+            while(ParseNetErrorValue(members)) ;
+        }
+
+        bool ParseNetErrorValue(List<EnumValueNode> members) {
+            var member = new EnumValueNode();
+            Mark();
+            ParseCommentBlock(member.Comments);
+            var success = Scan(@"NET_ERROR\((\w+),\s*([0-9-]+)\)", () => {
+                member.Name = Match.Groups[1].Value;
+                member.Value = Match.Groups[2].Value;
+            });
+            if(success) {
+                members.Add(member);
+            }
             Unmark(success);
             return success;
         }

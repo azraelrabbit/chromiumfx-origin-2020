@@ -39,17 +39,18 @@ namespace Chromium {
 
         // on_before_popup
         [System.Runtime.InteropServices.UnmanagedFunctionPointer(System.Runtime.InteropServices.CallingConvention.StdCall, SetLastError = false)]
-        private delegate void on_before_popup_delegate(IntPtr gcHandlePtr, out int __retval, IntPtr browser, out int browser_release, IntPtr frame, out int frame_release, IntPtr target_url_str, int target_url_length, IntPtr target_frame_name_str, int target_frame_name_length, int target_disposition, int user_gesture, IntPtr popupFeatures, IntPtr windowInfo, out IntPtr client, IntPtr settings, out int no_javascript_access);
+        private delegate void on_before_popup_delegate(IntPtr gcHandlePtr, out int __retval, IntPtr browser, out int browser_release, IntPtr frame, out int frame_release, IntPtr target_url_str, int target_url_length, IntPtr target_frame_name_str, int target_frame_name_length, int target_disposition, int user_gesture, IntPtr popupFeatures, IntPtr windowInfo, out IntPtr client, IntPtr settings, out IntPtr extra_info, out int no_javascript_access);
         private static on_before_popup_delegate on_before_popup_native;
         private static IntPtr on_before_popup_native_ptr;
 
-        internal static void on_before_popup(IntPtr gcHandlePtr, out int __retval, IntPtr browser, out int browser_release, IntPtr frame, out int frame_release, IntPtr target_url_str, int target_url_length, IntPtr target_frame_name_str, int target_frame_name_length, int target_disposition, int user_gesture, IntPtr popupFeatures, IntPtr windowInfo, out IntPtr client, IntPtr settings, out int no_javascript_access) {
+        internal static void on_before_popup(IntPtr gcHandlePtr, out int __retval, IntPtr browser, out int browser_release, IntPtr frame, out int frame_release, IntPtr target_url_str, int target_url_length, IntPtr target_frame_name_str, int target_frame_name_length, int target_disposition, int user_gesture, IntPtr popupFeatures, IntPtr windowInfo, out IntPtr client, IntPtr settings, out IntPtr extra_info, out int no_javascript_access) {
             var self = (CfxLifeSpanHandler)System.Runtime.InteropServices.GCHandle.FromIntPtr(gcHandlePtr).Target;
             if(self == null || self.CallbacksDisabled) {
                 __retval = default(int);
                 browser_release = 1;
                 frame_release = 1;
                 client = default(IntPtr);
+                extra_info = default(IntPtr);
                 no_javascript_access = default(int);
                 return;
             }
@@ -70,6 +71,7 @@ namespace Chromium {
             browser_release = e.m_browser_wrapped == null? 1 : 0;
             frame_release = e.m_frame_wrapped == null? 1 : 0;
             client = CfxClient.Unwrap(e.m_client_wrapped);
+            extra_info = CfxDictionaryValue.Unwrap(e.m_extra_info_wrapped);
             no_javascript_access = e.m_no_javascript_access;
             __retval = e.m_returnValue ? 1 : 0;
         }
@@ -155,7 +157,10 @@ namespace Chromium {
         /// modifications to |WindowInfo| will be ignored if the parent browser is
         /// wrapped in a CfxBrowserView. Popup browser creation will be canceled if
         /// the parent browser is destroyed before the popup browser creation completes
-        /// (indicated by a call to OnAfterCreated for the popup browser).
+        /// (indicated by a call to OnAfterCreated for the popup browser). The
+        /// |ExtraInfo| parameter provides an opportunity to specify extra information
+        /// specific to the created popup browser that will be passed to
+        /// CfxRenderProcessHandler.OnBrowserCreated() in the render process.
         /// </summary>
         /// <remarks>
         /// See also the original CEF documentation in
@@ -328,9 +333,13 @@ namespace Chromium {
         /// <summary>
         /// Called just before a browser is destroyed. Release all references to the
         /// browser object and do not attempt to execute any functions on the browser
-        /// object after this callback returns. This callback will be the last
-        /// notification that references |Browser|. See do_close() documentation for
-        /// additional usage information.
+        /// object (other than GetIdentifier or IsSame) after this callback returns.
+        /// This callback will be the last notification that references |Browser| on
+        /// the UI thread. Any in-progress network requests associated with |Browser|
+        /// will be aborted when the browser is destroyed, and
+        /// CfxResourceRequestHandler callbacks related to those requests may
+        /// still arrive on the IO thread after this function is called. See do_close()
+        /// documentation for additional usage information.
         /// </summary>
         /// <remarks>
         /// See also the original CEF documentation in
@@ -401,7 +410,10 @@ namespace Chromium {
         /// modifications to |WindowInfo| will be ignored if the parent browser is
         /// wrapped in a CfxBrowserView. Popup browser creation will be canceled if
         /// the parent browser is destroyed before the popup browser creation completes
-        /// (indicated by a call to OnAfterCreated for the popup browser).
+        /// (indicated by a call to OnAfterCreated for the popup browser). The
+        /// |ExtraInfo| parameter provides an opportunity to specify extra information
+        /// specific to the created popup browser that will be passed to
+        /// CfxRenderProcessHandler.OnBrowserCreated() in the render process.
         /// </summary>
         /// <remarks>
         /// See also the original CEF documentation in
@@ -429,7 +441,10 @@ namespace Chromium {
         /// modifications to |WindowInfo| will be ignored if the parent browser is
         /// wrapped in a CfxBrowserView. Popup browser creation will be canceled if
         /// the parent browser is destroyed before the popup browser creation completes
-        /// (indicated by a call to OnAfterCreated for the popup browser).
+        /// (indicated by a call to OnAfterCreated for the popup browser). The
+        /// |ExtraInfo| parameter provides an opportunity to specify extra information
+        /// specific to the created popup browser that will be passed to
+        /// CfxRenderProcessHandler.OnBrowserCreated() in the render process.
         /// </summary>
         /// <remarks>
         /// See also the original CEF documentation in
@@ -455,6 +470,7 @@ namespace Chromium {
             internal CfxClient m_client_wrapped;
             internal IntPtr m_settings;
             internal CfxBrowserSettings m_settings_wrapped;
+            internal CfxDictionaryValue m_extra_info_wrapped;
             internal int m_no_javascript_access;
 
             internal bool m_returnValue;
@@ -556,6 +572,15 @@ namespace Chromium {
                     CheckAccess();
                     if(m_settings_wrapped == null) m_settings_wrapped = CfxBrowserSettings.Wrap(m_settings);
                     return m_settings_wrapped;
+                }
+            }
+            /// <summary>
+            /// Set the ExtraInfo out parameter for the <see cref="CfxLifeSpanHandler.OnBeforePopup"/> callback.
+            /// </summary>
+            public CfxDictionaryValue ExtraInfo {
+                set {
+                    CheckAccess();
+                    m_extra_info_wrapped = value;
                 }
             }
             /// <summary>
@@ -855,9 +880,13 @@ namespace Chromium {
         /// <summary>
         /// Called just before a browser is destroyed. Release all references to the
         /// browser object and do not attempt to execute any functions on the browser
-        /// object after this callback returns. This callback will be the last
-        /// notification that references |Browser|. See do_close() documentation for
-        /// additional usage information.
+        /// object (other than GetIdentifier or IsSame) after this callback returns.
+        /// This callback will be the last notification that references |Browser| on
+        /// the UI thread. Any in-progress network requests associated with |Browser|
+        /// will be aborted when the browser is destroyed, and
+        /// CfxResourceRequestHandler callbacks related to those requests may
+        /// still arrive on the IO thread after this function is called. See do_close()
+        /// documentation for additional usage information.
         /// </summary>
         /// <remarks>
         /// See also the original CEF documentation in
@@ -868,9 +897,13 @@ namespace Chromium {
         /// <summary>
         /// Called just before a browser is destroyed. Release all references to the
         /// browser object and do not attempt to execute any functions on the browser
-        /// object after this callback returns. This callback will be the last
-        /// notification that references |Browser|. See do_close() documentation for
-        /// additional usage information.
+        /// object (other than GetIdentifier or IsSame) after this callback returns.
+        /// This callback will be the last notification that references |Browser| on
+        /// the UI thread. Any in-progress network requests associated with |Browser|
+        /// will be aborted when the browser is destroyed, and
+        /// CfxResourceRequestHandler callbacks related to those requests may
+        /// still arrive on the IO thread after this function is called. See do_close()
+        /// documentation for additional usage information.
         /// </summary>
         /// <remarks>
         /// See also the original CEF documentation in

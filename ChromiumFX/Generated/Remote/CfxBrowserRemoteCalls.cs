@@ -537,39 +537,4 @@ namespace Chromium.Remote {
         }
     }
 
-    internal class CfxBrowserSendProcessMessageRemoteCall : RemoteCall {
-
-        internal CfxBrowserSendProcessMessageRemoteCall()
-            : base(RemoteCallId.CfxBrowserSendProcessMessageRemoteCall) {}
-
-        internal IntPtr @this;
-        internal int targetProcess;
-        internal IntPtr message;
-        internal bool __retval;
-
-        protected override void WriteArgs(StreamHandler h) {
-            h.Write(@this);
-            h.Write(targetProcess);
-            h.Write(message);
-        }
-
-        protected override void ReadArgs(StreamHandler h) {
-            h.Read(out @this);
-            h.Read(out targetProcess);
-            h.Read(out message);
-        }
-
-        protected override void WriteReturn(StreamHandler h) {
-            h.Write(__retval);
-        }
-
-        protected override void ReadReturn(StreamHandler h) {
-            h.Read(out __retval);
-        }
-
-        protected override void RemoteProcedure() {
-            __retval = 0 != CfxApi.Browser.cfx_browser_send_process_message(@this, (int)targetProcess, message);
-        }
-    }
-
 }

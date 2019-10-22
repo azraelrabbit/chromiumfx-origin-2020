@@ -129,21 +129,23 @@ public class CefEnumType : ApiType {
         var prefixBuilder = new StringBuilder();
         var allEqual = true;
 
-        do {
-            char c = members[0].Name[prefixBuilder.Length];
-            for(var i = 1; i <= members.Length - 1; i++) {
-                if(c != members[i].Name[prefixBuilder.Length]) {
-                    allEqual = false;
-                    break;
+        if(members.Length > 1) {
+            do {
+                char c = members[0].Name[prefixBuilder.Length];
+                for(var i = 1; i <= members.Length - 1; i++) {
+                    if(c != members[i].Name[prefixBuilder.Length]) {
+                        allEqual = false;
+                        break;
+                    }
                 }
-            }
-            if(allEqual)
-                prefixBuilder.Append(c);
+                if(allEqual)
+                    prefixBuilder.Append(c);
 
-        } while(allEqual);
+            } while(allEqual);
 
-        while(prefixBuilder.Length > 0 && prefixBuilder[prefixBuilder.Length - 1] != '_')
-            --prefixBuilder.Length;
+            while(prefixBuilder.Length > 0 && prefixBuilder[prefixBuilder.Length - 1] != '_')
+                --prefixBuilder.Length;
+        }
 
         b.BeginBlock("public enum {0}", enumName);
         foreach(var m in members) {

@@ -68,7 +68,7 @@ namespace Chromium {
         /// will be the browser window and frame respectively that originated the
         /// request or NULL if the request did not originate from a browser window (for
         /// example, if the request came from CfxUrlRequest). The |Request| object
-        /// passed to this function will not contain cookie data.
+        /// passed to this function cannot be modified.
         /// </summary>
         /// <remarks>
         /// See also the original CEF documentation in
@@ -113,7 +113,7 @@ namespace Chromium {
         /// will be the browser window and frame respectively that originated the
         /// request or NULL if the request did not originate from a browser window (for
         /// example, if the request came from CfxUrlRequest). The |Request| object
-        /// passed to this function will not contain cookie data.
+        /// passed to this function cannot be modified.
         /// </summary>
         /// <remarks>
         /// See also the original CEF documentation in
@@ -127,7 +127,7 @@ namespace Chromium {
         /// will be the browser window and frame respectively that originated the
         /// request or NULL if the request did not originate from a browser window (for
         /// example, if the request came from CfxUrlRequest). The |Request| object
-        /// passed to this function will not contain cookie data.
+        /// passed to this function cannot be modified.
         /// </summary>
         /// <remarks>
         /// See also the original CEF documentation in

@@ -138,4 +138,17 @@ static void cfx_frame_visit_dom(cef_frame_t* self, cef_domvisitor_t* visitor) {
     self->visit_dom(self, visitor);
 }
 
+// create_urlrequest
+static cef_urlrequest_t* cfx_frame_create_urlrequest(cef_frame_t* self, cef_request_t* request, cef_urlrequest_client_t* client) {
+    if(request) ((cef_base_ref_counted_t*)request)->add_ref((cef_base_ref_counted_t*)request);
+    if(client) ((cef_base_ref_counted_t*)client)->add_ref((cef_base_ref_counted_t*)client);
+    return self->create_urlrequest(self, request, client);
+}
+
+// send_process_message
+static void cfx_frame_send_process_message(cef_frame_t* self, cef_process_id_t target_process, cef_process_message_t* message) {
+    if(message) ((cef_base_ref_counted_t*)message)->add_ref((cef_base_ref_counted_t*)message);
+    self->send_process_message(self, target_process, message);
+}
+
 

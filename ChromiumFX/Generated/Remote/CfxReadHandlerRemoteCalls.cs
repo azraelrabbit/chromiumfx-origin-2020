@@ -70,7 +70,7 @@ namespace Chromium.Remote {
             if(self == null || self.CallbacksDisabled) {
                 return;
             }
-            var e = new CfrReadEventArgs(this);
+            var e = new CfrReadHandlerReadEventArgs(this);
             e.connection = CfxRemoteCallContext.CurrentContext.connection;
             self.m_Read?.Invoke(self, e);
             e.connection = null;

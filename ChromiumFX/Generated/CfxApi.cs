@@ -360,17 +360,6 @@ namespace Chromium {
 
         }
 
-        internal static class AudioHandler {
-
-            static AudioHandler () {
-                CfxApiLoader.LoadCfxAudioHandlerApi();
-            }
-
-            public static cfx_ctor_with_gc_handle_delegate cfx_audio_handler_ctor;
-            public static cfx_set_callback_delegate cfx_audio_handler_set_callback;
-
-        }
-
         internal static class AuthCallback {
 
             static AuthCallback () {
@@ -650,11 +639,6 @@ namespace Chromium {
             public delegate void cfx_browser_get_frame_names_delegate(IntPtr self, IntPtr names);
             public static cfx_browser_get_frame_names_delegate cfx_browser_get_frame_names;
 
-            // static int cfx_browser_send_process_message(cef_browser_t* self, cef_process_id_t target_process, cef_process_message_t* message)
-            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
-            public delegate int cfx_browser_send_process_message_delegate(IntPtr self, int target_process, IntPtr message);
-            public static cfx_browser_send_process_message_delegate cfx_browser_send_process_message;
-
         }
 
         internal static class BrowserHost {
@@ -663,13 +647,13 @@ namespace Chromium {
                 CfxApiLoader.LoadCfxBrowserHostApi();
             }
 
-            // CEF_EXPORT int cef_browser_host_create_browser(const cef_window_info_t* windowInfo, cef_client_t* client, const cef_string_t* url, const cef_browser_settings_t* settings, cef_request_context_t* request_context);
+            // CEF_EXPORT int cef_browser_host_create_browser(const cef_window_info_t* windowInfo, cef_client_t* client, const cef_string_t* url, const cef_browser_settings_t* settings, cef_dictionary_value_t* extra_info, cef_request_context_t* request_context);
             [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
-            public delegate int cfx_browser_host_create_browser_delegate(IntPtr windowInfo, IntPtr client, IntPtr url_str, int url_length, IntPtr settings, IntPtr request_context);
+            public delegate int cfx_browser_host_create_browser_delegate(IntPtr windowInfo, IntPtr client, IntPtr url_str, int url_length, IntPtr settings, IntPtr extra_info, IntPtr request_context);
             public static cfx_browser_host_create_browser_delegate cfx_browser_host_create_browser;
-            // CEF_EXPORT cef_browser_t* cef_browser_host_create_browser_sync(const cef_window_info_t* windowInfo, cef_client_t* client, const cef_string_t* url, const cef_browser_settings_t* settings, cef_request_context_t* request_context);
+            // CEF_EXPORT cef_browser_t* cef_browser_host_create_browser_sync(const cef_window_info_t* windowInfo, cef_client_t* client, const cef_string_t* url, const cef_browser_settings_t* settings, cef_dictionary_value_t* extra_info, cef_request_context_t* request_context);
             [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
-            public delegate IntPtr cfx_browser_host_create_browser_sync_delegate(IntPtr windowInfo, IntPtr client, IntPtr url_str, int url_length, IntPtr settings, IntPtr request_context);
+            public delegate IntPtr cfx_browser_host_create_browser_sync_delegate(IntPtr windowInfo, IntPtr client, IntPtr url_str, int url_length, IntPtr settings, IntPtr extra_info, IntPtr request_context);
             public static cfx_browser_host_create_browser_sync_delegate cfx_browser_host_create_browser_sync;
 
             // static cef_browser_t* cfx_browser_host_get_browser(cef_browser_host_t* self)
@@ -1706,6 +1690,17 @@ namespace Chromium {
 
         }
 
+        internal static class CookieAccessFilter {
+
+            static CookieAccessFilter () {
+                CfxApiLoader.LoadCfxCookieAccessFilterApi();
+            }
+
+            public static cfx_ctor_with_gc_handle_delegate cfx_cookie_access_filter_ctor;
+            public static cfx_set_callback_delegate cfx_cookie_access_filter_set_callback;
+
+        }
+
         internal static class CookieManager {
 
             static CookieManager () {
@@ -1716,18 +1711,10 @@ namespace Chromium {
             [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
             public delegate IntPtr cfx_cookie_manager_get_global_manager_delegate(IntPtr callback);
             public static cfx_cookie_manager_get_global_manager_delegate cfx_cookie_manager_get_global_manager;
-            // CEF_EXPORT cef_cookie_manager_t* cef_cookie_manager_get_blocking_manager();
-            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
-            public delegate IntPtr cfx_cookie_manager_get_blocking_manager_delegate();
-            public static cfx_cookie_manager_get_blocking_manager_delegate cfx_cookie_manager_get_blocking_manager;
-            // CEF_EXPORT cef_cookie_manager_t* cef_cookie_manager_create_manager(const cef_string_t* path, int persist_session_cookies, cef_completion_callback_t* callback);
-            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
-            public delegate IntPtr cfx_cookie_manager_create_manager_delegate(IntPtr path_str, int path_length, int persist_session_cookies, IntPtr callback);
-            public static cfx_cookie_manager_create_manager_delegate cfx_cookie_manager_create_manager;
 
-            // static void cfx_cookie_manager_set_supported_schemes(cef_cookie_manager_t* self, cef_string_list_t schemes, cef_completion_callback_t* callback)
+            // static void cfx_cookie_manager_set_supported_schemes(cef_cookie_manager_t* self, cef_string_list_t schemes, int include_defaults, cef_completion_callback_t* callback)
             [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
-            public delegate void cfx_cookie_manager_set_supported_schemes_delegate(IntPtr self, IntPtr schemes, IntPtr callback);
+            public delegate void cfx_cookie_manager_set_supported_schemes_delegate(IntPtr self, IntPtr schemes, int include_defaults, IntPtr callback);
             public static cfx_cookie_manager_set_supported_schemes_delegate cfx_cookie_manager_set_supported_schemes;
 
             // static int cfx_cookie_manager_visit_all_cookies(cef_cookie_manager_t* self, cef_cookie_visitor_t* visitor)
@@ -1749,11 +1736,6 @@ namespace Chromium {
             [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
             public delegate int cfx_cookie_manager_delete_cookies_delegate(IntPtr self, IntPtr url_str, int url_length, IntPtr cookie_name_str, int cookie_name_length, IntPtr callback);
             public static cfx_cookie_manager_delete_cookies_delegate cfx_cookie_manager_delete_cookies;
-
-            // static int cfx_cookie_manager_set_storage_path(cef_cookie_manager_t* self, char16 *path_str, int path_length, int persist_session_cookies, cef_completion_callback_t* callback)
-            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
-            public delegate int cfx_cookie_manager_set_storage_path_delegate(IntPtr self, IntPtr path_str, int path_length, int persist_session_cookies, IntPtr callback);
-            public static cfx_cookie_manager_set_storage_path_delegate cfx_cookie_manager_set_storage_path;
 
             // static int cfx_cookie_manager_flush_store(cef_cookie_manager_t* self, cef_completion_callback_t* callback)
             [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
@@ -2794,6 +2776,16 @@ namespace Chromium {
             [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
             public delegate void cfx_frame_visit_dom_delegate(IntPtr self, IntPtr visitor);
             public static cfx_frame_visit_dom_delegate cfx_frame_visit_dom;
+
+            // static cef_urlrequest_t* cfx_frame_create_urlrequest(cef_frame_t* self, cef_request_t* request, cef_urlrequest_client_t* client)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate IntPtr cfx_frame_create_urlrequest_delegate(IntPtr self, IntPtr request, IntPtr client);
+            public static cfx_frame_create_urlrequest_delegate cfx_frame_create_urlrequest;
+
+            // static void cfx_frame_send_process_message(cef_frame_t* self, cef_process_id_t target_process, cef_process_message_t* message)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_frame_send_process_message_delegate(IntPtr self, int target_process, IntPtr message);
+            public static cfx_frame_send_process_message_delegate cfx_frame_send_process_message;
 
         }
 
@@ -4509,6 +4501,16 @@ namespace Chromium {
             public delegate void cfx_request_set_header_map_delegate(IntPtr self, IntPtr headerMap);
             public static cfx_request_set_header_map_delegate cfx_request_set_header_map;
 
+            // static cef_string_userfree_t cfx_request_get_header_by_name(cef_request_t* self, char16 *name_str, int name_length)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate IntPtr cfx_request_get_header_by_name_delegate(IntPtr self, IntPtr name_str, int name_length);
+            public static cfx_request_get_header_by_name_delegate cfx_request_get_header_by_name;
+
+            // static void cfx_request_set_header_by_name(cef_request_t* self, char16 *name_str, int name_length, char16 *value_str, int value_length, int overwrite)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_request_set_header_by_name_delegate(IntPtr self, IntPtr name_str, int name_length, IntPtr value_str, int value_length, int overwrite);
+            public static cfx_request_set_header_by_name_delegate cfx_request_set_header_by_name;
+
             // static void cfx_request_set(cef_request_t* self, char16 *url_str, int url_length, char16 *method_str, int method_length, cef_post_data_t* postData, cef_string_multimap_t headerMap)
             [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
             public delegate void cfx_request_set_delegate(IntPtr self, IntPtr url_str, int url_length, IntPtr method_str, int method_length, IntPtr postData, IntPtr headerMap);
@@ -4609,10 +4611,10 @@ namespace Chromium {
             public delegate IntPtr cfx_request_context_get_cache_path_delegate(IntPtr self);
             public static cfx_request_context_get_cache_path_delegate cfx_request_context_get_cache_path;
 
-            // static cef_cookie_manager_t* cfx_request_context_get_default_cookie_manager(cef_request_context_t* self, cef_completion_callback_t* callback)
+            // static cef_cookie_manager_t* cfx_request_context_get_cookie_manager(cef_request_context_t* self, cef_completion_callback_t* callback)
             [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
-            public delegate IntPtr cfx_request_context_get_default_cookie_manager_delegate(IntPtr self, IntPtr callback);
-            public static cfx_request_context_get_default_cookie_manager_delegate cfx_request_context_get_default_cookie_manager;
+            public delegate IntPtr cfx_request_context_get_cookie_manager_delegate(IntPtr self, IntPtr callback);
+            public static cfx_request_context_get_cookie_manager_delegate cfx_request_context_get_cookie_manager;
 
             // static int cfx_request_context_register_scheme_handler_factory(cef_request_context_t* self, char16 *scheme_name_str, int scheme_name_length, char16 *domain_name_str, int domain_name_length, cef_scheme_handler_factory_t* factory)
             [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
@@ -4659,6 +4661,11 @@ namespace Chromium {
             public delegate void cfx_request_context_clear_certificate_exceptions_delegate(IntPtr self, IntPtr callback);
             public static cfx_request_context_clear_certificate_exceptions_delegate cfx_request_context_clear_certificate_exceptions;
 
+            // static void cfx_request_context_clear_http_auth_credentials(cef_request_context_t* self, cef_completion_callback_t* callback)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_request_context_clear_http_auth_credentials_delegate(IntPtr self, IntPtr callback);
+            public static cfx_request_context_clear_http_auth_credentials_delegate cfx_request_context_clear_http_auth_credentials;
+
             // static void cfx_request_context_close_all_connections(cef_request_context_t* self, cef_completion_callback_t* callback)
             [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
             public delegate void cfx_request_context_close_all_connections_delegate(IntPtr self, IntPtr callback);
@@ -4668,11 +4675,6 @@ namespace Chromium {
             [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
             public delegate void cfx_request_context_resolve_host_delegate(IntPtr self, IntPtr origin_str, int origin_length, IntPtr callback);
             public static cfx_request_context_resolve_host_delegate cfx_request_context_resolve_host;
-
-            // static cef_errorcode_t cfx_request_context_resolve_host_cached(cef_request_context_t* self, char16 *origin_str, int origin_length, cef_string_list_t resolved_ips)
-            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
-            public delegate int cfx_request_context_resolve_host_cached_delegate(IntPtr self, IntPtr origin_str, int origin_length, IntPtr resolved_ips);
-            public static cfx_request_context_resolve_host_cached_delegate cfx_request_context_resolve_host_cached;
 
             // static void cfx_request_context_load_extension(cef_request_context_t* self, char16 *root_directory_str, int root_directory_length, cef_dictionary_value_t* manifest, cef_extension_handler_t* handler)
             [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
@@ -4852,6 +4854,43 @@ namespace Chromium {
 
         }
 
+        internal static class ResourceReadCallback {
+
+            static ResourceReadCallback () {
+                CfxApiLoader.LoadCfxResourceReadCallbackApi();
+            }
+
+            // static void cfx_resource_read_callback_cont(cef_resource_read_callback_t* self, int bytes_read)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_resource_read_callback_cont_delegate(IntPtr self, int bytes_read);
+            public static cfx_resource_read_callback_cont_delegate cfx_resource_read_callback_cont;
+
+        }
+
+        internal static class ResourceRequestHandler {
+
+            static ResourceRequestHandler () {
+                CfxApiLoader.LoadCfxResourceRequestHandlerApi();
+            }
+
+            public static cfx_ctor_with_gc_handle_delegate cfx_resource_request_handler_ctor;
+            public static cfx_set_callback_delegate cfx_resource_request_handler_set_callback;
+
+        }
+
+        internal static class ResourceSkipCallback {
+
+            static ResourceSkipCallback () {
+                CfxApiLoader.LoadCfxResourceSkipCallbackApi();
+            }
+
+            // static void cfx_resource_skip_callback_cont(cef_resource_skip_callback_t* self, int64 bytes_skipped)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_resource_skip_callback_cont_delegate(IntPtr self, long bytes_skipped);
+            public static cfx_resource_skip_callback_cont_delegate cfx_resource_skip_callback_cont;
+
+        }
+
         internal static class Response {
 
             static Response () {
@@ -4907,6 +4946,16 @@ namespace Chromium {
             [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
             public delegate void cfx_response_set_mime_type_delegate(IntPtr self, IntPtr mimeType_str, int mimeType_length);
             public static cfx_response_set_mime_type_delegate cfx_response_set_mime_type;
+
+            // static cef_string_userfree_t cfx_response_get_charset(cef_response_t* self)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate IntPtr cfx_response_get_charset_delegate(IntPtr self);
+            public static cfx_response_get_charset_delegate cfx_response_get_charset;
+
+            // static void cfx_response_set_charset(cef_response_t* self, char16 *charset_str, int charset_length)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_response_set_charset_delegate(IntPtr self, IntPtr charset_str, int charset_length);
+            public static cfx_response_set_charset_delegate cfx_response_set_charset;
 
             // static cef_string_userfree_t cfx_response_get_header(cef_response_t* self, char16 *name_str, int name_length)
             [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
@@ -5217,6 +5266,15 @@ namespace Chromium {
             public delegate void cfx_settings_get_framework_dir_path_delegate(IntPtr self, out IntPtr framework_dir_path_str, out int framework_dir_path_length);
             public static cfx_settings_get_framework_dir_path_delegate cfx_settings_get_framework_dir_path;
 
+            // static void cfx_settings_set_main_bundle_path(cef_settings_t *self, char16 *main_bundle_path_str, int main_bundle_path_length)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_settings_set_main_bundle_path_delegate(IntPtr self, IntPtr main_bundle_path_str, int main_bundle_path_length);
+            public static cfx_settings_set_main_bundle_path_delegate cfx_settings_set_main_bundle_path;
+            // static void cfx_settings_get_main_bundle_path(cef_settings_t *self, char16 **main_bundle_path_str, int *main_bundle_path_length)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_settings_get_main_bundle_path_delegate(IntPtr self, out IntPtr main_bundle_path_str, out int main_bundle_path_length);
+            public static cfx_settings_get_main_bundle_path_delegate cfx_settings_get_main_bundle_path;
+
             // static void cfx_settings_set_multi_threaded_message_loop(cef_settings_t *self, int multi_threaded_message_loop)
             [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
             public delegate void cfx_settings_set_multi_threaded_message_loop_delegate(IntPtr self, int multi_threaded_message_loop);
@@ -5261,6 +5319,15 @@ namespace Chromium {
             [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
             public delegate void cfx_settings_get_cache_path_delegate(IntPtr self, out IntPtr cache_path_str, out int cache_path_length);
             public static cfx_settings_get_cache_path_delegate cfx_settings_get_cache_path;
+
+            // static void cfx_settings_set_root_cache_path(cef_settings_t *self, char16 *root_cache_path_str, int root_cache_path_length)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_settings_set_root_cache_path_delegate(IntPtr self, IntPtr root_cache_path_str, int root_cache_path_length);
+            public static cfx_settings_set_root_cache_path_delegate cfx_settings_set_root_cache_path;
+            // static void cfx_settings_get_root_cache_path(cef_settings_t *self, char16 **root_cache_path_str, int *root_cache_path_length)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_settings_get_root_cache_path_delegate(IntPtr self, out IntPtr root_cache_path_str, out int root_cache_path_length);
+            public static cfx_settings_get_root_cache_path_delegate cfx_settings_get_root_cache_path;
 
             // static void cfx_settings_set_user_data_path(cef_settings_t *self, char16 *user_data_path_str, int user_data_path_length)
             [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
@@ -5423,6 +5490,15 @@ namespace Chromium {
             [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
             public delegate void cfx_settings_get_accept_language_list_delegate(IntPtr self, out IntPtr accept_language_list_str, out int accept_language_list_length);
             public static cfx_settings_get_accept_language_list_delegate cfx_settings_get_accept_language_list;
+
+            // static void cfx_settings_set_application_client_id_for_file_scanning(cef_settings_t *self, char16 *application_client_id_for_file_scanning_str, int application_client_id_for_file_scanning_length)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_settings_set_application_client_id_for_file_scanning_delegate(IntPtr self, IntPtr application_client_id_for_file_scanning_str, int application_client_id_for_file_scanning_length);
+            public static cfx_settings_set_application_client_id_for_file_scanning_delegate cfx_settings_set_application_client_id_for_file_scanning;
+            // static void cfx_settings_get_application_client_id_for_file_scanning(cef_settings_t *self, char16 **application_client_id_for_file_scanning_str, int *application_client_id_for_file_scanning_length)
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = false)]
+            public delegate void cfx_settings_get_application_client_id_for_file_scanning_delegate(IntPtr self, out IntPtr application_client_id_for_file_scanning_str, out int application_client_id_for_file_scanning_length);
+            public static cfx_settings_get_application_client_id_for_file_scanning_delegate cfx_settings_get_application_client_id_for_file_scanning;
 
         }
 
