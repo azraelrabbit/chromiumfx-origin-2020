@@ -76,6 +76,7 @@ namespace Parser {
             while(
                 ParseCefEnumValue(e.Members)
                 || SkipCommentBlock()
+                || SkipPreprocessorDirective()
             ) ;
             success = Scan(@"}\s*(\w+)_t\s*;", () => e.Name = Group01);
             Unmark(success);
